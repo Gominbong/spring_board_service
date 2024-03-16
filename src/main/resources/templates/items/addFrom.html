@@ -1,0 +1,50 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head th:replace="~{fragments/header :: header}">
+    <title>Hello</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+
+<br>
+<br>
+
+<form class="w-50 container">
+    <div style="height: 1000px">
+        <label style="margin-top: 10px" for="exampleFormControlInput1" class="form-label">악보제목입력하세요</label>
+        <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="악보명">
+
+        <label style="margin-top: 10px" class="form-label">악기타입 입력하세요</label>
+        <select class="form-select" id="id1">
+            <option value="" selected>악기선택</option>
+            <option value="piano">피아노</option>
+            <option value="guitar">기타</option>
+            <option value="drum">드럼</option>
+        </select>
+
+        <label style="margin-top: 10px" class="form-label">난이도 입력하세요 </label>
+        <select class="form-select" id="id2">
+            <option value="" selected>난이도선택</option>
+            <option value="3">상</option>
+            <option value="2">중</option>
+            <option value="1">하</option>
+        </select>
+
+        <label style="margin-top: 10px" for="exampleFormControlInput4" class="form-label">가격 입력하세요 </label>
+        <input type="email" class="form-control" id="exampleFormControlInput4" placeholder="가격">
+
+        <label for="formFile" class="form-label">pdf악보 올리기</label>
+        <input class="form-control" type="file" id="formFile">
+
+
+        <div class="text-center" style="margin-top: 30px">
+            <button type="submit" class="btn btn-primary mb-3">악보등록</button>
+            <a href="/" class="btn btn-primary mb-3">취소</a>
+        </div>
+
+    </div>
+
+</form>
+
+<div th:replace="~{fragments/footer :: footer}"/>
+
+</html>

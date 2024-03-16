@@ -1,0 +1,98 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header}">
+    <title>Hello</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<style>
+    html,
+    head {
+        height: 100%;
+    }
+
+    .form-signin {
+        width: 100%;
+        max-width: 330px;
+        padding: 15px;
+        margin: auto;
+    }
+
+    .form-signin .checkbox {
+        font-weight: 400;
+    }
+
+    .form-signin .form-floating:focus-within {
+        z-index: 2;
+    }
+
+    .form-signin input[type="email"] {
+        margin-bottom: -1px;
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+
+    .form-signin input[type="password"] {
+        margin-bottom: 10px;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+
+    .field-error{
+        border-color: #dc3545;
+        color: #dc3545;
+    }
+
+</style>
+<div style="height: 865px">
+    <body class="text-center">
+    <main class="form-signin" style="margin-top: 210px">
+        <form method="post" action="/signup" th:object="${memberDto}">
+            <img class="mb-4" src="/icon/bootstrap-logo.svg" alt="" width="72" height="57">
+            <h1 class="h3 mb-3 fw-normal">회원가입 페이지</h1>
+            <h6 class="text-start field-error"
+                   th:if="${errors?.containsKey('id')}" th:text="${errors['id']}">아이디</h6>
+            <h6 class="text-start field-error"
+                th:if="${errors?.containsKey('exist')}" th:text="${errors['exist']}">아이디</h6>
+
+            <div class="form-floating">
+                <input type="text" class="form-control" id="id" name="id" th:field="*{id}">
+                <label for="id">아이디입력하세요</label>
+            </div>
+
+            <div>
+                <br>
+                <h6 class="text-start field-error"
+                    th:if="${errors?.containsKey('pwd')}" th:text="${errors['pwd']}">비밀번호</h6>
+            </div>
+
+            <div class="form-floating">
+                <input type="password" class="form-control" id="pwd" name="pwd">
+                <label for="pwd">비밀번호입력하세요</label>
+                <br>
+            </div>
+
+            <div>
+                <h6 class="text-start field-error"
+                    th:if="${errors?.containsKey('nick')}" th:text="${errors['nick']}">닉네임</h6>
+            </div>
+
+            <div class="form-floating">
+                <input type="text" class="form-control" id="nickname" name="nickname"  th:field="*{nickname}">
+                <label for="nickname">닉네임입력하세요</label>
+            </div>
+
+            <div>
+                <br>
+                <button style="width: 100px" class="btn btn-lg btn-primary" type="submit">확인</button>
+                <a href="/" style="width: 100px" class="btn btn-lg btn-primary" type="submit">취소</a>
+            </div>
+
+        </form>
+    </main>
+    </body>
+
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"/>
+
+</html>

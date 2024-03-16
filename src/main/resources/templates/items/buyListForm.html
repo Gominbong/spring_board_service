@@ -1,0 +1,100 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header}">
+    <title>Hello</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<br>
+    <div class="container">
+        <form>
+            <select style="height:38px">
+                <option selected>정렬선택</option>
+                <option value="home.html">등록번호내림차순</option>
+                <option value="price">가격내림차순</option>
+                <option value="views">조회수내림차순</option>
+            </select>
+
+            <button style="margin-block-end: 5px" type="submit" class="btn btn-primary">확인</button>
+        </form>
+    </div>
+    <div class="container" style="height: 1000px;">
+        <div>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>곡제목</th>
+                    <th>만든이</th>
+                    <th>악기</th>
+                    <th>난이도</th>
+                    <th>조회수</th>
+                    <th>가격</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>11</td>
+                    <td>곡제목 누루면 악보볼수있는 페이지가 나와야함</td>
+                    <td>asd</td>
+                    <td>asd</td>
+                    <td>asd</td>
+                    <td>asd</td>
+                    <td>asd</td>
+                </tr>
+                <tr>
+                    <td>12</td>
+                    <td>asd</td>
+                    <td>asd</td>
+                    <td>asd</td>
+                    <td>asd</td>
+                    <td>asd</td>
+                    <td>asd</td>
+                </tr>
+                <tr>
+                    <td>13</td>
+                    <td>asd</td>
+                    <td>asd</td>
+                    <td>asd</td>
+                    <td>asd</td>
+                    <td>asd</td>
+                    <td>asd</td>
+                </tr>
+                <tr>
+                    <td>14</td>
+                    <td>asd</td>
+                    <td>asd</td>
+                    <td>asd</td>
+                    <td>asd</td>
+                    <td>asd</td>
+                    <td>asd</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <br>
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                    </li>
+                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item"><a class="page-link" href="#">4</a></li>
+                    <li class="page-item"><a class="page-link" href="#">5</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+</div>
+</body>
+
+
+<div th:replace="~{fragments/footer :: footer}"/>
+
+</html>
