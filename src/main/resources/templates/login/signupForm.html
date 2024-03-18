@@ -46,11 +46,11 @@
 <div style="height: 865px">
     <body class="text-center">
     <main class="form-signin" style="margin-top: 210px">
-        <form method="post" action="/signup" th:object="${memberDto}">
+        <form method="post" action="/signup" th:object="${signupFormDto}">
             <img class="mb-4" src="/icon/bootstrap-logo.svg" alt="" width="72" height="57">
             <h1 class="h3 mb-3 fw-normal">회원가입 페이지</h1>
             <h6 class="text-start field-error"
-                   th:if="${errors?.containsKey('id')}" th:text="${errors['id']}">아이디</h6>
+                th:if="${errors?.containsKey('id')}" th:text="${errors['id']}">아이디</h6>
             <h6 class="text-start field-error"
                 th:if="${errors?.containsKey('exist')}" th:text="${errors['exist']}">아이디</h6>
 
@@ -77,7 +77,7 @@
             </div>
 
             <div class="form-floating">
-                <input type="text" class="form-control" id="nickname" name="nickname"  th:field="*{nickname}">
+                <input type="text" class="form-control" id="nickname" name="nickname"  th:field="*{nick}">
                 <label for="nickname">닉네임입력하세요</label>
             </div>
 

@@ -19,11 +19,10 @@ public class MemberRepository {
         em.persist(member);
     }
 
-    public List<Member> findLoginId(String id) {
+    public List<Member> checkLoginId(String loginId) {
         return em.createQuery("select a from Member a where a.loginId = :id", Member.class)
-                .setParameter("id", id)
+                .setParameter("id", loginId)
                 .getResultList();
     }
 
 }
-

@@ -1,7 +1,7 @@
 package com.example.myproject.service;
 
 import com.example.myproject.domain.member.Member;
-import com.example.myproject.dto.MemberDto;
+import com.example.myproject.dto.SignupFormDto;
 import com.example.myproject.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,19 +17,19 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class MemberService {
+public class SignupService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public Map<String, String> createMember(MemberDto memberDto) {
+    public Map<String, String> createMember(SignupFormDto memberDto) {
 
-        List<Member> result = memberRepository.findLoginId(memberDto.getId());
+        List<Member> result = memberRepository.checkLoginId(memberDto.getId());
         Member member = new Member();
         Map<String, String> errors = new HashMap<>();
 
         member.setLoginId(memberDto.getId());
         member.setPassword(passwordEncoder.encode(memberDto.getPwd()));
-        member.setNickname(memberDto.getNickname());
+        member.setNickname(memberDto.getNick());
 
         if (!StringUtils.hasText(memberDto.getId())) {
             errors.put("id", "아이디필수입니다");
@@ -37,7 +37,7 @@ public class MemberService {
         if (!StringUtils.hasText(memberDto.getPwd())) {
             errors.put("pwd", "패스워드필수");
         }
-        if (!StringUtils.hasText(memberDto.getNickname())) {
+        if (!StringUtils.hasText(memberDto.getNick())) {
             errors.put("nick", "닉네임필수");
         }
         if (!result.isEmpty()){
