@@ -1,11 +1,14 @@
 package com.example.myproject.dto;
 
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
-@Data
-public class SignupFormDto {
-    private String id;
-    private String pw;
-    private String nick;
 
+@Data
+public class LoginFormDto {
+
+    @NotEmpty
+    private String id;
+    @NotEmpty
+    private String pw;
 }

@@ -8,7 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-
 import java.util.Map;
 
 @Slf4j
@@ -32,15 +31,15 @@ public class SignupController {
     }
 
     @PostMapping("/signup")
-    public String signForm(SignupFormDto memberDto, Model model ) {
+    public String signForm(SignupFormDto signupFormDto, Model model ) {
 
-        Map<String, String> errors = signupService.createMember(memberDto);
+        Map<String, String> errors = signupService.createMember(signupFormDto);
 
         if (errors != null) {
             model.addAttribute("errors", errors);
             return "/login/signupForm";
         }
-        log.info("aaaaaaaaaaaaaaaaa");
+        log.info("회원가입완료");
         return "redirect:/signupComplete";
     }
 }

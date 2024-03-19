@@ -16,7 +16,7 @@ public class Member {
 
     @Id
     @GeneratedValue
-    private Long id;  //db에 저장대어 관리대는
+    private Long id;
 
     @NotEmpty
     private String loginId;

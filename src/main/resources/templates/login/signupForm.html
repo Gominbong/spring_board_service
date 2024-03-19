@@ -49,40 +49,31 @@
         <form method="post" action="/signup" th:object="${signupFormDto}">
             <img class="mb-4" src="/icon/bootstrap-logo.svg" alt="" width="72" height="57">
             <h1 class="h3 mb-3 fw-normal">회원가입 페이지</h1>
-            <h6 class="text-start field-error"
-                th:if="${errors?.containsKey('id')}" th:text="${errors['id']}">아이디</h6>
-            <h6 class="text-start field-error"
-                th:if="${errors?.containsKey('exist')}" th:text="${errors['exist']}">아이디</h6>
 
-            <div class="form-floating">
+            <div class="form-floating" style="margin-bottom: 30px">
                 <input type="text" class="form-control" id="id" name="id" th:field="*{id}">
                 <label for="id">아이디입력하세요</label>
+                <label class="field-error" for="id" style="margin-left: 130px"
+                       th:if="${errors?.containsKey('id')}" th:text="${errors['id']}"></label>
+                <label class="field-error" for="id" style="margin-left: 130px"
+                       th:if="${errors?.containsKey('exist')}" th:text="${errors['exist']}"></label>
             </div>
 
-            <div>
-                <br>
-                <h6 class="text-start field-error"
-                    th:if="${errors?.containsKey('pwd')}" th:text="${errors['pwd']}">비밀번호</h6>
+            <div class="form-floating" style="margin-bottom: 30px">
+                <input type="password" class="form-control" id="pw" name="pw">
+                <label for="pw">비밀번호입력하세요</label>
+                <label class="field-error" for="id" style="margin-left: 130px"
+                       th:if="${errors?.containsKey('pw')}" th:text="${errors['pw']}"></label>
             </div>
 
-            <div class="form-floating">
-                <input type="password" class="form-control" id="pwd" name="pwd">
-                <label for="pwd">비밀번호입력하세요</label>
-                <br>
-            </div>
-
-            <div>
-                <h6 class="text-start field-error"
-                    th:if="${errors?.containsKey('nick')}" th:text="${errors['nick']}">닉네임</h6>
-            </div>
-
-            <div class="form-floating">
+            <div class="form-floating" style="margin-bottom: 30px">
                 <input type="text" class="form-control" id="nickname" name="nickname"  th:field="*{nick}">
                 <label for="nickname">닉네임입력하세요</label>
+                <label class="field-error" for="id" style="margin-left: 130px"
+                       th:if="${errors?.containsKey('nick')}" th:text="${errors['nick']}"></label>
             </div>
 
             <div>
-                <br>
                 <button style="width: 100px" class="btn btn-lg btn-primary" type="submit">확인</button>
                 <a href="/" style="width: 100px" class="btn btn-lg btn-primary" type="submit">취소</a>
             </div>
