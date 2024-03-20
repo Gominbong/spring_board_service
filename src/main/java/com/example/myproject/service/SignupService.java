@@ -47,6 +47,5 @@ public class SignupService {
 
         memberRepository.save(member);
         return null;
-
     }
 }

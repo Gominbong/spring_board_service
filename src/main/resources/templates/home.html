@@ -1,25 +1,24 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/header :: header}">
-    <title>Hello</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 </head>
-<body>
-<br>
-<div class="container">
-    <form>
-        <select style="height:38px">
-            <option selected>정렬선택</option>
-            <option value="home.html">등록번호내림차순</option>
-            <option value="price">가격내림차순</option>
-            <option value="views">조회수내림차순</option>
-        </select>
+<div style="height: 1000px">
+    <div class="container">
+        <form class="row g-2" style="margin-top: 20px">
+            <div class="col-auto">
+                <select class="form-select">
+                    <option selected>정렬선택</option>
+                    <option>낮은가격순</option>
+                    <option>높은가격순</option>
+                    <option>악보제목순</option>
+                </select>
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary mb-3">확인</button>
+            </div>
+        </form>
 
-        <button style="margin-block-end: 5px" type="submit" class="btn btn-primary">확인</button>
-    </form>
-</div>
-<div class="container" style="height: 1000px;">
-    <div>
         <table class="table table-striped">
             <thead>
             <tr>
@@ -126,7 +125,6 @@
             </tbody>
         </table>
 
-        <br>
         <nav aria-label="Page navigation example">
             <ul class="pagination justify-content-center">
                 <li class="page-item disabled">
@@ -142,13 +140,40 @@
                 </li>
             </ul>
         </nav>
+
+        <form class="row g-2 justify-content-center" style="margin-bottom: 300px">
+            <div class="col-auto">
+                <select class="form-select">
+                    <option selected>제목검색</option>
+                    <option>글작성자</option>
+                </select>
+            </div>
+            <div class="col-3">
+                <input type="search" class="form-control" placeholder="악보를 검색하세요" aria-label="Search" >
+            </div>
+
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary mb-3">확인</button>
+            </div>
+        </form>
+
+
+
+
+
+
+
     </div>
 </div>
 
-</div>
+
+
+
+<body>
+
+
+
 </body>
 
-
 <div th:replace="~{fragments/footer :: footer}"/>
-
 </html>

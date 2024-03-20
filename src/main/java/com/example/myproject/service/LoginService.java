@@ -3,13 +3,13 @@ package com.example.myproject.service;
 import com.example.myproject.domain.member.Member;
 import com.example.myproject.dto.LoginFormDto;
 import com.example.myproject.repository.MemberRepository;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -35,6 +35,12 @@ public class LoginService {
 
         return null;
     }
+    public void expireCookie(HttpServletResponse response, String cookieName) {
+        Cookie cookie = new Cookie(cookieName, null);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+    }
+
 }
 
 

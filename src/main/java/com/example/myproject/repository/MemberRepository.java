@@ -26,27 +26,20 @@ public class MemberRepository {
                 .getResultList();
     }
 
-    public Optional<Member> checkLoginId1(String loginId){
+    public Optional<Member> checkLoginId1(String loginId) {
         return findAll().stream()
                 .filter(m -> m.getLoginId().equals(loginId))
                 .findFirst();
     }
 
-    public List<Member> findAll(){
+    public List<Member> findAll() {
         return em.createQuery("select m from Member m", Member.class)
                 .getResultList();
     }
- public List<Member> findEncodePassword(String loginId) {
-     return em.createQuery("select m.password from Member m where m.loginId = :id", Member.class)
-             .setParameter("id", loginId)
-             .getResultList();
- }
 
-
-    public List<Member> checkLogin(String loginId, String password){
-        return em.createQuery("select m from Member m where m.loginId = :id and m.password = : pw")
+    public List<Member> findEncodePassword(String loginId) {
+        return em.createQuery("select m.password from Member m where m.loginId = :id", Member.class)
                 .setParameter("id", loginId)
-                .setParameter("pw", password)
                 .getResultList();
     }
 

@@ -5,11 +5,9 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 </head>
 
-<br>
-<br>
+<div style="height: 1000px; margin-top: 20px">
+    <form class="w-50 container">
 
-<form class="w-50 container">
-    <div style="height: 1000px">
         <label style="margin-top: 10px" for="exampleFormControlInput1" class="form-label">악보제목입력하세요</label>
         <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="악보명">
 
@@ -32,18 +30,17 @@
         <label style="margin-top: 10px" for="exampleFormControlInput4" class="form-label">가격 입력하세요 </label>
         <input type="email" class="form-control" id="exampleFormControlInput4" placeholder="가격">
 
-        <label for="formFile" class="form-label">pdf악보 올리기</label>
+        <label style="margin-top: 10px" for="formFile" class="form-label">pdf악보 올리기</label>
         <input class="form-control" type="file" id="formFile">
-
 
         <div class="text-center" style="margin-top: 30px">
             <button type="submit" class="btn btn-primary mb-3">악보등록</button>
             <a href="/" class="btn btn-primary mb-3">취소</a>
         </div>
 
-    </div>
+    </form>
 
-</form>
+</div>
 
 <div th:replace="~{fragments/footer :: footer}"/>
 

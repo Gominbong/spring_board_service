@@ -27,7 +27,7 @@ public class SignupController {
     @GetMapping("/signupComplete")
     public String signForm(){
 
-        return "/login/completeForm";
+        return "/login/signupCompleteForm";
     }
 
     @PostMapping("/signup")
@@ -39,7 +39,7 @@ public class SignupController {
             model.addAttribute("errors", errors);
             return "/login/signupForm";
         }
-        log.info("회원가입완료");
+        log.info("가입성공");
         return "redirect:/signupComplete";
     }
 }
