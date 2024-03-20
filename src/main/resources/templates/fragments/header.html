@@ -9,17 +9,11 @@
     <meta name="generator" content="Hugo 0.88.1">
     <title>Index</title>
     <link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/headers/">
-    <script src="js/bootstrap.bundle.min.js"></script>
     <link href="css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <header class="p-3 bg-dark text-white">
     <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-        <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
-            <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap">
-                <use xlink:href="#bootstrap"/>
-            </svg>
-        </a>
 
         <form class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
             <li><a href="/" class="nav-link px-5 text-white">악보목록</a></li>
@@ -30,13 +24,14 @@
         </form>
 
         <div class="text-end">
-            <a class="btn btn-outline-light me-2" href="/login" th:if="${cookieLoginId==null}">로그인</a>
-            <a class="btn btn-outline-info" href="/signup" th:if="${cookieLoginId==null}">회원가입</a>
-            <form th:action="@{/logout}" method="post">
-                <a class="btn btn-warning me-2" th:if="${cookieLoginId}"
-                   th:text="${cookieLoginId+'  님'}">로그인id표시</a>
-                <button class="btn btn-outline-info" th:if="${cookieLoginId}">로그아웃</button>
+            <a class="btn btn-outline-light me-2" href="/login" th:if="!${loginId}" >로그인</a>
+            <a class="btn btn-outline-info" href="/signup" th:if="!${loginId}">회원가입</a>
+
+            <form method="post" th:action="@{/logout}">
+            <a class="btn btn-warning me-2 fw-bold" th:if="${loginId}" th:text="${loginId}+ ' 님' "></a>
+                <button class="btn btn-outline-info fw-bold" th:if="${loginId}">로그아웃</button>
             </form>
+
         </div>
 
     </div>

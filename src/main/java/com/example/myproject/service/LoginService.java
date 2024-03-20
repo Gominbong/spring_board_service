@@ -24,12 +24,11 @@ public class LoginService {
         List<Member> a = memberRepository.findEncodePassword(loginFormDto.getId());
 
         if (a.isEmpty()) {
-            log.info("로그인Id와 비밀번호가 같지 않다");
             return null;
         }
         boolean matches = passwordEncoder.matches(loginFormDto.getPw(), String.valueOf(a.get(0)));
         if (matches) {
-            log.info("로그인 성공");
+            log.info("loginId 값으로 db에 있는 pw 조회성공");
             return a;
         }
 
