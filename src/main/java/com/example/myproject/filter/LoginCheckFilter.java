@@ -55,8 +55,4 @@ public class LoginCheckFilter implements Filter {
         return !PatternMatchUtils.simpleMatch(whitelist, requestURI);
     }
 
-    @Override
-    public void destroy() {
-        Filter.super.destroy();
-    }
 }

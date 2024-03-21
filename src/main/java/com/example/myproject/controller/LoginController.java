@@ -30,21 +30,9 @@ public class LoginController {
     }
 
     @GetMapping("/login")
-    public String login(@ModelAttribute("loginFormDto") LoginFormDto loginFormDto) {
+    public String loginForm(@ModelAttribute("loginFormDto") LoginFormDto loginFormDto) {
 
         return "login/loginForm";
-    }
-
-    @PostMapping("/logout")
-    public String logoutSession(HttpServletRequest request) {
-
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            session.invalidate();
-            log.info("세션 로그아웃 되었습니다");
-        }
-
-        return "redirect:/";
     }
 
     @GetMapping("/")
@@ -58,6 +46,7 @@ public class LoginController {
         model.addAttribute("loginId", session.getAttribute("loginId"));
         return "home";
     }
+
     @PostMapping("/login")
     public String loginSession(@Valid @ModelAttribute LoginFormDto loginFormDto,
                                BindingResult bindingResult, HttpServletRequest request) {
@@ -76,6 +65,18 @@ public class LoginController {
         session.setAttribute("loginId", loginFormDto.getId());
 
         log.info("세션 로그인 아이디 = {}", loginFormDto.getId());
+
+        return "redirect:/";
+    }
+
+    @PostMapping("/logout")
+    public String logoutSession(HttpServletRequest request) {
+
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+            log.info("세션 로그아웃 되었습니다");
+        }
 
         return "redirect:/";
     }
