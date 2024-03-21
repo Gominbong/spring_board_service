@@ -1,6 +1,7 @@
 package com.example.myproject.repository;
 
 import com.example.myproject.domain.member.Member;
+import com.example.myproject.dto.LoginFormDto;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -18,6 +19,13 @@ public class MemberRepository {
 
     public void save(Member member) {
         em.persist(member);
+    }
+
+
+    public List<Member> findId(LoginFormDto loginFormDto){
+        return em.createQuery("select m from Member m where m.loginId = :id", Member.class)
+                .setParameter("id", loginFormDto.getId())
+                .getResultList();
     }
 
     public List<Member> checkLoginId(String loginId) {

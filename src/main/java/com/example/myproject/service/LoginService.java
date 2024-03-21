@@ -1,14 +1,19 @@
 package com.example.myproject.service;
 
+import com.example.myproject.SessionConst;
 import com.example.myproject.domain.member.Member;
 import com.example.myproject.dto.LoginFormDto;
 import com.example.myproject.repository.MemberRepository;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.net.http.HttpRequest;
 import java.util.List;
 
 @Slf4j
@@ -18,6 +23,7 @@ public class LoginService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+
 
     public List<Member> login(LoginFormDto loginFormDto) {
 
@@ -40,6 +46,16 @@ public class LoginService {
         response.addCookie(cookie);
     }
 
+    public void createSession(LoginFormDto loginFormDto, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        session.setAttribute(SessionConst.LOGIN_MEMBER,loginFormDto);
+    }
 }
+
+
+
+
+
+
 
 
