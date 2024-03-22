@@ -27,9 +27,6 @@ public class LogInterceptor implements HandlerInterceptor {
 
         log.info("REQUEST [{}][{}][{}]", uuid, requestURI, handler);
         return true;
-
-
-
     }
 
     @Override
@@ -45,5 +42,6 @@ public class LogInterceptor implements HandlerInterceptor {
         if (ex != null) {
             log.error("afterCompletion error!!", ex);
         }
+
     }
 }

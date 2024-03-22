@@ -27,8 +27,13 @@ spring:
 logging:
   level:
     org.hibernate.SQL: debug
+
 server:
   servlet:
     session:
-      timeout: 1800
+      timeout: 10
+
+  error:
+    whitelabel:
+      enabled: false
 #    org.hibernate.type: trace

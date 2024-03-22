@@ -19,7 +19,6 @@ public class LoginCheckFilter implements Filter {
         log.info("log filter init");
     }
 
-
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         log.info("log filter doFilter");

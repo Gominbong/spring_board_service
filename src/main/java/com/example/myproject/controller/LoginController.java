@@ -24,8 +24,12 @@ public class LoginController {
     @GetMapping("/myInfo")
     public String myInfo(HttpServletRequest request, Model model) {
 
-        HttpSession session = request.getSession();
-        model.addAttribute("loginId", session.getAttribute("loginId"));
+
+        HttpSession session = request.getSession(false);
+        if (session != null){
+            model.addAttribute("loginId", session.getAttribute("loginId"));
+        }
+
         return "/login/myInfoForm";
     }
 
