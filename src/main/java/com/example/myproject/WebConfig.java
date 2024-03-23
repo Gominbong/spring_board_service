@@ -10,10 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.mvc.WebContentInterceptor;
-import org.springframework.web.servlet.support.WebContentGenerator;
 
-import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 @Configuration
@@ -33,6 +30,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .addResourceLocations("classpath:/static/")
                 .setCacheControl(cacheControl);
     }
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
 

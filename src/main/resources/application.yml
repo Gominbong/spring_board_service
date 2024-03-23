@@ -35,4 +35,8 @@ server:
   error:
     whitelabel:
       enabled: false
+    include-message: always
+    include-stacktrace: on_param
+    include-binding-errors: on_param
+    include-exception: true
 #    org.hibernate.type: trace
