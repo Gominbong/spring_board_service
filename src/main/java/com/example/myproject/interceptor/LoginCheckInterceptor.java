@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -17,20 +18,22 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
         String requestURI = request.getRequestURI();
-        log.info("인증 체크 인터셉터 실행 {}" , requestURI);
+        log.info("인증 체크 인터셉터 실행 {}", requestURI);
 
-       try{
-           HttpSession session = request.getSession();
-           if (session.getAttribute("loginId") == null){
-               log.info("세션에 loginId값이 없음 로그인하세요");
-               response.sendRedirect("/login");
-           }
-       }catch (NullPointerException e){
-           log.info("   에러 메세지   =  {} ", e.getMessage());
-       }
 
+        HttpSession session = request.getSession();
+        if (session.getAttribute("loginId") == null) {
+            log.info("세션에 loginId값이 없음 로그인하세요");
+            response.sendRedirect("/login");
+
+        }
 
         return true;
     }
 
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+        HttpSession session = request.getSession();
+
+    }
 }
