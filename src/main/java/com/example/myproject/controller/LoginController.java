@@ -1,7 +1,8 @@
 package com.example.myproject.controller;
 
-import com.example.myproject.domain.member.Member;
+import com.example.myproject.domain.Member;
 import com.example.myproject.dto.LoginFormDto;
+import com.example.myproject.repository.MemberRepository;
 import com.example.myproject.service.LoginService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -21,6 +22,8 @@ public class LoginController {
 
     private final LoginService loginService;
 
+    private final MemberRepository memberRepository;
+
     @GetMapping("/myInfo")
     public String myInfo(HttpServletRequest request, Model model) {
 
@@ -34,7 +37,7 @@ public class LoginController {
     }
 
     @GetMapping("/login")
-    public String loginForm(@ModelAttribute("loginFormDto") LoginFormDto loginFormDto) {
+    public String loginForm(LoginFormDto loginFormDto) {
 
         return "login/loginForm";
     }
@@ -46,13 +49,17 @@ public class LoginController {
         if (session == null) {
             return "home";
         }
-
         model.addAttribute("loginId", session.getAttribute("loginId"));
+        Object id = session.getAttribute("id");
+
+        Long b = (Long)id;
+        log.info("iiiiiiiiiiiiiiiiiii  = {}", id);
+        log.info("uuuuuuuuuuuuuuuuuuu  = {}", b);
         return "home";
     }
 
     @PostMapping("/login")
-    public String loginSession(@Valid @ModelAttribute LoginFormDto loginFormDto,
+    public String loginSession(@Valid LoginFormDto loginFormDto,
                                BindingResult bindingResult, HttpServletRequest request) {
 
         List<Member> result = loginService.login(loginFormDto);
@@ -65,8 +72,11 @@ public class LoginController {
             bindingResult.reject("loginFail", "아이디 또는 비밀번호 맞지 않습니다");
             return "/login/loginForm";
         }
+
+        List<Member> byId = memberRepository.findById(loginFormDto.getId());
         HttpSession session = request.getSession();
         session.setAttribute("loginId", loginFormDto.getId());
+        session.setAttribute("id", byId.get(0));
 
         log.info("세션 로그인 아이디 = {}", loginFormDto.getId());
 

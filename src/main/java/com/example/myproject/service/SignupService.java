@@ -1,6 +1,6 @@
 package com.example.myproject.service;
 
-import com.example.myproject.domain.member.Member;
+import com.example.myproject.domain.Member;
 import com.example.myproject.dto.SignupFormDto;
 import com.example.myproject.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +29,9 @@ public class SignupService {
         member.setLoginId(signupFormDto.getId());
         member.setPassword(passwordEncoder.encode(signupFormDto.getPw()));
         member.setNickname(signupFormDto.getNick());
-
+        member.setCache(0);
+        member.setLocalDate(LocalDate.now());
+        member.setId(member.getId());
         if (!StringUtils.hasText(signupFormDto.getId())) {
             errors.put("id", "아이디필수입니다");
         }

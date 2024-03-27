@@ -1,14 +1,14 @@
 package com.example.myproject;
 
-import com.example.myproject.domain.member.Member;
+import com.example.myproject.domain.Member;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import java.time.LocalDate;
 
 @Slf4j
 @Component
@@ -31,15 +31,20 @@ public class InitDb {
         private final EntityManager em;
         private final PasswordEncoder passwordEncoder;
         public void dbInit1(){
-            Member member = createMember("sjy2017z", passwordEncoder.encode("123"), "고민봉");
+            Member member = createMember("sjy2017z", passwordEncoder.encode("123"),
+                    "고민봉");
             em.persist(member);
         }
+
+
 
         private Member createMember(String loginId, String password, String nickname) {
             Member member = new Member();
             member.setLoginId(loginId);
             member.setPassword(password);
             member.setNickname(nickname);
+            member.setCache(0);
+            member.setLocalDate(LocalDate.now());
             return member;
         }
     }

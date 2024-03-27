@@ -1,21 +1,17 @@
-package com.example.myproject.domain.member;
-
+package com.example.myproject.domain;
 
 import jakarta.persistence.*;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.time.LocalDate;
 
 @Data
 @Entity
-@Slf4j
-@RequiredArgsConstructor
 public class Member {
 
-    @Id
     @GeneratedValue
+    @Id
+    @Column(name = "member_id")
     private Long id;
 
     @NotEmpty
@@ -24,5 +20,9 @@ public class Member {
     private String password;
     @NotEmpty
     private String nickname;
+    private int cache;
+    private LocalDate localDate;
+
+
 
 }

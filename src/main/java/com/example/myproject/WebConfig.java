@@ -1,7 +1,6 @@
 package com.example.myproject;
 
 import com.example.myproject.interceptor.LogInterceptor;
-import com.example.myproject.interceptor.LoginCheckInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.CacheControl;
@@ -41,11 +40,11 @@ public class WebConfig implements WebMvcConfigurer {
                 .excludePathPatterns("/", "/signup", "/login", "/css/*", "/js/*", "/icon/*", "/signupComplete",
                         "/error", "/api/**"  );
 
-        registry.addInterceptor(new LoginCheckInterceptor())
+        /*registry.addInterceptor(new LoginCheckInterceptor())
                 .order(2)
                 .addPathPatterns("/add", "/buyList", "/sellList", "/myInfo")
                 .excludePathPatterns("/", "/signup", "/login", "/css/*", "/js/*", "/icon/*", "/signupComplete",
                         "/error", "/api/**" );
-
+*/
     }
 }

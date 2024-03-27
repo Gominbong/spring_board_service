@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head th:replace="~{fragments/header :: header}">
+    <title>Hello</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+
+<div style="height: 1000px; margin-top: 20px">
+    <form class="w-50 container" enctype="multipart/form-data" method="post" action="/addItem"
+          th:object="${addItemFormDto}">
+
+        <label style="margin-top: 10px" for="title" class="form-label">제목입력하세요</label>
+        <input type="text" class="form-control" id="title" name="title" placeholder="제목">
+
+        <label style="margin-top: 10px" class="form-label">악기타입 입력하세요</label>
+        <select class="form-select" id="type" name="type">
+            <option value="" selected>악기선택</option>
+            <option value="piano" id="piano">피아노</option>
+            <option value="guitar" id="guitar">기타</option>
+            <option value="drum" id="drum">드럼</option>
+        </select>
+
+        <label style="margin-top: 10px" class="form-label">난이도 입력하세요 </label>
+        <select class="form-select" id="level" name="level">
+            <option value="" selected>난이도선택</option>
+            <option value="3" id="3">상</option>
+            <option value="2" id="2">중</option>
+            <option value="1" id="1">하</option>
+        </select>
+
+        <label style="margin-top: 10px" class="form-label">가격 입력하세요 </label>
+        <input type="text" class="form-control" id="price" name="price" placeholder="가격">
+
+
+
+
+        <label style="margin-top: 10px" class="form-label">pdf 악보 올리기</label>
+        <input class="form-control" type="file" id="pdfFile">
+
+
+        <label style="margin-top: 10px" class="form-label">내용을 입력하세요</label>
+        <textarea class="form-control" id="content" name="content" rows="15"></textarea>
+
+
+        <div class="text-center" style="margin-top: 30px">
+            <button type="submit" class="btn btn-primary mb-3">악보등록</button>
+            <a href="/" class="btn btn-primary mb-3">취소</a>
+        </div>
+
+    </form>
+
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"/>
+
+</html>
