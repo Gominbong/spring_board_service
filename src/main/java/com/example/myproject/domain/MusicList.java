@@ -2,11 +2,7 @@ package com.example.myproject.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import static jakarta.persistence.FetchType.LAZY;
 
 @Entity

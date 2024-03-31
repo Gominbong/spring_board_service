@@ -3,9 +3,10 @@ package com.example.myproject.service;
 import com.example.myproject.domain.FileList;
 import com.example.myproject.domain.Member;
 import com.example.myproject.domain.MusicList;
-import com.example.myproject.dto.AddItemFormDto;
-import com.example.myproject.repository.AddItemRepository;
-import jakarta.persistence.EntityManager;
+import com.example.myproject.dto.AddMusicListFormDto;
+import com.example.myproject.repository.MusicListRepository;
+import com.example.myproject.repository.FileRepository;
+import com.example.myproject.repository.MemberRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -25,18 +26,18 @@ import java.util.Map;
 @Transactional
 @Service
 @Slf4j
-public class AddItemService {
+public class MusicListService {
 
-    private final EntityManager em;
-    private final AddItemRepository addItemRepository;
+    private final MusicListRepository musicListRepository;
+    private final MemberRepository memberRepository;
+    private final FileRepository fileRepository;
 
-    public Map<String, String> createAddItem(HttpServletRequest request, AddItemFormDto addItemFormDto) throws IOException {
+    public Map<String, String> createAddItem(HttpServletRequest request, AddMusicListFormDto addItemFormDto) throws IOException {
 
         HttpSession session = request.getSession();
-        Long id = (Long)session.getAttribute("id");
+        String loginId = (String)session.getAttribute("loginId");
+        Member member = memberRepository.findByLoginId(loginId);
         Map<String, String> errors = new HashMap<>();
-        Member member = addItemRepository.findById(id);
-
         MusicList musicList = new MusicList(); //db 저장할 객체 생성
         musicList.setMember(member); // 외래키 설정
         musicList.setTitle(addItemFormDto.getTitle());
@@ -53,7 +54,6 @@ public class AddItemService {
         String storedFileName = System.currentTimeMillis() + "_" + originalFilename;
         String savePath = "C:/Users/asd/Desktop/study/pdf/" + storedFileName;
         pdfFile.transferTo(new File(savePath));
-
         FileList fileList = new FileList(); //db 저장할 객체 생성
         fileList.setOriginalFilename(originalFilename);
         fileList.setStoredFilename(storedFileName);
@@ -78,12 +78,12 @@ public class AddItemService {
             return errors;
         }
 
-        addItemRepository.save(musicList);
-        addItemRepository.fileSave(fileList);
+        musicListRepository.save(musicList);
+        fileRepository.save(fileList);
         return null;
     }
 
     public List<MusicList> findItemList() {
-        return addItemRepository.findAll();
+        return musicListRepository.findAll();
     }
 }

@@ -18,18 +18,21 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Slf4j
 public class SignupService {
-    private final MemberRepository memberRepository;
+
     private final PasswordEncoder passwordEncoder;
+    private final MemberRepository memberRepository;
 
     public Map<String, String> createMember(SignupFormDto signupFormDto) {
 
-        List<Member> result = memberRepository.checkLoginId(signupFormDto.getId());
+        Member result = memberRepository.findByLoginId(signupFormDto.getId());
+
+
         Member member = new Member();
         Map<String, String> errors = new HashMap<>();
         member.setLoginId(signupFormDto.getId());
         member.setPassword(passwordEncoder.encode(signupFormDto.getPw()));
         member.setNickname(signupFormDto.getNick());
-        member.setCache(0);
+        member.setCache(10000);
         member.setLocalDate(LocalDate.now());
         member.setId(member.getId());
         if (!StringUtils.hasText(signupFormDto.getId())) {
@@ -41,7 +44,7 @@ public class SignupService {
         if (!StringUtils.hasText(signupFormDto.getNick())) {
             errors.put("nick", "닉네임필수입니다");
         }
-        if (!result.isEmpty()){
+        if (result != null){
             errors.put("exist", "아이디중복입니다");
         }
         if (!errors.isEmpty()) {

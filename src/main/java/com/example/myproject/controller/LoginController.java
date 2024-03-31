@@ -3,7 +3,7 @@ package com.example.myproject.controller;
 import com.example.myproject.domain.Member;
 import com.example.myproject.domain.MusicList;
 import com.example.myproject.dto.LoginFormDto;
-import com.example.myproject.service.AddItemService;
+import com.example.myproject.service.MusicListService;
 import com.example.myproject.service.LoginService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -22,7 +22,7 @@ import java.util.List;
 public class LoginController {
 
     private final LoginService loginService;
-    private final AddItemService addItemService;
+    private final MusicListService addItemService;
     @GetMapping("/myInfo")
     public String myInfo(HttpServletRequest request, Model model) {
 
@@ -64,8 +64,8 @@ public class LoginController {
     @PostMapping("/login")
     public String loginSession(@Valid LoginFormDto loginFormDto,
                                BindingResult bindingResult, HttpServletRequest request) {
+        Member result = loginService.login(loginFormDto);
 
-        List<Member> result = loginService.login(loginFormDto);
         log.info("암호화된비밀번호가져오기= {}", result);
         if (bindingResult.hasErrors()) {
             return "/login/loginForm";
@@ -76,13 +76,11 @@ public class LoginController {
             return "/login/loginForm";
         }
 
-        List<Member> memberId = loginService.findMemberId(loginFormDto.getId());
         HttpSession session = request.getSession();
         session.setAttribute("loginId", loginFormDto.getId());
-        session.setAttribute("id", memberId.get(0));
+
 
         log.info("세션 로그인 아이디 = {}", loginFormDto.getId());
-
         return "redirect:/";
     }
 
