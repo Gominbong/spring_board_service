@@ -11,36 +11,40 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.io.IOException;
+import java.util.Map;
+
 @Controller
 @RequiredArgsConstructor
 @Slf4j
 public class ItemController {
 
     private final AddItemService addItemService;
+
     @GetMapping("/addItem")
     public String addItemForm(HttpServletRequest request, Model model){
-        model.addAttribute("addItemFormDto", new AddItemFormDto());
+
         HttpSession session = request.getSession();
         model.addAttribute("loginId", session.getAttribute("loginId"));
+        model.addAttribute("addItemFormDto", new AddItemFormDto());
 
         return "/addSheetMusic/addItemForm";
     }
 
-    @GetMapping("/addItemComplete")
-    public String addItemForm(){
-        return "/addSheetMusic/addItemCompleteForm";
-    }
-
     @PostMapping("/addItem")
-    public String addItemForm(AddItemFormDto addItemFormDto, HttpServletRequest request){
+    public String addItemForm(AddItemFormDto addItemFormDto, HttpServletRequest request, Model model) throws IOException {
 
 
         HttpSession session = request.getSession();
         String loginId = (String)session.getAttribute("loginId");
         log.info("세션 로그인한 아이디 = {} ", loginId);
 
-        addItemService.createAddItem(request, addItemFormDto);
-        return "redirect:/addItemComplete";
+        Map<String, String> errors = addItemService.createAddItem(request, addItemFormDto);
+        if (errors != null){
+            model.addAttribute("errors", errors);
+            return "/addSheetMusic/addItemForm";
+        }
+        return "redirect:/";
     }
 
     @GetMapping("/buyList")

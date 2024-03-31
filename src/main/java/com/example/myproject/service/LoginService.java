@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 
 @Slf4j
@@ -42,6 +43,9 @@ public class LoginService {
         response.addCookie(cookie);
     }
 
+    public List<Member> findMemberId(String id) {
+        return memberRepository.findById(id);
+    }
 }
 
 

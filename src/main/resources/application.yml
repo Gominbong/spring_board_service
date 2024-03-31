@@ -19,7 +19,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: none
     properties:
       hibernate:
         show-sql: true
@@ -43,7 +43,7 @@ server:
     whitelabel:
       enabled: false
     include-message: always
-    include-stacktrace: on_param
-    include-binding-errors: on_param
+    include-stacktrace: always
+    include-binding-errors: always
     include-exception: true
 #    org.hibernate.type: trace

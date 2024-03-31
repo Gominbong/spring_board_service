@@ -1,9 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/header :: header}">
-    <title>Hello</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-</head>
+<head th:replace="~{fragments/header :: head}"/>
+<div th:replace="~{fragments/header :: header ('login')}"/>
 <style>
     html,
     head {
@@ -42,7 +40,7 @@
     }
 
 </style>
-<div style="height: 865px">
+<div style="height: 810px">
     <body class="text-center">
     <main class="form-signin" style="margin-top: 210px">
         <form method="post" action="/login" th:object="${loginFormDto}">

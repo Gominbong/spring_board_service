@@ -1,9 +1,9 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/header :: header}">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-</head>
+<head th:replace="~{fragments/header :: head}"/>
+<div th:replace="~{fragments/header :: header ('home')}"/>
 
+<body>
 <div style="height: 1000px">
     <div class="container">
         <form class="row g-2" style="margin-top: 20px">
@@ -28,100 +28,17 @@
                 <th>만든이</th>
                 <th>악기</th>
                 <th>난이도</th>
-                <th>조회수</th>
                 <th>가격</th>
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <td></td>
-                <td>제목을 누루면 악보구매 form이 나와야함</td>
-                <td>asd </td>
-                <td>asd</td>
-                <td>asd</td>
-                <td>asd</td>
-                <td>asd</td>
-            </tr>
-            <tr>
-                <td>12</td>
-                <td>asd</td>
-                <td>asd</td>
-                <td>asd</td>
-                <td>asd</td>
-                <td>asd</td>
-                <td>asd</td>
-            </tr>
-            <tr>
-                <td>13</td>
-                <td>asd</td>
-                <td>asd</td>
-                <td>asd</td>
-                <td>asd</td>
-                <td>asd</td>
-                <td>asd</td>
-            </tr>
-            <tr>
-                <td>14</td>
-                <td>asd</td>
-                <td>asd</td>
-                <td>asd</td>
-                <td>asd</td>
-                <td>asd</td>
-                <td>asd</td>
-            </tr>
-            <tr>
-                <td>15</td>
-                <td>asd</td>
-                <td>asd</td>
-                <td>asd</td>
-                <td>asd</td>
-                <td>asd</td>
-                <td>asd</td>
-            </tr>
-            <tr>
-                <td>16</td>
-                <td>asd</td>
-                <td>asd</td>
-                <td>asd</td>
-                <td>asd</td>
-                <td>asd</td>
-                <td>asd</td>
-            </tr>
-            <tr>
-                <td>17</td>
-                <td>asd</td>
-                <td>asd</td>
-                <td>asd</td>
-                <td>asd</td>
-                <td>asd</td>
-                <td>asd</td>
-            </tr>
-            <tr>
-                <td>18</td>
-                <td>asd</td>
-                <td>asd</td>
-                <td>asd</td>
-                <td>asd</td>
-                <td>asd</td>
-                <td>asd</td>
-            </tr>
-            <tr>
-                <td>19</td>
-                <td>asd</td>
-                <td>asd</td>
-                <td>asd</td>
-                <td>asd</td>
-                <td>asd</td>
-                <td>asd</td>
-            </tr>
-            <tr>
-                <td>20</td>
-                <td>asd</td>
-                <td>asd</td>
-                <td>asd</td>
-                <td>asd</td>
-                <td>asd</td>
-                <td>asd</td>
+            <tr th:each="item, loop : ${itemList}">
+                <td th:text="${loop.index+1}"></td>
+                <td th:text="${item.title}"></td>
+                <td th:text="${item.memberName}"></td>
+                <td th:text="${item.type}"></td>
+                <td th:text="${item.level}"></td>
+                <td th:text="${item.price}"></td>
             </tr>
             </tbody>
         </table>
@@ -160,6 +77,6 @@
 
     </div>
 </div>
-
+</body>
 <div th:replace="~{fragments/footer :: footer}"/>
 </html>
