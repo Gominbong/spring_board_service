@@ -3,6 +3,7 @@ package com.example.myproject.controller;
 import com.example.myproject.domain.Member;
 import com.example.myproject.domain.MusicList;
 import com.example.myproject.dto.LoginFormDto;
+import com.example.myproject.dto.PageDto;
 import com.example.myproject.service.MusicListService;
 import com.example.myproject.service.LoginService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,6 +11,9 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,7 +26,8 @@ import java.util.List;
 public class LoginController {
 
     private final LoginService loginService;
-    private final MusicListService addItemService;
+    private final MusicListService musicListService;
+
     @GetMapping("/myInfo")
     public String myInfo(HttpServletRequest request, Model model) {
 
@@ -43,20 +48,36 @@ public class LoginController {
     }
 
     @GetMapping("/")
-    public String loginSession(HttpServletRequest request, Model model){
-
+    public String loginSession(@RequestParam(value = "page", defaultValue = "0") int page,
+                               @RequestParam(value = "start", defaultValue = "0") int start,
+                               @RequestParam(value = "end", defaultValue = "6") int end,
+                               HttpServletRequest request, Model model){
         model.addAttribute("menu","list");
         HttpSession session = request.getSession(false);
+
         if (session == null) {
-            List<MusicList> itemList = addItemService.findItemList();
-            model.addAttribute("itemList", itemList);
+            Page<MusicList> paging = musicListService.findAllItemList(page);
+            model.addAttribute("paging", paging);
+            model.addAttribute("page", page);
+            model.addAttribute("start", start);
+            model.addAttribute("end", end);
+
+            log.info("스타트 시작번호 확인 하기 = {} ", start);
+            log.info("마지막 번호 확인하기 = {} ", end);
             return "home";
         }
         model.addAttribute("loginId", session.getAttribute("loginId"));
         Object id = session.getAttribute("id");
-        List<MusicList> itemList = addItemService.findItemList();
 
-        model.addAttribute("itemList", itemList);
+        Page<MusicList> paging = musicListService.findAllItemList(page);
+
+        model.addAttribute("page", page);
+        model.addAttribute("paging", paging);
+        model.addAttribute("start", start);
+        model.addAttribute("end", end);
+
+        log.info("스타트 시작번호 확인 하기 = {} ", start);
+        log.info("마지막 번호 확인하기 = {} ", end);
 
         return "home";
     }

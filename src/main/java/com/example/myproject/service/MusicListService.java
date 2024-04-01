@@ -11,6 +11,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -83,7 +86,8 @@ public class MusicListService {
         return null;
     }
 
-    public List<MusicList> findItemList() {
-        return musicListRepository.findAll();
+    public Page<MusicList> findAllItemList(int page) {
+        Pageable pageable = PageRequest.of(page, 15);
+        return musicListRepository.findAll(pageable);
     }
 }

@@ -4,7 +4,7 @@
 <div th:replace="~{fragments/header :: header ('home')}"/>
 
 <body>
-<div style="height: 1000px">
+<div>
     <div class="container">
         <form class="row g-2" style="margin-top: 20px">
             <div class="col-auto">
@@ -20,46 +20,50 @@
             </div>
         </form>
 
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>#</th>
-                <th >곡제목</th>
-                <th>만든이</th>
-                <th>악기</th>
-                <th>난이도</th>
-                <th>가격</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="item, loop : ${itemList}">
-                <td th:text="${loop.index+1}"></td>
-                <td th:text="${item.title}"></td>
-                <td th:text="${item.memberName}"></td>
-                <td th:text="${item.type}"></td>
-                <td th:text="${item.level}"></td>
-                <td th:text="${item.price}"></td>
-            </tr>
-            </tbody>
-        </table>
+        <div style="height: 700px">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>곡제목</th>
+                    <th>만든이</th>
+                    <th>악기</th>
+                    <th>난이도</th>
+                    <th>가격</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="musicList, loop : ${paging}">
+                    <td th:text="${musicList.id}"></td>
+                    <td th:text="${musicList.title}"></td>
+                    <td th:text="${musicList.memberName}"></td>
+                    <td th:text="${musicList.type}"></td>
+                    <td th:text="${musicList.level}"></td>
+                    <td th:text="${musicList.price}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
 
-        <nav aria-label="Page navigation example">
-            <ul class="pagination justify-content-center">
-                <li class="page-item disabled">
-                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-                </li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item"><a class="page-link" href="#">4</a></li>
-                <li class="page-item"><a class="page-link" href="#">5</a></li>
-                <li class="page-item">
-                    <a class="page-link" href="#">Next</a>
-                </li>
-            </ul>
-        </nav>
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:classappend="${start==0} ? 'disabled'">
+                <a class="page-link" th:href="@{/ (page=${end -7}, start=${start -7}, end=${end -7})}">이전</a>
+            </li>
 
-        <form class="row g-2 justify-content-center" style="margin-bottom: 300px">
+            <li th:each=" page: ${#numbers.sequence(start, end)}"
+                th:classappend="${page == paging.number} ? 'active'"
+                class="page-item">
+
+                <a th:text="${page.intValue()+1}" class="page-link"
+                   th:href="@{/ (page=${page}, start=${start}, end=${end})}"></a>
+            </li>
+
+            <li class="page-item" th:classappend="${end>=paging.getTotalPages()-1} ? 'disabled'">
+                <a class="page-link" th:href="@{/ (page=${start+7}, start=${start+7}, end=${end+7})}">다음</a>
+            </li>
+        </ul>
+
+        <form class="row g-2 justify-content-center" style="margin-bottom: 154px">
             <div class="col-auto">
                 <select class="form-select">
                     <option selected>제목검색</option>
@@ -67,7 +71,7 @@
                 </select>
             </div>
             <div class="col-3">
-                <input type="search" class="form-control" placeholder="악보를 검색하세요" aria-label="Search" >
+                <input type="search" class="form-control" placeholder="악보를 검색하세요" aria-label="Search">
             </div>
 
             <div class="col-auto">

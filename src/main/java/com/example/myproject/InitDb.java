@@ -21,7 +21,7 @@ public class InitDb {
 
     @PostConstruct
     public void init(){
-        for(int i=0; i<100; i++){
+        for(int i=0; i<134; i++){
             initService.dbInit1();
         }
 
@@ -63,8 +63,6 @@ public class InitDb {
             em.persist(musicList);
             em.persist(musicList1);
         }
-
-
 
         private Member createMember(String loginId, String password, String nickname) {
             Member member = new Member();
