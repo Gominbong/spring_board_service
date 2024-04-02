@@ -21,7 +21,7 @@ public class InitDb {
 
     @PostConstruct
     public void init(){
-        for(int i=0; i<134; i++){
+        for(int i=0; i<5; i++){
             initService.dbInit1();
         }
 
@@ -40,9 +40,10 @@ public class InitDb {
 
             MusicList musicList = MusicList.builder()
                     .title("Kiss The Rain - 이루마")
-                    .memberName(member.getNickname())
+                    .memberNickname(member.getNickname())
+                    .loginId("sjy2017z")
                     .member(member)
-                    .localDateTime(LocalDateTime.now())
+                    .localDateTime(LocalDateTime.now().withNano(0))
                     .content("체르니 40정도면 칠수 있어요")
                     .type("피아노")
                     .level("어려움")
@@ -51,9 +52,10 @@ public class InitDb {
 
             MusicList musicList1 = MusicList.builder()
                     .title("River Flows In You - 이루마")
-                    .memberName(member.getNickname())
+                    .memberNickname(member.getNickname())
+                    .loginId("sjy2017z")
                     .member(member)
-                    .localDateTime(LocalDateTime.now())
+                    .localDateTime(LocalDateTime.now().withNano(0))
                     .content("체르니 100정도면 칠수있어요 ")
                     .type("피아노")
                     .level("보통")
@@ -69,7 +71,7 @@ public class InitDb {
             member.setLoginId(loginId);
             member.setPassword(password);
             member.setNickname(nickname);
-            member.setCache(0);
+            member.setCache(20000);
             member.setLocalDate(LocalDate.now());
             return member;
         }

@@ -2,7 +2,11 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/header :: head}"/>
 <div th:replace="~{fragments/header :: header ('home')}"/>
-
+<style>
+   .table_color:hover {
+       background-color: lightgray;
+   }
+</style>
 <body>
 <div>
     <div class="container">
@@ -32,11 +36,12 @@
                     <th>가격</th>
                 </tr>
                 </thead>
-                <tbody>
-                <tr th:each="musicList, loop : ${paging}">
+                <tbody >
+                <tr class="table_color" th:each="musicList, loop : ${paging}"
+                    th:onclick="|location.href='@{/content (musicListId=${musicList.id}) }'|">
                     <td th:text="${musicList.id}"></td>
                     <td th:text="${musicList.title}"></td>
-                    <td th:text="${musicList.memberName}"></td>
+                    <td th:text="${musicList.memberNickname}"></td>
                     <td th:text="${musicList.type}"></td>
                     <td th:text="${musicList.level}"></td>
                     <td th:text="${musicList.price}"></td>

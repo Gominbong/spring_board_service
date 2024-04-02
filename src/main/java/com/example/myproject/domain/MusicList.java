@@ -3,10 +3,13 @@ package com.example.myproject.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
-@Data
+@Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
@@ -21,7 +24,8 @@ public class MusicList {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    private String memberName;
+    private String loginId;
+    private String memberNickname;
     private String title;
     @Column(columnDefinition = "text")
     private String content;
@@ -30,8 +34,8 @@ public class MusicList {
     private Integer price;
     private LocalDateTime localDateTime;
 
-    @OneToOne
+    @OneToMany
     @JoinColumn(name = "fileList_id")
-    private FileList fileLists;
+    private List<FileList> fileLists = new ArrayList<>();
 
 }

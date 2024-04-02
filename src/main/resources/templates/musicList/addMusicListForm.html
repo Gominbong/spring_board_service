@@ -9,8 +9,8 @@
     }
 </style>
 <div style="height: 1000px; margin-top: 20px" >
-    <form class="w-50 container" enctype="multipart/form-data" method="post" action="/addItem"
-          th:object="${addItemFormDto}" >
+    <form class="w-50 container" enctype="multipart/form-data" method="post" action="/addMusicList"
+          th:object="${musicListFormDto}" >
 
         <label style="margin-top: 10px" for="title" class="form-label">제목 입력하세요</label>
         <label class="field-error" style="margin-left: 200px"
@@ -47,8 +47,7 @@
 
 
         <label style="margin-top: 10px" class="form-label">pdf 악보 올리기</label>
-        <input class="form-control" type="file" id="pdfFile" name="pdfFile">
-
+        <input class="form-control" type="file" multiple="multiple" id="pdfFiles" name="pdfFiles">
 
         <label style="margin-top: 10px" class="form-label">내용을 입력하세요</label>
         <label class="field-error" style="margin-left: 200px"

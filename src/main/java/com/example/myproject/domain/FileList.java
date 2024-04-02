@@ -1,10 +1,11 @@
 package com.example.myproject.domain;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Data
+@Getter @Setter
 public class FileList {
 
     @Id
@@ -14,6 +15,11 @@ public class FileList {
 
     private String originalFilename;
     private String storedFilename;
+
+
+    @ManyToOne
+    @JoinColumn(name = "musicList_id")
+    private MusicList musicList;
 
 
 }
