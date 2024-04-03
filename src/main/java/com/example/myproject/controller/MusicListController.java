@@ -1,20 +1,34 @@
 package com.example.myproject.controller;
 
+import com.example.myproject.domain.FileList;
 import com.example.myproject.domain.MusicList;
 import com.example.myproject.dto.MusicListFormDto;
 import com.example.myproject.dto.ContentMusicListFormDto;
+import com.example.myproject.repository.FileListRepository;
+import com.example.myproject.service.FileListService;
 import com.example.myproject.service.MusicListService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.util.UriUtils;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -24,17 +38,46 @@ public class MusicListController {
 
     private final MusicListService musicListService;
 
+    private final FileListService fileListService;
+    @GetMapping("/download/{id}")
+    public ResponseEntity<Resource> downloadAttach(@PathVariable Long id) throws MalformedURLException {
+        FileList file = fileListService.findById(id);
+
+        String originalFilename = file.getOriginalFilename();
+        UrlResource urlResource = new UrlResource("file:" + "C:/Users/asd/Desktop/study/pdf/" + file.getStoredFilename());
+
+        log.info("파일 이름 = {} ", originalFilename);
+        String originalFileName = file.getOriginalFilename();
+        String encodedOriginalFileName = UriUtils.encode(originalFileName, StandardCharsets.UTF_8);
+
+        String contentDisposition = "attachment; filename=\"" + encodedOriginalFileName + "\"";
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
+                .body(urlResource);
+    }
+
+
+
 
 
     @GetMapping("/content")
     public String contentForm(@RequestParam("musicListId") Long id, Model model,
-                              HttpServletRequest request){
+                              HttpServletRequest request) throws MalformedURLException {
         HttpSession session = request.getSession();
         model.addAttribute("loginId", session.getAttribute("loginId"));
 
         MusicList musicList = musicListService.findById(id);
+        List<FileList> fileList = fileListService.findByFiles(id);
+        log.info("파일 확인해보기  =  {}", fileList );
+
+        for (FileList file : fileList) {
+            UrlResource urlResource = new UrlResource("file:" + file.getStoredFilename());
+        }
+
 
         model.addAttribute("musicList", musicList);
+        model.addAttribute("fileList", fileList);
 
         return "/musicList/contentMusicListForm";
     }
@@ -42,6 +85,7 @@ public class MusicListController {
     @PostMapping("/content")
     public String contentForm(@RequestParam("musicListId") Long id, Model model,
                               ContentMusicListFormDto contentMusicListFormDto){
+
         MusicList byId = musicListService.findById(id);
         log.info("확인해보기용 = {} ", byId.getMemberNickname() );
         return "/musicList/contentMusicListForm";

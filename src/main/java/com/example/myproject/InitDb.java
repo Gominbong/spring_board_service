@@ -21,9 +21,9 @@ public class InitDb {
 
     @PostConstruct
     public void init(){
-        for(int i=0; i<5; i++){
+     /*   for(int i=0; i<5; i++){
             initService.dbInit1();
-        }
+        }*/
 
     }
 

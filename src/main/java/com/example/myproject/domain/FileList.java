@@ -12,13 +12,10 @@ public class FileList {
     @GeneratedValue
     @Column(name = "fileList_id")
     private Long id;
-
     private String originalFilename;
     private String storedFilename;
 
-
-    @ManyToOne
-    @JoinColumn(name = "musicList_id")
+    @ManyToOne()
     private MusicList musicList;
 
 

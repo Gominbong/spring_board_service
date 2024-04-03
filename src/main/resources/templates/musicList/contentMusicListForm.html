@@ -10,7 +10,17 @@
     <h2 th:text="*{memberNickname}"/>
     <h3 th:text="*{price}"/>
     <p th:text="*{localDateTime}"></p>
-    <p th:text="*{content}"></p>
+    <p style="white-space:pre-line"  th:text="*{content}"></p>
+
+    <table th:if="${loginId=='3'}">
+        <tr th:each="file : ${fileList}">
+           <td>
+               <a th:text="${file.originalFilename}" th:href="|/download/${file.id}|"></a>
+           </td>
+        </tr>
+    </table>
+
+
     <button th:if="${loginId!=musicList.loginId}" type="button" class="btn btn-primary btn-lg">구매하기</button>
     <button th:if="${loginId==musicList.loginId}" type="button" class="btn btn-primary btn-lg">수정하기</button>
     <button th:if="${loginId!=musicList.loginId}" type="button" class="btn btn-primary btn-lg">장바구니</button>

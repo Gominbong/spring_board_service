@@ -15,7 +15,6 @@ public class Member {
     @Id
     @Column(name = "member_id")
     private Long id;
-
     @NotEmpty
     private String loginId;
     @NotEmpty

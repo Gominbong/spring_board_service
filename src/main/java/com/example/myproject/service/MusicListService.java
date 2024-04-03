@@ -5,7 +5,7 @@ import com.example.myproject.domain.Member;
 import com.example.myproject.domain.MusicList;
 import com.example.myproject.dto.MusicListFormDto;
 import com.example.myproject.repository.MusicListRepository;
-import com.example.myproject.repository.FileRepository;
+import com.example.myproject.repository.FileListRepository;
 import com.example.myproject.repository.MemberRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -21,7 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +33,7 @@ public class MusicListService {
 
     private final MusicListRepository musicListRepository;
     private final MemberRepository memberRepository;
-    private final FileRepository fileRepository;
+    private final FileListRepository fileRepository;
     int i=0;
     public Map<String, String> createAddItem(HttpServletRequest request, MusicListFormDto musicListFormDto) throws IOException {
 
@@ -43,8 +42,6 @@ public class MusicListService {
         Member member = memberRepository.findByLoginId(loginId);
         Map<String, String> errors = new HashMap<>();
         MusicList musicList = new MusicList(); //db 저장할 객체 생성
-
-
         musicList.setMember(member); // 외래키 설정
         musicList.setTitle(musicListFormDto.getTitle());
         musicList.setType(musicListFormDto.getType());
@@ -55,7 +52,6 @@ public class MusicListService {
         musicList.setLocalDateTime(LocalDateTime.now().withNano(0));
         musicList.setMemberNickname(member.getNickname());
 
-
         List<MultipartFile> storePdfFiles = musicListFormDto.getPdfFiles();
 
         for (MultipartFile multipartFile : storePdfFiles){
@@ -65,15 +61,12 @@ public class MusicListService {
                 String savePath = "C:/Users/asd/Desktop/study/pdf/" + storedFileName;
                 multipartFile.transferTo(new File(savePath));
                 FileList fileList = new FileList();
-                fileList.setMusicList(musicList);
+                fileList.setMusicList(musicList); //외래키 설정
                 fileList.setOriginalFilename(originalFilename);
                 fileList.setStoredFilename(storedFileName);
                 fileRepository.save(fileList);
             }
         }
-
-
-        // 외래키 설정
 
         if (!StringUtils.hasText(musicListFormDto.getTitle())){
             errors.put("title", "제목 입력 필수입니다");
@@ -108,4 +101,5 @@ public class MusicListService {
     public MusicList findById(Long id) {
         return musicListRepository.findById(id).orElseThrow();
     }
+
 }

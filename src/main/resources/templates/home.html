@@ -3,8 +3,13 @@
 <head th:replace="~{fragments/header :: head}"/>
 <div th:replace="~{fragments/header :: header ('home')}"/>
 <style>
-   .table_color:hover {
+   .table_row_color:hover {
        background-color: lightgray;
+   }
+   .table_title_fontcolor:hover{
+       background-color: lightgray;
+       color: darkviolet !important;
+       cursor: pointer;
    }
 </style>
 <body>
@@ -37,10 +42,10 @@
                 </tr>
                 </thead>
                 <tbody >
-                <tr class="table_color" th:each="musicList, loop : ${paging}"
-                    th:onclick="|location.href='@{/content (musicListId=${musicList.id}) }'|">
+                <tr class="table_row_color" th:each="musicList, loop : ${paging}">
                     <td th:text="${musicList.id}"></td>
-                    <td th:text="${musicList.title}"></td>
+                    <td th:text="${musicList.title}" class="table_title_fontcolor"
+                        th:onclick="|location.href='@{/content (musicListId=${musicList.id}) }'|"></td>
                     <td th:text="${musicList.memberNickname}"></td>
                     <td th:text="${musicList.type}"></td>
                     <td th:text="${musicList.level}"></td>

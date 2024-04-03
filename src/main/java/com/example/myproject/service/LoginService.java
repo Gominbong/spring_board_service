@@ -3,13 +3,11 @@ package com.example.myproject.service;
 import com.example.myproject.domain.Member;
 import com.example.myproject.dto.LoginFormDto;
 import com.example.myproject.repository.MemberRepository;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import java.util.List;
+
 
 @Slf4j
 @Service

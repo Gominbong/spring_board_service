@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static jakarta.persistence.FetchType.EAGER;
 import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
@@ -19,11 +20,9 @@ public class MusicList {
     @GeneratedValue
     @Column(name = "musicList_id")
     private Long id;
-
     @ManyToOne (fetch = LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
-
     private String loginId;
     private String memberNickname;
     private String title;
@@ -34,7 +33,8 @@ public class MusicList {
     private Integer price;
     private LocalDateTime localDateTime;
 
-    @OneToMany
+
+    @OneToMany(fetch = LAZY)
     @JoinColumn(name = "fileList_id")
     private List<FileList> fileLists = new ArrayList<>();
 
