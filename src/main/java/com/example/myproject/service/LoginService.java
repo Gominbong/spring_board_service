@@ -21,7 +21,7 @@ public class LoginService {
     public Member login(LoginFormDto loginFormDto) {
 
         Member result = memberRepository.findEncodePassword(loginFormDto.getId());
-        log.info("암호화 비밀번호 가져오기 확인  = {}", result);
+        log.info("암호화 비밀번호 가져오기 확인  = '{}'", result);
 
         if (result == null) {
             return null;

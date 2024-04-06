@@ -25,19 +25,6 @@ public class LoginController {
     private final LoginService loginService;
     private final MusicListService musicListService;
 
-
-    @GetMapping("/myInfo")
-    public String myInfo(HttpServletRequest request, Model model) {
-
-
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            model.addAttribute("loginId", session.getAttribute("loginId"));
-        }
-
-        return "/login/myInfoForm";
-    }
-
     @GetMapping("/login")
     public String loginForm(Model model) {
 
@@ -46,11 +33,11 @@ public class LoginController {
     }
 
     @GetMapping("/")
-    public String loginSession(@RequestParam(value = "page", defaultValue = "0") int page,
+    public String loginSession(@RequestParam(value = "page", defaultValue = "0")  int page,
                                HttpServletRequest request, Model model) {
-        model.addAttribute("menu", "list");
+        model.addAttribute("menu", "home");
         HttpSession session = request.getSession(false);
-        log.info("페이지 정보 확인 = {} ", page);
+        log.info("페이지 정보 확인 = '{}' ", page);
 
         if (session == null) {
             Page<MusicList> paging = musicListService.findAllItemList(page);
@@ -58,7 +45,7 @@ public class LoginController {
             model.addAttribute("page", page);
             int temp=page/7;
             int start = temp* 7;
-            log.info("스타트 위치 확인 해보기 = {} ", start);
+            log.info("스타트 페이지 위치 확인 해보기 = '{}' ", start);
 
             model.addAttribute("start", start);
             model.addAttribute("end", start+6);
@@ -71,7 +58,7 @@ public class LoginController {
         model.addAttribute("paging", paging);
         int temp=page/7;
         int start = temp* 7;
-        log.info("스타트 확인 해보기 = {} ", start);
+        log.info("스타트 페이지 확인 해보기 = '{}' ", start);
 
         model.addAttribute("start", start);
         model.addAttribute("end", start+6);
@@ -83,7 +70,7 @@ public class LoginController {
                                BindingResult bindingResult, HttpServletRequest request) {
         Member result = loginService.login(loginFormDto);
 
-        log.info("암호화된비밀번호가져오기= {}", result);
+        log.info("암호화된비밀번호가져오기= '{}'", result);
         if (bindingResult.hasErrors()) {
             return "/login/loginForm";
         }
@@ -96,10 +83,10 @@ public class LoginController {
         HttpSession session = request.getSession();
         session.setAttribute("loginId", loginFormDto.getId());
 
-
-        log.info("세션 로그인 아이디 = {}", loginFormDto.getId());
+        log.info("세션 로그인 아이디 = '{}'", loginFormDto.getId());
         return "redirect:/";
     }
+
 
     @PostMapping("/logout")
     public String logoutSession(HttpServletRequest request) {

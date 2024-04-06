@@ -5,7 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Getter @Setter
+@Getter
+@Setter
 public class FileList {
 
     @Id
@@ -14,8 +15,8 @@ public class FileList {
     private Long id;
     private String originalFilename;
     private String storedFilename;
-
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "musicList_id")
     private MusicList musicList;
 
 

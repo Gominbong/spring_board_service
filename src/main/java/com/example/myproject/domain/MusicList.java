@@ -5,12 +5,11 @@ import lombok.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
-import static jakarta.persistence.FetchType.EAGER;
 import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
@@ -22,6 +21,7 @@ public class MusicList {
     private Long id;
     @ManyToOne (fetch = LAZY)
     @JoinColumn(name = "member_id")
+    @ToString.Exclude
     private Member member;
     private String loginId;
     private String memberNickname;
@@ -33,9 +33,8 @@ public class MusicList {
     private Integer price;
     private LocalDateTime localDateTime;
 
-
-    @OneToMany(fetch = LAZY)
-    @JoinColumn(name = "fileList_id")
+    @OneToMany()
+    @ToString.Exclude
     private List<FileList> fileLists = new ArrayList<>();
 
 }

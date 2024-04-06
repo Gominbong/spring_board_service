@@ -4,10 +4,10 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.time.LocalDate;
 
-@Setter @Getter
+@Getter
+@Setter
 @Entity
 public class Member {
 
@@ -21,7 +21,7 @@ public class Member {
     private String password;
     @NotEmpty
     private String nickname;
-    private int cache;
+    private int cash;
     private LocalDate localDate;
 
 

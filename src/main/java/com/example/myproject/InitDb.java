@@ -18,10 +18,10 @@ import java.time.LocalDateTime;
 public class InitDb {
 
     private final InitService initService;
-
+    static int a=0;
     @PostConstruct
     public void init(){
-     /*   for(int i=0; i<5; i++){
+/*        for(int i=0; i<15; i++){
             initService.dbInit1();
         }*/
 
@@ -35,13 +35,13 @@ public class InitDb {
         private final EntityManager em;
         private final PasswordEncoder passwordEncoder;
         public void dbInit1(){
-            Member member = createMember("sjy2017z", passwordEncoder.encode("123"),
+            Member member = createMember("sjy2017zzz", passwordEncoder.encode("123"),
                     "고민봉");
 
             MusicList musicList = MusicList.builder()
                     .title("Kiss The Rain - 이루마")
                     .memberNickname(member.getNickname())
-                    .loginId("sjy2017z")
+                    .loginId(member.getLoginId())
                     .member(member)
                     .localDateTime(LocalDateTime.now().withNano(0))
                     .content("체르니 40정도면 칠수 있어요")
@@ -53,7 +53,7 @@ public class InitDb {
             MusicList musicList1 = MusicList.builder()
                     .title("River Flows In You - 이루마")
                     .memberNickname(member.getNickname())
-                    .loginId("sjy2017z")
+                    .loginId(member.getLoginId())
                     .member(member)
                     .localDateTime(LocalDateTime.now().withNano(0))
                     .content("체르니 100정도면 칠수있어요 ")
@@ -68,10 +68,12 @@ public class InitDb {
 
         private Member createMember(String loginId, String password, String nickname) {
             Member member = new Member();
-            member.setLoginId(loginId);
+            a=a+1;
+            String b = String.valueOf(a);
+            member.setLoginId(loginId+b);
             member.setPassword(password);
-            member.setNickname(nickname);
-            member.setCache(20000);
+            member.setNickname(nickname+b);
+            member.setCash(20000);
             member.setLocalDate(LocalDate.now());
             return member;
         }

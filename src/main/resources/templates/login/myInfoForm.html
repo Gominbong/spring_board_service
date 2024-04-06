@@ -3,10 +3,46 @@
 <head th:replace="~{fragments/header :: head}"/>
 <div th:replace="~{fragments/header :: header ('myInfo')}"/>
 
-판매리스트 출력하기
+<div class="container" style="height: 1000px; margin-top: 20px">
+
+    <ul style="font-size: large">
+        <li>보유 캐시 <p th:text="${member.cash}"></p></li>
+        <li>아이디 <p th:text="${member.loginId}"></p></li>
+        <li>닉네임 <p th:text="${member.nickname}"></p></li>
+    </ul>
+
+    <button class="btn btn-lg btn-primary" onclick="btnClick()">가상머니충전</button>
+
+    <div id='my-div' style="visibility: hidden">
+        <form style="margin-top: 20px;" method="post" action="/myInfo" onsubmit="return formSubmit()">
+            <lebel>충전금액</lebel>
+            <input type="number" min="0" name="cash"/>
+            <input type="submit" value="충전하기"/>
+        </form>
+    </div>
+
+    <script type="text/javascript">
+        function btnClick() {
+            const myDiv = document.getElementById('my-div');
+
+            if (myDiv.style.visibility === 'hidden') {
+                myDiv.style.visibility = 'visible';
+            } else {
+                myDiv.style.visibility = 'hidden';
+            }
+        }
+
+        function formSubmit() {
+            if (confirm("충전하시겠습니까")) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    </script>
 
 
-<div style="height: 1000px">
+
 </div>
 <div th:replace="~{fragments/footer :: footer}"/>
 

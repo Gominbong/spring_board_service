@@ -41,7 +41,7 @@ public class MusicListService {
         String loginId = (String)session.getAttribute("loginId");
         Member member = memberRepository.findByLoginId(loginId);
         Map<String, String> errors = new HashMap<>();
-        MusicList musicList = new MusicList(); //db 저장할 객체 생성
+        MusicList musicList = new MusicList();
         musicList.setMember(member); // 외래키 설정
         musicList.setTitle(musicListFormDto.getTitle());
         musicList.setType(musicListFormDto.getType());
@@ -91,12 +91,10 @@ public class MusicListService {
         return null;
     }
 
-
     public Page<MusicList> findAllItemList(int page) {
         Pageable pageable = PageRequest.of(page, 15);
         return musicListRepository.findAll(pageable);
     }
-
 
     public MusicList findById(Long id) {
         return musicListRepository.findById(id).orElseThrow();

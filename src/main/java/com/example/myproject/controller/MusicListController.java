@@ -4,7 +4,6 @@ import com.example.myproject.domain.FileList;
 import com.example.myproject.domain.MusicList;
 import com.example.myproject.dto.MusicListFormDto;
 import com.example.myproject.dto.ContentMusicListFormDto;
-import com.example.myproject.repository.FileListRepository;
 import com.example.myproject.service.FileListService;
 import com.example.myproject.service.MusicListService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,12 +21,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.util.UriUtils;
-
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
@@ -44,22 +40,19 @@ public class MusicListController {
         FileList file = fileListService.findById(id);
 
         String originalFilename = file.getOriginalFilename();
-        UrlResource urlResource = new UrlResource("file:" + "C:/Users/asd/Desktop/study/pdf/" + file.getStoredFilename());
+        UrlResource urlResource = new UrlResource("file:" +
+                "C:/Users/asd/Desktop/study/pdf/" + file.getStoredFilename());
 
-        log.info("파일 이름 = {} ", originalFilename);
+        log.info("파일 이름 = '{}' ", originalFilename);
         String originalFileName = file.getOriginalFilename();
         String encodedOriginalFileName = UriUtils.encode(originalFileName, StandardCharsets.UTF_8);
 
         String contentDisposition = "attachment; filename=\"" + encodedOriginalFileName + "\"";
 
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
+                .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition) //다운로드받는파일명
                 .body(urlResource);
     }
-
-
-
-
 
     @GetMapping("/content")
     public String contentForm(@RequestParam("musicListId") Long id, Model model,
@@ -87,16 +80,17 @@ public class MusicListController {
                               ContentMusicListFormDto contentMusicListFormDto){
 
         MusicList byId = musicListService.findById(id);
-        log.info("확인해보기용 = {} ", byId.getMemberNickname() );
+        log.info("확인해보기용 = '{}' ", byId.getMemberNickname() );
         return "/musicList/contentMusicListForm";
     }
 
 
     @GetMapping("/addMusicList")
     public String addItemForm(HttpServletRequest request, Model model){
-
         HttpSession session = request.getSession();
-        model.addAttribute("loginId", session.getAttribute("loginId"));
+        String loginId = (String)session.getAttribute("loginId");
+        model.addAttribute("loginId", loginId);
+        log.info("세션 로그인한 아이디 = '{}' ", loginId);
         model.addAttribute("musicListFormDto", new MusicListFormDto());
 
         return "/musicList/addMusicListForm";
@@ -108,7 +102,8 @@ public class MusicListController {
 
         HttpSession session = request.getSession();
         String loginId = (String)session.getAttribute("loginId");
-        log.info("세션 로그인한 아이디 = {} ", loginId);
+        model.addAttribute("loginId", loginId);
+        log.info("세션 로그인한 아이디 = '{}' ", loginId);
 
         Map<String, String> errors = musicListService.createAddItem(request, musicListFormDto);
         if (errors != null){

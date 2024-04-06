@@ -30,7 +30,7 @@ public class SignupService {
         member.setLoginId(signupFormDto.getId());
         member.setPassword(passwordEncoder.encode(signupFormDto.getPw()));
         member.setNickname(signupFormDto.getNick());
-        member.setCache(10000);
+        member.setCash(10000);
         member.setLocalDate(LocalDate.now());
         member.setId(member.getId());
         if (!StringUtils.hasText(signupFormDto.getId())) {
@@ -46,7 +46,7 @@ public class SignupService {
             errors.put("exist", "아이디중복입니다");
         }
         if (!errors.isEmpty()) {
-            log.info("errors = {}", errors);
+            log.info("errors = '{}'", errors);
             return errors;
         }
 

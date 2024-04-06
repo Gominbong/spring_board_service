@@ -3,14 +3,15 @@
 <head th:replace="~{fragments/header :: head}"/>
 <div th:replace="~{fragments/header :: header ('addItem')}"/>
 <style>
-    .field-error{
+    .field-error {
         border-color: #dc3545;
         color: #dc3545;
     }
 </style>
-<div style="height: 1000px; margin-top: 20px" >
-    <form class="w-50 container" enctype="multipart/form-data" method="post" action="/addMusicList"
-          th:object="${musicListFormDto}" >
+<div style="height: 1000px; margin-top: 20px">
+    <form class="w-50 container" enctype="multipart/form-data"
+          method="post" action="/addMusicList" id="addForm" onsubmit="return formSubmit()"
+          th:object="${musicListFormDto}">
 
         <label style="margin-top: 10px" for="title" class="form-label">제목 입력하세요</label>
         <label class="field-error" style="margin-left: 200px"
@@ -39,11 +40,9 @@
         <label style="margin-top: 10px" class="form-label">가격 입력하세요 </label>
         <label class="field-error" style="margin-left: 200px"
                th:if="${errors?.containsKey('price')}" th:text="${errors['price']}">오류메세지</label>
-        <input type="number" class="form-control" id="price" name="price" placeholder="가격"
+        <input type="number" min="0" class="form-control" id="price" name="price" placeholder="가격"
                th:field="*{price}">
         <label for="price" class="text-start field-error"></label>
-
-
 
 
         <label style="margin-top: 10px" class="form-label">pdf 악보 올리기</label>
@@ -63,6 +62,19 @@
         </div>
 
     </form>
+
+</div>
+
+<script>
+    function formSubmit() {
+        if (confirm("등록하시겠습니까")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+</script>
+
 
 </div>
 

@@ -41,7 +41,7 @@ server:
   servlet:
     session:
       timeout: 600
-
+      tracking-modes: cookie
   error:
     whitelabel:
       enabled: false

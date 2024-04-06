@@ -3,29 +3,96 @@
 <head th:replace="~{fragments/header :: head}"/>
 <div th:replace="~{fragments/header :: header ('home')}"/>
 
-<div class="container" th:object="${musicList}" style="height: 1000px; margin-top: 20px" >
+<div class="container" th:object="${musicList}" style="height: 1000px; margin-top: 20px">
 
+    <ul style="font-size: large">
+        <li>제목 <p th:text="*{title}"></p></li>
+        <li>만든이 <p th:text="*{memberNickname}"></p></li>
+        <li>가격 <p th:text="*{price}"></p></li>
+        <li>등록일 <p th:text="*{localDateTime}"></p></li>
+        <li>내용 <p style="white-space: pre-line" th:text="*{content}"></p></li>
+        <li>첨부파일
+            <table>
+                <tr th:each="file : ${fileList}">
+                    <td>
+                        <a th:text="${file.originalFilename}" th:href="|/download/${file.id}|"></a>
+                    </td>
+                </tr>
+            </table>
+        </li>
+    </ul>
+    <button th:if="${loginId!=musicList.loginId}" onclick="buyBtnClick()"
+            type="button" class="btn btn-primary btn-lg">구매하기</button>
+    <button th:if="${loginId==musicList.loginId}" onclick="updateBtnClick()"
+            type="button" class="btn btn-primary btn-lg">수정하기</button>
+    <button th:if="${loginId!=musicList.loginId}" onclick="cartBtnClick()"
+            type="button" class="btn btn-primary btn-lg">장바구니</button>
+    <button th:if="${loginId==musicList.loginId}" onclick="deleteBtnClick()"
+            type="button" class="btn btn-primary btn-lg">삭제하기</button>
 
-    <h1 th:text="*{title}"/>
-    <h2 th:text="*{memberNickname}"/>
-    <h3 th:text="*{price}"/>
-    <p th:text="*{localDateTime}"></p>
-    <p style="white-space:pre-line"  th:text="*{content}"></p>
+    <div id='buy_div' style="display: none">
+        <form style="margin-top: 20px;" method="post">
+            <h1>구매하시겠습니까</h1>
+            <button class="btn btn-lg btn-primary">Yes</button>
+        </form>
+    </div>
 
-    <table th:if="${loginId=='3'}">
-        <tr th:each="file : ${fileList}">
-           <td>
-               <a th:text="${file.originalFilename}" th:href="|/download/${file.id}|"></a>
-           </td>
-        </tr>
-    </table>
+    <div id='cart_div' style="display: none">
+        <form style="margin-top: 20px;" method="post">
+            <h1>장바구니담으시겟습니까</h1>
+            <button class="btn btn-lg btn-primary">Yes</button>
+        </form>
+    </div>
 
+    <div id='update_div' style="display: none">
+        <form style="margin-top: 20px;" method="post">
+            <h1>수정하시겠습니까</h1>
+            <button class="btn btn-lg btn-primary">Yes</button>
+        </form>
+    </div>
 
-    <button th:if="${loginId!=musicList.loginId}" type="button" class="btn btn-primary btn-lg">구매하기</button>
-    <button th:if="${loginId==musicList.loginId}" type="button" class="btn btn-primary btn-lg">수정하기</button>
-    <button th:if="${loginId!=musicList.loginId}" type="button" class="btn btn-primary btn-lg">장바구니</button>
-    <button th:if="${loginId==musicList.loginId}" type="button" class="btn btn-primary btn-lg">삭제하기</button>
+    <div id='delete_div' style="display: none">
+        <form style="margin-top: 20px;" method="post">
+            <h1>삭제하시겟습니까</h1>
+            <button class="btn btn-lg btn-primary">Yes</button>
+        </form>
+    </div>
 
+    <script type="text/javascript">
+        function buyBtnClick() {
+            const buyDiv = document.getElementById('buy_div');
+            const cartDiv = document.getElementById('cart_div');
+            if (buyDiv.style.display === 'none') {
+                cartDiv.style.display = 'none';
+                buyDiv.style.display = 'inline';
+            }
+        }
+            function cartBtnClick() {
+                const buyDiv = document.getElementById('buy_div');
+                const cartDiv = document.getElementById('cart_div');
+                if (cartDiv.style.display === 'none') {
+                    buyDiv.style.display = 'none';
+                    cartDiv.style.display = 'inline';
+                }
+        }
+
+        function updateBtnClick() {
+            const updateDiv = document.getElementById('update_div');
+            const delete_div = document.getElementById('delete_div');
+            if (updateDiv.style.display === 'none') {
+                delete_div.style.display = 'none';
+                updateDiv.style.display = 'inline';
+            }
+        }
+        function deleteBtnClick() {
+            const updateDiv = document.getElementById('update_div');
+            const delete_div = document.getElementById('delete_div');
+            if (delete_div.style.display === 'none') {
+                updateDiv.style.display = 'none';
+                delete_div.style.display = 'inline';
+            }
+        }
+    </script>
 
 </div>
 
