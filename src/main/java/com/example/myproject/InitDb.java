@@ -18,14 +18,12 @@ import java.time.LocalDateTime;
 public class InitDb {
 
     private final InitService initService;
-    static int a=0;
+    static int a = 0;
     @PostConstruct
-    public void init(){
-/*        for(int i=0; i<15; i++){
-            initService.dbInit1();
-        }*/
-
+    public void init() {
+        //initService.dbInit1();
     }
+
 
     @Component
     @Transactional
@@ -35,7 +33,7 @@ public class InitDb {
         private final EntityManager em;
         private final PasswordEncoder passwordEncoder;
         public void dbInit1(){
-            Member member = createMember("sjy2017zzz", passwordEncoder.encode("123"),
+            Member member = createMember("rhalsqhd123", passwordEncoder.encode("123"),
                     "고민봉");
 
             MusicList musicList = MusicList.builder()

@@ -40,7 +40,7 @@
         <label style="margin-top: 10px" class="form-label">가격 입력하세요 </label>
         <label class="field-error" style="margin-left: 200px"
                th:if="${errors?.containsKey('price')}" th:text="${errors['price']}">오류메세지</label>
-        <input type="number" min="0" class="form-control" id="price" name="price" placeholder="가격"
+        <input type="number" min="0" max="2147483647" class="form-control" id="price" name="price" placeholder="가격"
                th:field="*{price}">
         <label for="price" class="text-start field-error"></label>
 

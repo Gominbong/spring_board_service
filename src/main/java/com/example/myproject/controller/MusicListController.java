@@ -2,11 +2,15 @@ package com.example.myproject.controller;
 
 import com.example.myproject.domain.FileList;
 import com.example.myproject.domain.MusicList;
+import com.example.myproject.domain.SellBuyList;
 import com.example.myproject.dto.MusicListFormDto;
 import com.example.myproject.dto.ContentMusicListFormDto;
 import com.example.myproject.service.FileListService;
 import com.example.myproject.service.MusicListService;
+import com.example.myproject.service.SellBuyListService;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,8 +37,8 @@ import java.util.Map;
 public class MusicListController {
 
     private final MusicListService musicListService;
-
     private final FileListService fileListService;
+    private final SellBuyListService sellBuyListService;
     @GetMapping("/download/{id}")
     public ResponseEntity<Resource> downloadAttach(@PathVariable Long id) throws MalformedURLException {
         FileList file = fileListService.findById(id);
@@ -58,31 +62,47 @@ public class MusicListController {
     public String contentForm(@RequestParam("musicListId") Long id, Model model,
                               HttpServletRequest request) throws MalformedURLException {
         HttpSession session = request.getSession();
-        model.addAttribute("loginId", session.getAttribute("loginId"));
+        String loginId = (String)session.getAttribute("loginId");
+        model.addAttribute("loginId", loginId);
 
         MusicList musicList = musicListService.findById(id);
         List<FileList> fileList = fileListService.findByFiles(id);
-        log.info("파일 확인해보기  =  {}", fileList );
+        SellBuyList sellBuyList = sellBuyListService.myBuyInfo(musicList, loginId);
 
-        for (FileList file : fileList) {
-            UrlResource urlResource = new UrlResource("file:" + file.getStoredFilename());
+        if (musicList.getContent() == null){
+            log.info("삭제된 게시글 입니다.");
+            return "/musicList/deletedMusicListForm";
         }
 
+        log.info("파일 확인해보기  =  {}", fileList );
 
         model.addAttribute("musicList", musicList);
         model.addAttribute("fileList", fileList);
-
+        model.addAttribute("sellBuyList", sellBuyList);
         return "/musicList/contentMusicListForm";
     }
 
-    @PostMapping("/content")
-    public String contentForm(@RequestParam("musicListId") Long id, Model model,
-                              ContentMusicListFormDto contentMusicListFormDto){
+    @GetMapping("/deleteMusicList")
+    public String deleteMusicList(@RequestParam("musicListId") Long id){
+        musicListService.deleteMusicList(id);
+        log.info("논리적 삭제 완료 내용 필드값 null 업데이트해서 삭제 구분");
 
-        MusicList byId = musicListService.findById(id);
-        log.info("확인해보기용 = '{}' ", byId.getMemberNickname() );
-        return "/musicList/contentMusicListForm";
+        return "redirect:/";
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     @GetMapping("/addMusicList")
@@ -114,19 +134,4 @@ public class MusicListController {
         return "redirect:/";
     }
 
-    @GetMapping("/buyList")
-    public String buyList(HttpServletRequest request, Model model) {
-        HttpSession session = request.getSession();
-        model.addAttribute("loginId", session.getAttribute("loginId"));
-
-        return "/musicList/buyMusicListForm";
-    }
-
-    @GetMapping("/sellList")
-    public String cart(HttpServletRequest request, Model model){
-        HttpSession session = request.getSession();
-        model.addAttribute("loginId", session.getAttribute("loginId"));
-
-        return "/musicList/sellMusicListForm";
-    }
 }

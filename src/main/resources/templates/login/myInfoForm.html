@@ -5,7 +5,7 @@
 
 <div class="container" style="height: 1000px; margin-top: 20px">
 
-    <ul style="font-size: large">
+    <ul style="font-size: large" th:if="${member}">
         <li>보유 캐시 <p th:text="${member.cash}"></p></li>
         <li>아이디 <p th:text="${member.loginId}"></p></li>
         <li>닉네임 <p th:text="${member.nickname}"></p></li>

@@ -22,8 +22,8 @@ public class SignupService {
 
     public Map<String, String> createMember(SignupFormDto signupFormDto) {
 
-        Member result = memberRepository.findByLoginId(signupFormDto.getId());
-
+        Member loginId = memberRepository.findByLoginId(signupFormDto.getId());
+        Member nickname = memberRepository.findByNickname(signupFormDto.getNick());
 
         Member member = new Member();
         Map<String, String> errors = new HashMap<>();
@@ -42,8 +42,11 @@ public class SignupService {
         if (!StringUtils.hasText(signupFormDto.getNick())) {
             errors.put("nick", "닉네임필수입니다");
         }
-        if (result != null){
+        if (loginId != null){
             errors.put("exist", "아이디중복입니다");
+        }
+        if (nickname != null){
+            errors.put("nick", "닉네임 중복입니다");
         }
         if (!errors.isEmpty()) {
             log.info("errors = '{}'", errors);

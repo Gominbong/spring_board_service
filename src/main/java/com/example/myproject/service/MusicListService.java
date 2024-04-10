@@ -39,34 +39,7 @@ public class MusicListService {
 
         HttpSession session = request.getSession();
         String loginId = (String)session.getAttribute("loginId");
-        Member member = memberRepository.findByLoginId(loginId);
         Map<String, String> errors = new HashMap<>();
-        MusicList musicList = new MusicList();
-        musicList.setMember(member); // 외래키 설정
-        musicList.setTitle(musicListFormDto.getTitle());
-        musicList.setType(musicListFormDto.getType());
-        musicList.setLevel(musicListFormDto.getLevel());
-        musicList.setPrice(musicListFormDto.getPrice());
-        musicList.setContent(musicListFormDto.getContent());
-        musicList.setLoginId(loginId);
-        musicList.setLocalDateTime(LocalDateTime.now().withNano(0));
-        musicList.setMemberNickname(member.getNickname());
-
-        List<MultipartFile> storePdfFiles = musicListFormDto.getPdfFiles();
-
-        for (MultipartFile multipartFile : storePdfFiles){
-            if (!multipartFile.isEmpty()){
-                String originalFilename = multipartFile.getOriginalFilename();
-                String storedFileName = System.currentTimeMillis() + "_" + originalFilename;
-                String savePath = "C:/Users/asd/Desktop/study/pdf/" + storedFileName;
-                multipartFile.transferTo(new File(savePath));
-                FileList fileList = new FileList();
-                fileList.setMusicList(musicList); //외래키 설정
-                fileList.setOriginalFilename(originalFilename);
-                fileList.setStoredFilename(storedFileName);
-                fileRepository.save(fileList);
-            }
-        }
 
         if (!StringUtils.hasText(musicListFormDto.getTitle())){
             errors.put("title", "제목 입력 필수입니다");
@@ -87,17 +60,55 @@ public class MusicListService {
             return errors;
         }
 
+        Member member = memberRepository.findByLoginId(loginId);
+        MusicList musicList = new MusicList();
+        musicList.setMember(member); // 외래키 설정
+        musicList.setTitle(musicListFormDto.getTitle());
+        musicList.setType(musicListFormDto.getType());
+        musicList.setLevel(musicListFormDto.getLevel());
+        musicList.setPrice(musicListFormDto.getPrice());
+        musicList.setContent(musicListFormDto.getContent());
+        musicList.setLoginId(loginId);
+        musicList.setLocalDateTime(LocalDateTime.now().withNano(0));
+        musicList.setMemberNickname(member.getNickname());
         musicListRepository.save(musicList);
+
+        List<MultipartFile> storePdfFiles = musicListFormDto.getPdfFiles();
+
+        for (MultipartFile multipartFile : storePdfFiles){
+            if (!multipartFile.isEmpty()){
+                String originalFilename = multipartFile.getOriginalFilename();
+                String storedFileName = System.currentTimeMillis() + "_" + originalFilename;
+                String savePath = "C:/Users/asd/Desktop/study/pdf/" + storedFileName;
+                multipartFile.transferTo(new File(savePath));
+                FileList fileList = new FileList();
+                fileList.setMusicList(musicList); //외래키 설정
+                fileList.setOriginalFilename(originalFilename);
+                fileList.setStoredFilename(storedFileName);
+                fileRepository.save(fileList);
+            }
+        }
+
         return null;
     }
 
-    public Page<MusicList> findAllItemList(int page) {
+    public Page<MusicList> findMusicList(int page) {
         Pageable pageable = PageRequest.of(page, 15);
-        return musicListRepository.findAll(pageable);
+        return musicListRepository.findContentNotNull(pageable);
     }
 
     public MusicList findById(Long id) {
         return musicListRepository.findById(id).orElseThrow();
     }
 
+    public void deleteMusicList(Long id) {
+        MusicList musicList = musicListRepository.findById(id).orElseThrow();
+        musicList.setContent(null);
+
+    }
+
+    public MusicList musicListCheckInterceptor() {
+
+        return musicListRepository.findContentIsNull();
+    }
 }

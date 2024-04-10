@@ -3,8 +3,6 @@ package com.example.myproject.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
@@ -21,7 +19,6 @@ public class MusicList {
     private Long id;
     @ManyToOne (fetch = LAZY)
     @JoinColumn(name = "member_id")
-    @ToString.Exclude
     private Member member;
     private String loginId;
     private String memberNickname;
@@ -33,8 +30,5 @@ public class MusicList {
     private Integer price;
     private LocalDateTime localDateTime;
 
-    @OneToMany()
-    @ToString.Exclude
-    private List<FileList> fileLists = new ArrayList<>();
 
 }
