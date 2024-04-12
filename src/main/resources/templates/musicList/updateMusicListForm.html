@@ -10,13 +10,13 @@
 </style>
 <div style="height: 1000px; margin-top: 20px">
     <form class="w-50 container" enctype="multipart/form-data"
-          method="post" action="/addMusicList" id="addForm" onsubmit="return addSubmit()"
+          method="post" action="/updateMusicListComplete" id="addForm" onsubmit="return updateSubmit()"
           th:object="${musicListFormDto}">
 
         <label style="margin-top: 10px" for="title" class="form-label">제목 입력하세요</label>
         <label class="field-error" style="margin-left: 200px"
                th:if="${errors?.containsKey('title')}" th:text="${errors['title']}">오류메세지</label>
-        <input type="text" class="form-control" id="title" name="title" th:field="*{title}" placeholder="제목">
+        <input type="text" class="form-control" id="title" name="title" th:field="*{title}"placeholder="제목">
         <label style="margin-top: 10px" class="form-label">악기타입 입력하세요</label>
         <label class="field-error" style="margin-left: 200px"
                th:if="${errors?.containsKey('type')}" th:text="${errors['type']}">오류메세지</label>
@@ -46,7 +46,24 @@
 
 
         <label style="margin-top: 10px" class="form-label">pdf 악보 올리기</label>
-        <input class="form-control" type="file" multiple="multiple" id="pdfFiles" name="pdfFiles">
+        <div>
+            <table class="table table-bordered">
+                <tr>
+                    <td>파일명</td>
+                    <td>삭제</td>
+                </tr>
+                <tbody >
+                <tr th:each="fileList : ${fileList}">
+                    <td th:text="${fileList.originalFilename}"></td>
+                    <td><button class="btn-primary">삭제</button></td>
+                </tr>
+                </tbody>
+            </table>
+
+
+            <input class="form-control" type="file" multiple="multiple" id="pdfFiles" name="pdfFiles">
+
+        </div>
 
         <label style="margin-top: 10px" class="form-label">내용을 입력하세요</label>
         <textarea class="form-control" id="content" name="content" rows="15"
@@ -55,7 +72,8 @@
 
 
         <div class="text-center" style="margin-top: 30px">
-            <button type="submit" class="btn btn-primary mb-3">악보등록</button>
+            <button type="submit" class="btn btn-primary mb-3"
+                    th:name="musicListId" th:value="${musicList.id}">수정하기</button>
             <a href="/" class="btn btn-primary mb-3">취소</a>
         </div>
 
@@ -64,7 +82,7 @@
 </div>
 
 <script>
-    function addSubmit() {
+    function updateSubmit() {
         if (confirm("등록하시겠습니까")) {
             return true;
         } else {

@@ -8,7 +8,6 @@ import com.example.myproject.repository.MusicListRepository;
 import com.example.myproject.repository.FileListRepository;
 import com.example.myproject.repository.MemberRepository;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -26,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor
-@Transactional
 @Service
 @Slf4j
 public class MusicListService {
@@ -34,11 +32,10 @@ public class MusicListService {
     private final MusicListRepository musicListRepository;
     private final MemberRepository memberRepository;
     private final FileListRepository fileRepository;
-    int i=0;
-    public Map<String, String> createAddItem(HttpServletRequest request, MusicListFormDto musicListFormDto) throws IOException {
+    
+    public Map<String, String> createAddItem(HttpServletRequest request, MusicListFormDto musicListFormDto,
+                                             String loginId) throws IOException {
 
-        HttpSession session = request.getSession();
-        String loginId = (String)session.getAttribute("loginId");
         Map<String, String> errors = new HashMap<>();
 
         if (!StringUtils.hasText(musicListFormDto.getTitle())){
@@ -52,9 +49,6 @@ public class MusicListService {
         }
         if (musicListFormDto.getPrice()==null){
             errors.put("price", "가격 입력 필수입니다 ");
-        }
-        if (!StringUtils.hasText(musicListFormDto.getContent())){
-            errors.put("content", "내용 입력 필수입니다");
         }
         if (!errors.isEmpty()){
             return errors;
@@ -94,7 +88,7 @@ public class MusicListService {
 
     public Page<MusicList> findMusicList(int page) {
         Pageable pageable = PageRequest.of(page, 15);
-        return musicListRepository.findContentNotNull(pageable);
+        return musicListRepository.findBySoftDeleteIsNull(pageable);
     }
 
     public MusicList findById(Long id) {
@@ -103,12 +97,29 @@ public class MusicListService {
 
     public void deleteMusicList(Long id) {
         MusicList musicList = musicListRepository.findById(id).orElseThrow();
-        musicList.setContent(null);
+        musicList.setSoftDelete("Yes");
 
     }
 
-    public MusicList musicListCheckInterceptor() {
+    public MusicListFormDto setUpdateMusicListForm (Long id) {
+        MusicList musicList = musicListRepository.findById(id).orElseThrow();
+        MusicListFormDto musicListFormDto = new MusicListFormDto();
+        musicListFormDto.setTitle(musicList.getTitle());
+        musicListFormDto.setContent(musicList.getContent());
+        musicListFormDto.setType(musicList.getType());
+        musicListFormDto.setLevel(musicList.getLevel());
+        musicListFormDto.setPrice(musicList.getPrice());
+        return musicListFormDto;
 
-        return musicListRepository.findContentIsNull();
+    }
+
+    @Transactional
+    public void updateMusicList(Long id, MusicListFormDto musicListFormDto) {
+        MusicList musicList = musicListRepository.findById(id).orElseThrow();
+        musicList.setTitle(musicListFormDto.getTitle());
+        musicList.setContent(musicListFormDto.getContent());
+        musicList.setType(musicListFormDto.getType());
+        musicList.setLevel(musicListFormDto.getLevel());
+        musicList.setPrice(musicListFormDto.getPrice());
     }
 }

@@ -18,6 +18,6 @@ public class FileList {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "musicList_id")
     private MusicList musicList;
-
+    private String softDelete;
 
 }

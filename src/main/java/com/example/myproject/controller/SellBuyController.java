@@ -1,5 +1,6 @@
 package com.example.myproject.controller;
 
+import com.example.myproject.domain.MusicList;
 import com.example.myproject.service.SellBuyListService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,7 +35,7 @@ public class SellBuyController {
 
         sellBuyListService.buyMusicList(request, id);
         log.info("구매성공 = '{}'", id);
-        return "redirect:/";
+        return "redirect:/content?musicListId="+id;
     }
     @GetMapping("/sellList")
     public String cart(HttpServletRequest request, Model model){

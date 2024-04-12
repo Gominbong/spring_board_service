@@ -12,7 +12,7 @@
         <li>등록일 <p th:text="*{localDateTime}"></p></li>
         <li>내용 <p style="white-space: pre-line" th:text="*{content}"></p></li>
         <li>첨부파일
-            <table th:if="${sellBuyList} or ${musicList.loginId.equals(loginId)}">
+            <table th:if="${sellBuyList} or ${#strings.equals(loginId,musicList.loginId)}">
                 <tr th:each="file : ${fileList}">
                     <td>
                         <a th:text="${file.originalFilename}" th:href="|/download/${file.id}|"></a>
@@ -21,21 +21,24 @@
             </table>
         </li>
     </ul>
-    <div th:if="${loginId!=musicList.loginId}">
+
+    <div th:if="${sellBuyList==null} and ${!#strings.equals(loginId,musicList.loginId)}">
         <button onclick="buyBtnClick()"
                 type="button" class="btn btn-primary btn-lg">구매하기</button>
         <button  onclick="cartBtnClick()"
-                type="button" class="btn btn-primary btn-lg">장바구니</button>
+                 type="button" class="btn btn-primary btn-lg">장바구니</button>
     </div>
 
-    <div th:if="${loginId==musicList.loginId}" >
+    <div th:if="${sellBuyList!=null}">
+        <button type="button" class="btn btn-primary btn-lg">구매한상품입니다</button>
+    </div>
+
+    <div th:if="${#strings.equals(loginId,musicList.loginId)}">
         <button onclick="updateBtnClick()"
                 type="button" class="btn btn-primary btn-lg">수정하기</button>
         <button onclick="deleteBtnClick()"
                 type="button" class="btn btn-primary btn-lg">삭제하기</button>
     </div>
-
-
 
     <div id='buy_div' style="display: none">
         <form style="margin-top: 20px;">
@@ -53,21 +56,30 @@
     </div>
 
     <div id='update_div' style="display: none">
-        <form style="margin-top: 20px">
+        <form style="margin-top: 20px" method="post" th:action="@{/updateMusicList}">
             <h1>수정하시겠습니까</h1>
-            <button type="button" class="btn btn-lg btn-primary">Yes</button>
+            <button type="submit" th:name="musicListId" th:value="${musicList.id}" class="btn btn-lg btn-primary">Yes</button>
         </form>
     </div>
 
     <div id='delete_div' style="display: none">
-        <form style="margin-top: 20px">
+        <form style="margin-top: 20px" id="delete_form" method="post"
+              th:action="@{/deleteMusicList}" onsubmit="return deleteSubmit()">
             <h1>삭제하시겟습니까</h1>
-            <button type="button"  class="btn btn-lg btn-primary"
-                    th:onclick="|location.href='@{/deleteMusicList (musicListId=${musicList.id}) }'|">Yes</button>
+            <button type="submit" th:name="musicListId" th:value="${musicList.id}" class="btn btn-lg btn-primary">Yes</button>
         </form>
     </div>
 
     <script type="text/javascript">
+
+        function deleteSubmit() {
+            if (confirm("삭제하시겠습니까")) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
         function buyBtnClick() {
             const buyDiv = document.getElementById('buy_div');
             const cartDiv = document.getElementById('cart_div');

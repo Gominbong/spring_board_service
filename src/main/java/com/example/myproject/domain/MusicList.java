@@ -29,6 +29,7 @@ public class MusicList {
     private String level;
     private Integer price;
     private LocalDateTime localDateTime;
+    private String softDelete;
 
 
 }

@@ -33,6 +33,6 @@ public class SellBuyListService {
     }
 
     public SellBuyList myBuyInfo(MusicList musicList, String loginId) {
-        return sellBuyListRepository.findMyBuyList(musicList, loginId);
+        return sellBuyListRepository.findByMusicListAndBuyMemberLoginId(musicList, loginId);
     }
 }
