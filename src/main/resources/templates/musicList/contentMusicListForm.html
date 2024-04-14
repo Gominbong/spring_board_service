@@ -56,9 +56,10 @@
     </div>
 
     <div id='update_div' style="display: none">
-        <form style="margin-top: 20px" method="post" th:action="@{/updateMusicList}">
+        <form style="margin-top: 20px" method="post" th:action="@{/editMusicList}">
             <h1>수정하시겠습니까</h1>
-            <button type="submit" th:name="musicListId" th:value="${musicList.id}" class="btn btn-lg btn-primary">Yes</button>
+            <button type="submit" th:name="musicListId" th:value="${musicList.id}"
+                    class="btn btn-lg btn-primary">Yes</button>
         </form>
     </div>
 
@@ -69,7 +70,6 @@
             <button type="submit" th:name="musicListId" th:value="${musicList.id}" class="btn btn-lg btn-primary">Yes</button>
         </form>
     </div>
-
     <script type="text/javascript">
 
         function deleteSubmit() {
@@ -115,9 +115,7 @@
         }
 
     </script>
-
 </div>
 
-<div th:replace="~{fragments/footer :: footer}"/>
 
 </html>

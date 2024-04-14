@@ -4,6 +4,7 @@ import com.example.myproject.domain.FileList;
 import com.example.myproject.domain.Member;
 import com.example.myproject.domain.MusicList;
 import com.example.myproject.dto.MusicListFormDto;
+import com.example.myproject.dto.UpdateMusicListFormDto;
 import com.example.myproject.repository.MusicListRepository;
 import com.example.myproject.repository.FileListRepository;
 import com.example.myproject.repository.MemberRepository;
@@ -23,6 +24,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -95,10 +97,11 @@ public class MusicListService {
         return musicListRepository.findById(id).orElseThrow();
     }
 
+
+    @Transactional
     public void deleteMusicList(Long id) {
         MusicList musicList = musicListRepository.findById(id).orElseThrow();
         musicList.setSoftDelete("Yes");
-
     }
 
     public MusicListFormDto setUpdateMusicListForm (Long id) {
@@ -113,13 +116,44 @@ public class MusicListService {
 
     }
 
-    @Transactional
-    public void updateMusicList(Long id, MusicListFormDto musicListFormDto) {
+
+    public Map<String, String> updateMusicList(Long id, MusicListFormDto updateMusicListFormDto) {
+
+
         MusicList musicList = musicListRepository.findById(id).orElseThrow();
-        musicList.setTitle(musicListFormDto.getTitle());
-        musicList.setContent(musicListFormDto.getContent());
-        musicList.setType(musicListFormDto.getType());
-        musicList.setLevel(musicListFormDto.getLevel());
-        musicList.setPrice(musicListFormDto.getPrice());
+        updateMusicListFormDto.setPrice(musicList.getPrice());
+
+        Map<String, String> errors = new HashMap<>();
+
+        if (!StringUtils.hasText(updateMusicListFormDto.getType())){
+            errors.put("type", "악기타입 입력 필수입니다");
+        }
+        if (!StringUtils.hasText(updateMusicListFormDto.getTitle())){
+            errors.put("title", "제목 입력 필수입니다");
+        }
+        if (!StringUtils.hasText(updateMusicListFormDto.getLevel())){
+            errors.put("level", "난이도 입력 필수입니다 ");
+        }
+        if (updateMusicListFormDto.getPrice()==null){
+            errors.put("price", "가격 입력 필수입니다 ");
+        }
+        if (!errors.isEmpty()){
+            return errors;
+        }
+
+        return null;
+    }
+
+    public UpdateMusicListFormDto setUpdateMusicListFormDto(Long id) {
+        UpdateMusicListFormDto updateMusicListFormDto = new UpdateMusicListFormDto();
+        MusicList musicList = musicListRepository.findById(id).orElseThrow();
+        updateMusicListFormDto.setTitle(musicList.getTitle());
+        updateMusicListFormDto.setType(musicList.getType());
+        updateMusicListFormDto.setLevel(musicList.getLevel());
+        updateMusicListFormDto.setPrice(musicList.getPrice());
+        updateMusicListFormDto.setContent(musicList.getContent());
+
+        return updateMusicListFormDto;
+
     }
 }

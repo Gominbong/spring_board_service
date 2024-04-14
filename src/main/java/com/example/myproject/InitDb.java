@@ -21,7 +21,9 @@ public class InitDb {
     static int a = 0;
     @PostConstruct
     public void init() {
-        //initService.dbInit1();
+/*        for(int i=0; i<20; i++){
+            initService.dbInit1();
+        }*/
     }
 
 
@@ -37,7 +39,7 @@ public class InitDb {
                     "고민봉");
 
             MusicList musicList = MusicList.builder()
-                    .title("Kiss The Rain - 이루마")
+                    .title("테스트용 더미 글 입니다.")
                     .memberNickname(member.getNickname())
                     .loginId(member.getLoginId())
                     .member(member)
@@ -49,7 +51,7 @@ public class InitDb {
                     .build();
 
             MusicList musicList1 = MusicList.builder()
-                    .title("River Flows In You - 이루마")
+                    .title("테스트용 더미 글 입니다.")
                     .memberNickname(member.getNickname())
                     .loginId(member.getLoginId())
                     .member(member)

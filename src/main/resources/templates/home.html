@@ -3,14 +3,15 @@
 <head th:replace="~{fragments/header :: head}"/>
 <div th:replace="~{fragments/header :: header ('home')}"/>
 <style>
-   .table_row_color:hover {
-       background-color: lightgray;
-   }
-   .table_title_fontcolor:hover{
-       background-color: lightgray;
-       color: darkviolet !important;
-       cursor: pointer;
-   }
+    .table_row_color:hover {
+        background-color: lightgray;
+    }
+
+    .table_title_fontcolor:hover {
+        background-color: lightgray;
+        color: darkviolet !important;
+        cursor: pointer;
+    }
 </style>
 <body>
 <div>
@@ -41,7 +42,7 @@
                     <th>가격</th>
                 </tr>
                 </thead>
-                <tbody >
+                <tbody>
                 <tr class="table_row_color" th:each="musicList, loop : ${paging}">
                     <td th:text="${musicList.id}"></td>
                     <td th:text="${musicList.title}" class="table_title_fontcolor"
@@ -55,24 +56,30 @@
             </table>
         </div>
 
-            <ul class="pagination justify-content-center">
-                <li class="page-item" th:classappend="${start == 0} ? 'disabled'">
-                    <a class="page-link" th:href="@{|?page=${start -1}|}"> << </a>
-                </li>
-                <li class="page-item" th:classappend="${!paging.hasPrevious} ? 'disabled'">
-                    <a class="page-link" th:href="@{|?page=${paging.number -1}|}"> < </a>
-                </li>
-                <li class="page-item" th:classappend="${page == paging.number} ? 'active'"
-                    th:each="page : ${#numbers.sequence(start, end)}">
-                    <a class="page-link" th:text="${page+1}" th:href="@{|?page=${page}|}"></a>
-                </li>
-                <li class="page-item" th:classappend="${!paging.hasNext} ? 'disabled'">
-                    <a class="page-link" th:href="@{|?page=${paging.number+1}|}"> > </a>
-                </li>
-                <li class="page-item" th:classappend="${paging.getTotalPages() < end} ? 'disabled'">
-                    <a class="page-link" th:href="@{|?page=${start+7}|}"> >> </a>
-                </li>
-            </ul>
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:if="${start==0}">
+                <a class="page-link" th:href="@{|?page=${start}|}"> << </a>
+            </li>
+            <li class="page-item" th:if="${start!=0}">
+                <a class="page-link" th:href="@{|?page=${start -1}|}"> << </a>
+            </li>
+            <li class="page-item" th:classappend="${!paging.hasPrevious} ? 'disabled'">
+                <a class="page-link" th:href="@{|?page=${paging.number -1}|}"> < </a>
+            </li>
+            <li class="page-item" th:classappend="${page == paging.number} ? 'active'"
+                th:each="page : ${#numbers.sequence(start, end)}">
+                <a class="page-link" th:text="${page+1}" th:href="@{|?page=${page}|}"></a>
+            </li>
+            <li class="page-item" th:classappend="${!paging.hasNext} ? 'disabled'">
+                <a class="page-link" th:href="@{|?page=${paging.number+1}|}"> > </a>
+            </li>
+            <li class="page-item" th:if="${paging.getTotalPages() - start < 8}">
+                <a class="page-link" th:href="@{|?page=${paging.getTotalPages() -1}|}"> >> </a>
+            </li>
+            <li class="page-item" th:if="${paging.getTotalPages() - start > 8}">
+                <a class="page-link" th:href="@{|?page=${start+7}|}"> >> </a>
+            </li>
+        </ul>
 
         <form class="row g-2 justify-content-center" style="margin-bottom: 154px">
             <div class="col-auto">
@@ -89,9 +96,9 @@
                 <button type="submit" class="btn btn-primary mb-3">확인</button>
             </div>
         </form>
-
     </div>
+
 </div>
+
 </body>
-<div th:replace="~{fragments/footer :: footer}"/>
 </html>

@@ -31,52 +31,50 @@ public class LoginController {
         HttpSession session = request.getSession(false);
         log.info("페이지 정보 확인 = '{}' ", page);
 
-        if (session == null) {
-            Page<MusicList> paging = musicListService.findMusicList(page);
-            model.addAttribute("paging", paging);
-            model.addAttribute("page", page);
-            int temp=page/7;
-            int start = temp* 7;
-            log.info("스타트 페이지 위치 확인 해보기 = '{}' ", start);
-
-            model.addAttribute("start", start);
-            model.addAttribute("end", start+6);
-            return "home";
+        if (session != null){
+            String loginId = (String)session.getAttribute("loginId");
+            model.addAttribute("loginId", loginId);
         }
 
-        String loginId = (String)session.getAttribute("loginId");
-        model.addAttribute("loginId", loginId);
         Page<MusicList> paging = musicListService.findMusicList(page);
         model.addAttribute("page", page);
         model.addAttribute("paging", paging);
+        log.info("전체 페이지수 확인 = '{}'", paging.getTotalPages());
         int temp=page/7;
         int start = temp* 7;
+
+        if (paging.getTotalPages() - start > 7 ){
+            model.addAttribute("start", start);
+            model.addAttribute("end", start+6);
+        }else{
+            model.addAttribute("start", start);
+            model.addAttribute("end", paging.getTotalPages()-1);
+        }
+
         log.info("스타트 페이지 확인 해보기 = '{}' ", start);
 
-        model.addAttribute("start", start);
-        model.addAttribute("end", start+6);
         return "home";
     }
 
-    @GetMapping("/loginBuy")
+    @GetMapping("/loginInterceptor")
     public String loginBuyForm(Model model) {
         model.addAttribute("loginFormDto", new LoginFormDto());
-        return "/login/loginBuyForm";
+        return "/login/loginInterceptorForm";
     }
 
-    @PostMapping("/loginBuy")
+    @PostMapping("/loginInterceptor")
     public String loginBuyForm(@CookieValue("url") String url, @Valid LoginFormDto loginFormDto,
                                BindingResult bindingResult, HttpServletRequest request) {
         Member result = loginService.login(loginFormDto);
         log.info("로그인후 돌아갈 경로 확인 = '{}'", url);
         log.info("암호화된비밀번호가져오기= '{}'", result);
         if (bindingResult.hasErrors()) {
-            return "/login/loginBuyForm";
+            return "/login/loginInterceptorForm";
         }
         if (result == null) {
             log.info("로그인 실패");
             bindingResult.reject("loginFail", "아이디 또는 비밀번호 맞지 않습니다");
-            return "/login/loginBuyForm";
+            return "/login/loginInterceptorForm";
         }
 
         HttpSession session = request.getSession();

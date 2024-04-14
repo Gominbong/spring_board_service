@@ -1,5 +1,6 @@
 package com.example.myproject.interceptor;
 
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -22,8 +23,9 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
         HttpSession session = request.getSession();
         if (session.getAttribute("loginId") == null) {
             log.info("세션에 loginId 값이 없음 로그인하세요");
-            response.sendRedirect("/login");
-
+            Cookie cookie = new Cookie("url", requestURI);
+            response.addCookie(cookie);
+            response.sendRedirect("/loginInterceptor");
         }
 
         return true;

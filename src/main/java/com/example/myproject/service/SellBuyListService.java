@@ -17,10 +17,8 @@ public class SellBuyListService {
     private final SellBuyListRepository sellBuyListRepository;
     private final MusicListRepository musicListRepository;
 
-    public void buyMusicList(HttpServletRequest request, Long id) {
+    public void buyMusicList(Long id, String loginId) {
 
-        HttpSession session = request.getSession();
-        String loginId = (String)session.getAttribute("loginId");
         MusicList musicList = musicListRepository.findById(id).orElseThrow();
 
         SellBuyList sellBuyList = new SellBuyList();

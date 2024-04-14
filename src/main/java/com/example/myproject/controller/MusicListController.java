@@ -4,6 +4,7 @@ import com.example.myproject.domain.FileList;
 import com.example.myproject.domain.MusicList;
 import com.example.myproject.domain.SellBuyList;
 import com.example.myproject.dto.MusicListFormDto;
+import com.example.myproject.dto.UpdateMusicListFormDto;
 import com.example.myproject.service.FileListService;
 import com.example.myproject.service.MusicListService;
 import com.example.myproject.service.SellBuyListService;
@@ -17,11 +18,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriUtils;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,8 +45,7 @@ public class MusicListController {
                 "C:/Users/asd/Desktop/study/pdf/" + file.getStoredFilename());
 
         log.info("파일 이름 = '{}' ", originalFilename);
-        String originalFileName = file.getOriginalFilename();
-        String encodedOriginalFileName = UriUtils.encode(originalFileName, StandardCharsets.UTF_8);
+        String encodedOriginalFileName = UriUtils.encode(originalFilename, StandardCharsets.UTF_8);
 
         String contentDisposition = "attachment; filename=\"" + encodedOriginalFileName + "\"";
 
@@ -69,7 +71,6 @@ public class MusicListController {
         }
 
         log.info("파일 확인해보기  =  {}", fileList );
-
         model.addAttribute("musicList", musicList);
         model.addAttribute("fileList", fileList);
         model.addAttribute("sellBuyList", sellBuyList);
@@ -84,35 +85,48 @@ public class MusicListController {
         return "redirect:/";
     }
 
-    @PostMapping("/updateMusicListComplete")
-    String updateMusicListComplete(@RequestParam("musicListId") Long id, MusicListFormDto musicListFormDto){
-
-
-        musicListService.updateMusicList(id, musicListFormDto);
-        log.info("뮤직리스트 dto 값 = {}", musicListFormDto.getTitle());
-        log.info("뮤직리스트 업데이트 완료");
-
-        return "redirect:/";
-    }
-    @PostMapping("/updateMusicList")
-    public String updateMusicList(@RequestParam("musicListId") Long id, HttpServletRequest request,
-                                  Model model){
+    @PostMapping("EditMusicList")
+    public String updateMusicListComplete(@RequestParam("musicListId") Long id,
+                                          UpdateMusicListFormDto updateMusicListFormDto,
+                                          HttpServletRequest request, Model model){
         HttpSession session = request.getSession();
         String loginId = (String)session.getAttribute("loginId");
         model.addAttribute("loginId", loginId);
+        model.addAttribute("musicListId", id);
+        Map<String, String> errors = new HashMap<>();
 
-        MusicList musicList = musicListService.findById(id);
+        log.info("11업데이트 뮤직리스트 아이디 확인 = {}", id);
+        log.info("11업데이트 투스트링 확인 = {}", updateMusicListFormDto.toString());
+        if (!StringUtils.hasText(updateMusicListFormDto.getTitle())){
+            log.info("제목이 비어있습니다.");
+            return "/musicList/editMusicListForm";
+        }
+
+        return "redirect:/";
+    }
+
+    @PostMapping("/editMusicList")
+    public String updateMusicList(@RequestParam("musicListId") Long id, HttpServletRequest request,
+                                  Model model){
+
+        HttpSession session = request.getSession();
+        String loginId = (String)session.getAttribute("loginId");
+        model.addAttribute("loginId", loginId);
+        UpdateMusicListFormDto updateMusicListFormDto = musicListService.setUpdateMusicListFormDto(id);
         List<FileList> fileList = fileListService.findByFiles(id);
-        //뮤직리스트 값을 수정 form 에 그대로 넣음
-        MusicListFormDto musicListFormDto = musicListService.setUpdateMusicListForm(id);
-        model.addAttribute("musicListFormDto", musicListFormDto);
+        model.addAttribute("updateMusicListFormDto", updateMusicListFormDto);
+
         model.addAttribute("fileList", fileList);
-        model.addAttribute("musicList", musicList);
-        return "/musicList/updateMusicListForm";
+        model.addAttribute("musicListId", id);
+        log.info("뮤직리스트확인하기= {}", id );
+        log.info("업데이트 뮤직리스트 확인 = {}", updateMusicListFormDto.getTitle());
+        return "/musicList/editMusicListForm";
     }
 
     @GetMapping("/addMusicList")
     public String addItemForm(HttpServletRequest request, Model model){
+
+        log.info("등록 페이지 입니다.");
         HttpSession session = request.getSession();
         String loginId = (String)session.getAttribute("loginId");
         model.addAttribute("loginId", loginId);

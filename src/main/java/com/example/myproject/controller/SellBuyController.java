@@ -24,16 +24,17 @@ public class SellBuyController {
     public String buyComplete(@RequestParam("musicListId") Long id,
                               HttpServletRequest request, HttpServletResponse response){
         HttpSession session = request.getSession();
-        if(session.getAttribute("loginId") == null){
+        String loginId = (String)session.getAttribute("loginId");
+        if(loginId == null){
             log.info("구매하시려면 로그인해주세요");
             String referer = request.getHeader("Referer");
             log.info("이전 경로 확인 = {} ", referer);
             Cookie cookie = new Cookie("url",referer);
             response.addCookie(cookie);
-            return"redirect:/loginBuy";
+            return"redirect:/loginInterceptor";
         }
 
-        sellBuyListService.buyMusicList(request, id);
+        sellBuyListService.buyMusicList(id, loginId);
         log.info("구매성공 = '{}'", id);
         return "redirect:/content?musicListId="+id;
     }
