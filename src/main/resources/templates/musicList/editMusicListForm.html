@@ -8,6 +8,7 @@
         color: #dc3545;
     }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <div style="height: 1000px; margin-top: 20px">
     <form class="w-50 container" enctype="multipart/form-data"
           method="post" th:action="@{/EditMusicList}" onsubmit="return updateSubmit()"
@@ -43,37 +44,39 @@
         <input type="number" min="0" max="2147483647" class="form-control" id="price" name="price" placeholder="가격"
                th:field="*{price}">
         <label for="price" class="text-start field-error"></label>
-
-
         <label style="margin-top: 10px" class="form-label">pdf 악보 올리기</label>
-        <div>
-            <table class="table table-bordered" id="fileTable">
-                <tr>
-                    <td>파일명</td>
-                    <td>삭제</td>
-                </tr>
-                <tbody>
+
+        <div style="border: 1px solid brown; height: 25px; width: 100px;">
+            <p class="fw-bolder" style="margin-left: 20px; ">파일명</p>
+        </div>
+
+        <div style="max-height: 190px; overflow: auto">
+            <table class="table table-bordered">
                 <tr th:each="fileList : ${fileList}" style="color: brown; text-decoration: underline; !important;">
-                    <td th:text="${fileList.originalFilename}"></td>
+                    <td id="id" th:text="${fileList.originalFilename}"></td>
                     <td>
-                        <button type="button" class="btn-primary" onclick="remove_tr(this)">삭제</button>
+                        <button type="button" class="edit" th:class="btn-primary" onclick="remove_tr(this)" >삭제</button>
                     </td>
                 </tr>
-                </tbody>
             </table>
-
-
-            <input class="form-control" type="file" multiple="multiple" id="pdfFiles" name="pdfFiles">
 
         </div>
 
+
+
+
+
+            <input style="margin-top: 20px" class="form-control" type="file" multiple="multiple" id="pdfFiles" name="pdfFiles">
+
+
+
         <label style="margin-top: 10px" class="form-label">내용을 입력하세요</label>
-        <textarea class="form-control" id="content" name="content" rows="15"
+        <textarea class="form-control" id="content" name="content" rows="10"
                   th:field="*{content}"></textarea>
         <label for="content" class="text-start field-error"></label>
 
 
-        <div class="text-center" style="margin-top: 30px">
+        <div class="text-center">
             <button type="submit" class="btn btn-primary mb-3"
                     th:name="musicListId" th:value="${musicListId}">수정하기
             </button>
@@ -83,7 +86,7 @@
     </form>
 
 </div>
-<script>
+<script type="text/javascript">
     function updateSubmit() {
         if (confirm("등록하시겠습니까")) {
             return true;
@@ -92,13 +95,16 @@
         }
     }
 
-    function remove_tr(This){
-        if (confirm("삭제하시겠습니까")){
-            This.closest('tr').remove();
+    function remove_tr(obj){
+
+        const row = $(obj).parent().parent().get(0);
+        const td = row.cells[0];
+        const value = $(td).text();
+
+        if (confirm(value)){
+           obj.closest('tr').remove();
         }
-
-
     }
 </script>
-
+<div th:replace="~{fragments/footer :: footer}"/>
 </html>

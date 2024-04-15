@@ -3,7 +3,7 @@
 <head th:replace="~{fragments/header :: head}"/>
 <div th:replace="~{fragments/header :: header ('home')}"/>
 
-<div class="container" th:object="${musicList}" style="height: 1000px; margin-top: 20px">
+<div class="container" th:object="${musicList}" style="height: 1000px; margin-top: 20px;">
 
     <ul style="font-size: large">
         <li>제목 <p th:text="*{title}"></p></li>
@@ -12,21 +12,26 @@
         <li>등록일 <p th:text="*{localDateTime}"></p></li>
         <li>내용 <p style="white-space: pre-line" th:text="*{content}"></p></li>
         <li>첨부파일
-            <table th:if="${sellBuyList} or ${#strings.equals(loginId,musicList.loginId)}">
-                <tr th:each="file : ${fileList}">
-                    <td>
-                        <a th:text="${file.originalFilename}" th:href="|/download/${file.id}|"></a>
-                    </td>
-                </tr>
-            </table>
+            <div style="max-height: 150px; overflow: auto">
+                <table th:if="${sellBuyList} or ${#strings.equals(loginId,musicList.loginId)}">
+                    <tr th:each="file : ${fileList}">
+                        <td>
+                            <a th:text="${file.originalFilename}" th:href="|/download/${file.id}|"></a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
         </li>
     </ul>
 
     <div th:if="${sellBuyList==null} and ${!#strings.equals(loginId,musicList.loginId)}">
         <button onclick="buyBtnClick()"
-                type="button" class="btn btn-primary btn-lg">구매하기</button>
-        <button  onclick="cartBtnClick()"
-                 type="button" class="btn btn-primary btn-lg">장바구니</button>
+                type="button" class="btn btn-primary btn-lg">구매하기
+        </button>
+        <button onclick="cartBtnClick()"
+                type="button" class="btn btn-primary btn-lg">장바구니
+        </button>
     </div>
 
     <div th:if="${sellBuyList!=null}">
@@ -35,16 +40,19 @@
 
     <div th:if="${#strings.equals(loginId,musicList.loginId)}">
         <button onclick="updateBtnClick()"
-                type="button" class="btn btn-primary btn-lg">수정하기</button>
+                type="button" class="btn btn-primary btn-lg">수정하기
+        </button>
         <button onclick="deleteBtnClick()"
-                type="button" class="btn btn-primary btn-lg">삭제하기</button>
+                type="button" class="btn btn-primary btn-lg">삭제하기
+        </button>
     </div>
 
     <div id='buy_div' style="display: none">
         <form style="margin-top: 20px;">
             <h1>구매하시겠습니까</h1>
             <button type="button" class="btn btn-lg btn-primary"
-                    th:onclick="|location.href='@{/buyMusicList (musicListId=${musicList.id}) }'|">Yes</button>
+                    th:onclick="|location.href='@{/buyMusicList (musicListId=${musicList.id}) }'|">Yes
+            </button>
         </form>
     </div>
 
@@ -59,7 +67,8 @@
         <form style="margin-top: 20px" method="post" th:action="@{/editMusicList}">
             <h1>수정하시겠습니까</h1>
             <button type="submit" th:name="musicListId" th:value="${musicList.id}"
-                    class="btn btn-lg btn-primary">Yes</button>
+                    class="btn btn-lg btn-primary">Yes
+            </button>
         </form>
     </div>
 
@@ -67,7 +76,8 @@
         <form style="margin-top: 20px" id="delete_form" method="post"
               th:action="@{/deleteMusicList}" onsubmit="return deleteSubmit()">
             <h1>삭제하시겟습니까</h1>
-            <button type="submit" th:name="musicListId" th:value="${musicList.id}" class="btn btn-lg btn-primary">Yes</button>
+            <button type="submit" th:name="musicListId" th:value="${musicList.id}" class="btn btn-lg btn-primary">Yes
+            </button>
         </form>
     </div>
     <script type="text/javascript">
@@ -88,13 +98,14 @@
                 buyDiv.style.display = 'inline';
             }
         }
-            function cartBtnClick() {
-                const buyDiv = document.getElementById('buy_div');
-                const cartDiv = document.getElementById('cart_div');
-                if (cartDiv.style.display === 'none') {
-                    buyDiv.style.display = 'none';
-                    cartDiv.style.display = 'inline';
-                }
+
+        function cartBtnClick() {
+            const buyDiv = document.getElementById('buy_div');
+            const cartDiv = document.getElementById('cart_div');
+            if (cartDiv.style.display === 'none') {
+                buyDiv.style.display = 'none';
+                cartDiv.style.display = 'inline';
+            }
         }
 
         function updateBtnClick() {
@@ -105,6 +116,7 @@
                 updateDiv.style.display = 'inline';
             }
         }
+
         function deleteBtnClick() {
             const updateDiv = document.getElementById('update_div');
             const delete_div = document.getElementById('delete_div');
@@ -116,6 +128,6 @@
 
     </script>
 </div>
-
+<div th:replace="~{fragments/footer :: footer}"/>
 
 </html>
