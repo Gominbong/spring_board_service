@@ -24,6 +24,7 @@ import org.springframework.web.util.UriUtils;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -85,10 +86,19 @@ public class MusicListController {
         return "redirect:/";
     }
 
-    @PostMapping("EditMusicList")
+    @PostMapping("/EditMusicList")
     public String updateMusicListComplete(@RequestParam("musicListId") Long id,
                                           UpdateMusicListFormDto updateMusicListFormDto,
                                           HttpServletRequest request, Model model){
+
+        String[] filename = updateMusicListFormDto.getFilename();
+        if (filename != null){
+            for (String file : filename) {
+                log.info("수정페이지에서 삭제버튼누른 파일이름 = '{}'", file);
+            }
+        }
+
+
         HttpSession session = request.getSession();
         String loginId = (String)session.getAttribute("loginId");
         model.addAttribute("loginId", loginId);

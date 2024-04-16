@@ -23,4 +23,6 @@ public class UpdateMusicListFormDto {
     private LocalDateTime localDateTime;
     private List<MultipartFile> pdfFiles;
 
+    private String[] filename;
+
 }
