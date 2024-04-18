@@ -53,7 +53,8 @@
         <div style="max-height: 190px; overflow: auto">
             <table class="table table-bordered">
                 <tr th:each="fileList : ${fileList}" style="color: brown; text-decoration: underline; !important;">
-                    <td id="id" th:text="${fileList.originalFilename}"></td>
+                    <td style="display: none" th:text="${fileList.storedFilename}"></td>
+                    <td th:text="${fileList.originalFilename}"></td>
                     <td>
                         <button type="button" class="edit" th:class="btn-primary" onclick="remove_tr(this)">삭제</button>
                     </td>
@@ -92,15 +93,16 @@
     function remove_tr(obj) {
 
         const row = $(obj).parent().parent().get(0);
-        const td = row.cells[0];
-        const value = $(td).text();
+        const storeFilename = row.cells[0].innerText;
+        const originalFilename = row.cells[1].innerText;
+
 ;
-        if (confirm(value+"삭제하시겟습니까")) {
+        if (confirm(originalFilename+"삭제하시겟습니까")) {
             const formData = document.getElementById("formId");
             const input = document.createElement('input');
             input.type = "hidden"
             input.name = "filename";
-            input.value = value;
+            input.value = storeFilename;
             formData.appendChild(input);
             obj.closest('tr').remove();
         }

@@ -24,7 +24,6 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -36,7 +35,7 @@ public class MusicListService {
     private final FileListRepository fileRepository;
     
     public Map<String, String> createAddItem(HttpServletRequest request, MusicListFormDto musicListFormDto,
-                                             String loginId) throws IOException {
+                                             String loginId) {
 
         Map<String, String> errors = new HashMap<>();
 
@@ -69,14 +68,20 @@ public class MusicListService {
         musicList.setMemberNickname(member.getNickname());
         musicListRepository.save(musicList);
 
-        List<MultipartFile> storePdfFiles = musicListFormDto.getPdfFiles();
+        List<MultipartFile> pdfFiles = musicListFormDto.getPdfFiles();
 
-        for (MultipartFile multipartFile : storePdfFiles){
-            if (!multipartFile.isEmpty()){
+        if(!pdfFiles.get(0).isEmpty()){
+            for(MultipartFile multipartFile : pdfFiles ){
                 String originalFilename = multipartFile.getOriginalFilename();
-                String storedFileName = System.currentTimeMillis() + "_" + originalFilename;
-                String savePath = "C:/Users/asd/Desktop/study/pdf/" + storedFileName;
-                multipartFile.transferTo(new File(savePath));
+                String Path = "C:/Users/asd/Desktop/study/pdf/";
+                String encode = originalFilename.replaceAll("[^ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9]", "_");
+                String storedFileName = System.currentTimeMillis() + "_" + encode;
+
+                try {
+                    multipartFile.transferTo(new File(Path+storedFileName));
+                } catch (IOException e) {
+
+                }
                 FileList fileList = new FileList();
                 fileList.setMusicList(musicList); //외래키 설정
                 fileList.setOriginalFilename(originalFilename);
@@ -102,26 +107,11 @@ public class MusicListService {
     public void deleteMusicList(Long id) {
         MusicList musicList = musicListRepository.findById(id).orElseThrow();
         musicList.setSoftDelete("Yes");
-    }
-
-    public MusicListFormDto setUpdateMusicListForm (Long id) {
-        MusicList musicList = musicListRepository.findById(id).orElseThrow();
-        MusicListFormDto musicListFormDto = new MusicListFormDto();
-        musicListFormDto.setTitle(musicList.getTitle());
-        musicListFormDto.setContent(musicList.getContent());
-        musicListFormDto.setType(musicList.getType());
-        musicListFormDto.setLevel(musicList.getLevel());
-        musicListFormDto.setPrice(musicList.getPrice());
-        return musicListFormDto;
 
     }
 
-
-    public Map<String, String> updateMusicList(Long id, MusicListFormDto updateMusicListFormDto) {
-
-
-        MusicList musicList = musicListRepository.findById(id).orElseThrow();
-        updateMusicListFormDto.setPrice(musicList.getPrice());
+    @Transactional
+    public Map<String, String> updateMusicList(Long id, UpdateMusicListFormDto updateMusicListFormDto) {
 
         Map<String, String> errors = new HashMap<>();
 
@@ -141,6 +131,45 @@ public class MusicListService {
             return errors;
         }
 
+        MusicList musicList = musicListRepository.findById(id).orElseThrow();
+        musicList.setTitle(updateMusicListFormDto.getTitle());
+        musicList.setType(updateMusicListFormDto.getType());
+        musicList.setLevel(updateMusicListFormDto.getLevel());
+        musicList.setPrice(updateMusicListFormDto.getPrice());
+        musicList.setContent(updateMusicListFormDto.getContent());
+
+        String[] filename = updateMusicListFormDto.getFilename();
+        log.info("업데이트디티오 = {}", updateMusicListFormDto.toString());
+        if (filename != null){
+            for (String file : filename) {
+                log.info("수정페이지에서 삭제버튼누른 파일이름 = '{}'", file);
+                FileList fileList = fileRepository.findByStoredFilename(file);
+                fileList.setMusicList(null);
+                fileRepository.delete(fileList);
+
+            }
+        }
+
+        List<MultipartFile> pdfFiles = updateMusicListFormDto.getPdfFiles();
+        if(!pdfFiles.get(0).isEmpty()){
+            for(MultipartFile multipartFile : pdfFiles ){
+                String originalFilename = multipartFile.getOriginalFilename();
+                String Path = "C:/Users/asd/Desktop/study/pdf/";
+                String encode = originalFilename.replaceAll("[^ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9]", "_");
+                String storedFileName = System.currentTimeMillis() + "_" + encode;
+
+                try {
+                    multipartFile.transferTo(new File(Path+storedFileName));
+                } catch (IOException e) {
+
+                }
+                FileList fileList = new FileList();
+                fileList.setMusicList(musicList); //외래키 설정
+                fileList.setOriginalFilename(originalFilename);
+                fileList.setStoredFilename(storedFileName);
+                fileRepository.save(fileList);
+            }
+        }
         return null;
     }
 

@@ -11,5 +11,4 @@ public interface MusicListRepository extends JpaRepository<MusicList, Long> {
 
 
     Page<MusicList> findBySoftDeleteIsNull(Pageable pageable);
-
 }

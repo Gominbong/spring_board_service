@@ -14,9 +14,9 @@
         <li>첨부파일
             <div style="max-height: 150px; overflow: auto">
                 <table th:if="${sellBuyList} or ${#strings.equals(loginId,musicList.loginId)}">
-                    <tr th:each="file : ${fileList}">
+                    <tr th:each="fileList : ${fileList}">
                         <td>
-                            <a th:text="${file.originalFilename}" th:href="|/download/${file.id}|"></a>
+                            <a th:href="|/download/${fileList.id}|" th:text="${fileList.originalFilename}"></a>
                         </td>
                     </tr>
                 </table>

@@ -4,8 +4,6 @@ import com.example.myproject.domain.MusicList;
 import com.example.myproject.domain.SellBuyList;
 import com.example.myproject.repository.MusicListRepository;
 import com.example.myproject.repository.SellBuyListRepository;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

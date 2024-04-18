@@ -1,5 +1,6 @@
 package com.example.myproject.dto;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -7,8 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Getter @Setter
-@ToString
+@Data
 public class MusicListFormDto {
 
     private String title;

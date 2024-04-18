@@ -18,14 +18,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriUtils;
-import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,17 +38,23 @@ public class MusicListController {
         FileList file = fileListService.findById(id);
 
         String originalFilename = file.getOriginalFilename();
-        UrlResource urlResource = new UrlResource("file:" +
-                "C:/Users/asd/Desktop/study/pdf/" + file.getStoredFilename());
+        String storedFilename = file.getStoredFilename();
 
+        log.info("스토어파일이름 = {}", storedFilename);
+
+        String Path = "C:/Users/asd/Desktop/study/pdf/"+storedFilename;
+
+        UrlResource urlResource = new UrlResource("file:" + Path);
+
+        log.info("파일네임= {}", urlResource.getFilename());
         log.info("파일 이름 = '{}' ", originalFilename);
-        String encodedOriginalFileName = UriUtils.encode(originalFilename, StandardCharsets.UTF_8);
 
-        String contentDisposition = "attachment; filename=\"" + encodedOriginalFileName + "\"";
+        String encodedUploadFileName = URLEncoder.encode(originalFilename, StandardCharsets.UTF_8);
+        String contentDisposition = "attachment; filename=\"" + encodedUploadFileName + "\"";
 
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition) //다운로드받는파일명
-                .body(urlResource);
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition) //다운로드받는파일명
+                    .body(urlResource);
     }
 
     @GetMapping("/content")
@@ -71,9 +73,12 @@ public class MusicListController {
             return "/musicList/deletedMusicListForm";
         }
 
-        log.info("파일 확인해보기  =  {}", fileList );
-        model.addAttribute("musicList", musicList);
+        if (fileList.isEmpty()){
+            log.info("ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ");
+        }
+
         model.addAttribute("fileList", fileList);
+        model.addAttribute("musicList", musicList);
         model.addAttribute("sellBuyList", sellBuyList);
         return "/musicList/contentMusicListForm";
     }
@@ -91,24 +96,16 @@ public class MusicListController {
                                           UpdateMusicListFormDto updateMusicListFormDto,
                                           HttpServletRequest request, Model model){
 
-        String[] filename = updateMusicListFormDto.getFilename();
-        if (filename != null){
-            for (String file : filename) {
-                log.info("수정페이지에서 삭제버튼누른 파일이름 = '{}'", file);
-            }
-        }
-
-
+        log.info("업데이트 뮤직리스트 아이디 = {}",id);
         HttpSession session = request.getSession();
-        String loginId = (String)session.getAttribute("loginId");
+        String loginId = (String)session.getAttribute( "loginId");
         model.addAttribute("loginId", loginId);
         model.addAttribute("musicListId", id);
-        Map<String, String> errors = new HashMap<>();
-
-        log.info("11업데이트 뮤직리스트 아이디 확인 = {}", id);
-        log.info("11업데이트 투스트링 확인 = {}", updateMusicListFormDto.toString());
-        if (!StringUtils.hasText(updateMusicListFormDto.getTitle())){
-            log.info("제목이 비어있습니다.");
+        List<FileList> fileList = fileListService.findByFiles(id);
+        Map<String, String> errors = musicListService.updateMusicList(id, updateMusicListFormDto);
+        if (errors != null){
+            model.addAttribute("fileList", fileList);
+            model.addAttribute("errors", errors);
             return "/musicList/editMusicListForm";
         }
 
@@ -124,12 +121,11 @@ public class MusicListController {
         model.addAttribute("loginId", loginId);
         UpdateMusicListFormDto updateMusicListFormDto = musicListService.setUpdateMusicListFormDto(id);
         List<FileList> fileList = fileListService.findByFiles(id);
-        model.addAttribute("updateMusicListFormDto", updateMusicListFormDto);
 
+        model.addAttribute("updateMusicListFormDto", updateMusicListFormDto);
         model.addAttribute("fileList", fileList);
         model.addAttribute("musicListId", id);
-        log.info("뮤직리스트확인하기= {}", id );
-        log.info("업데이트 뮤직리스트 확인 = {}", updateMusicListFormDto.getTitle());
+
         return "/musicList/editMusicListForm";
     }
 
@@ -147,7 +143,7 @@ public class MusicListController {
     }
 
     @PostMapping("/addMusicList")
-    public String addItemForm(MusicListFormDto musicListFormDto, HttpServletRequest request, Model model) throws IOException {
+    public String addItemForm(MusicListFormDto musicListFormDto, HttpServletRequest request, Model model) {
 
 
         HttpSession session = request.getSession();
