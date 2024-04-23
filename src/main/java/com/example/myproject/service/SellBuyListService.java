@@ -12,7 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Service
 @RequiredArgsConstructor
@@ -32,8 +32,9 @@ public class SellBuyListService {
             sellBuyList.setMusicList(musicList);
             sellBuyList.setBuyMemberLoginId(loginId);
             sellBuyList.setSellMemberLoginId(musicList.getLoginId());
-            sellBuyList.setLocalDateTime(LocalDateTime.now().withNano(0));
+            sellBuyList.setLocalDate(LocalDate.now());
             sellBuyListRepository.save(sellBuyList);
+            musicList.setSalesQuantity(musicList.getSalesQuantity()+1);
             BuyMember.setCash(BuyMember.getCash() - musicList.getPrice());
             sellMember.setRevenue(sellMember.getRevenue() + musicList.getPrice());
         }else{

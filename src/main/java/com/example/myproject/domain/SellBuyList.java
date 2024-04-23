@@ -3,7 +3,7 @@ package com.example.myproject.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -18,6 +18,6 @@ public class SellBuyList {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "musicList_id")
     private MusicList musicList;
-    private LocalDateTime localDateTime;
+    private LocalDate localDate;
 
 }

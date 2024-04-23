@@ -2,6 +2,7 @@ package com.example.myproject.controller;
 
 import com.example.myproject.domain.Member;
 import com.example.myproject.domain.SellBuyList;
+import com.example.myproject.service.MemberService;
 import com.example.myproject.service.SellBuyListService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class SellBuyController {
 
     private final SellBuyListService sellBuyListService;
+    private final MemberService memberService;
 
     @GetMapping("/buyMusicList")
     public String buyComplete(@RequestParam("musicListId") Long id,
@@ -46,10 +48,30 @@ public class SellBuyController {
         return "redirect:/content?musicListId="+id;
     }
     @GetMapping("/sellList")
-    public String cart(HttpServletRequest request, Model model){
+    public String sellList(@RequestParam(value = "page", defaultValue = "0") int page,
+                       HttpServletRequest request, Model model){
         HttpSession session = request.getSession();
         String loginId = (String)session.getAttribute("loginId");
         model.addAttribute("loginId", loginId);
+        Member member = memberService.findByLoginId(loginId);
+        Page<SellBuyList> paging = sellBuyListService.findBuyList(page, loginId);
+        if (member==null){
+            log.info("조회실패");
+        }
+        model.addAttribute("member", member);
+        model.addAttribute("paging", paging);
+        int temp = page/7;
+        int start = temp* 7;
+
+        if (paging.getTotalPages() - start > 7 ){
+            model.addAttribute("start", start);
+            model.addAttribute("end", start+6);
+        }else{
+            model.addAttribute("start", start);
+            model.addAttribute("end", paging.getTotalPages()-1);
+        }
+
+        log.info("스타트 페이지 확인 해보기 = '{}' ", start);
 
         return "/musicList/sellMusicListForm";
     }
@@ -65,11 +87,15 @@ public class SellBuyController {
         log.info("페이지 정보 확인 = '{}' ", page);
 
         Page<SellBuyList> paging = sellBuyListService.findBuyList(page, loginId);
+
+        if (paging==null){
+            log.info("조회실패");
+        }
         for (SellBuyList sellBuyList : paging) {
             log.info("SellBuyList 테이블 기본키Id = {}", sellBuyList.getId());
             log.info("SellBuyList 테이블 구매자아이디 = {}", sellBuyList.getBuyMemberLoginId());
             log.info("SellBuyList 테이블 판매자아이디 = {}", sellBuyList.getSellMemberLoginId());
-            log.info("SellBuyList 테이블 구매판매시간 = {}", sellBuyList.getLocalDateTime());
+            log.info("SellBuyList 테이블 구매판매시간 = {}", sellBuyList.getLocalDate());
             log.info("SellBuyList 테이블 구매판매시간 = {}", sellBuyList.getMusicList());
 
             log.info("MusicList 테이블 기본키Id = {}", sellBuyList.getMusicList().getId());
@@ -83,7 +109,7 @@ public class SellBuyController {
 
         log.info("전체 페이지수 확인 = '{}'", paging.getTotalPages());
 
-        int temp=page/7;
+        int temp = page/7;
         int start = temp* 7;
 
         if (paging.getTotalPages() - start > 7 ){

@@ -40,7 +40,7 @@ public class LoginController {
         model.addAttribute("page", page);
         model.addAttribute("paging", paging);
         log.info("전체 페이지수 확인 = '{}'", paging.getTotalPages());
-        int temp=page/7;
+        int temp = page/7;
         int start = temp* 7;
 
         if (paging.getTotalPages() - start > 7 ){

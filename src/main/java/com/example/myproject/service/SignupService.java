@@ -31,6 +31,7 @@ public class SignupService {
         member.setPassword(passwordEncoder.encode(signupFormDto.getPw()));
         member.setNickname(signupFormDto.getNick());
         member.setCash(10000);
+        member.setRevenue(0);
         member.setLocalDate(LocalDate.now());
         member.setId(member.getId());
         if (!StringUtils.hasText(signupFormDto.getId())) {

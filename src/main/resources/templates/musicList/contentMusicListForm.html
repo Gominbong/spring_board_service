@@ -11,6 +11,7 @@
         <li>가격 <p th:text="*{price}"></p></li>
         <li>등록일 <p th:text="*{localDateTime}"></p></li>
         <li>내용 <p style="white-space: pre-line" th:text="*{content}"></p></li>
+        <li th:if="${sellBuyList!=null}">구매일<p th:text="${sellBuyList.localDate}"></p></li>
         <li>첨부파일
             <div style="max-height: 150px; overflow: auto">
                 <table th:if="${sellBuyList} or ${#strings.equals(loginId,musicList.loginId)}">

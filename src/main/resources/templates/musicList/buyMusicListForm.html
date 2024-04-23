@@ -34,7 +34,7 @@
             <table class="table table-striped table-bordered">
                 <thead>
                 <tr>
-                    <th>#</th>
+                    <th>구매일</th>
                     <th>곡제목</th>
                     <th>만든이</th>
                     <th>악기</th>
@@ -44,7 +44,7 @@
                 </thead>
                 <tbody>
                 <tr class="table_row_color" th:each="musicList : ${paging}">
-                    <td style="width: 10%" th:text="${musicList.musicList.id}"></td>
+                    <td style="width: 10%" th:text="${musicList.localDate}"></td>
                     <td style="width: 50%" th:text="${musicList.musicList.title}" class="table_title_fontcolor"
                         th:onclick="|location.href='@{/content (musicListId=${musicList.musicList.id}) }'|"></td>
                     <td th:text="${musicList.musicList.memberNickname}"></td>
