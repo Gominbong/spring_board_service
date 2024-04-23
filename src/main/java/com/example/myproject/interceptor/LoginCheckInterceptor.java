@@ -18,7 +18,6 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
 
         String requestURI = request.getRequestURI();
         log.info("로그인 체크 인터셉터 실행 '{}'", requestURI);
-
         HttpSession session = request.getSession();
         if (session.getAttribute("loginId") == null) {
             log.info("세션에 loginId 값이 없음 로그인하세요");

@@ -30,6 +30,8 @@ public class MusicList {
     private Integer price;
     private LocalDateTime localDateTime;
     private String softDelete;
-
+    private Integer salesQuantity;
+    private Integer likeCount;
+    private Integer views;
 
 }

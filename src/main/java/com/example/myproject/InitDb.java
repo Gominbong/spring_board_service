@@ -47,7 +47,11 @@ public class InitDb {
                     .content("체르니 40정도면 칠수 있어요")
                     .type("피아노")
                     .level("어려움")
+                    .salesQuantity(0)
                     .price(4000)
+                    .views(0)
+                    .likeCount(0)
+                    .salesQuantity(0)
                     .build();
 
             MusicList musicList1 = MusicList.builder()
@@ -59,7 +63,11 @@ public class InitDb {
                     .content("체르니 100정도면 칠수있어요 ")
                     .type("피아노")
                     .level("보통")
+                    .salesQuantity(0)
+                    .views(0)
+                    .likeCount(0)
                     .price(3000)
+                    .salesQuantity(0)
                     .build();
             em.persist(member);
             em.persist(musicList);
@@ -74,6 +82,7 @@ public class InitDb {
             member.setPassword(password);
             member.setNickname(nickname+b);
             member.setCash(20000);
+            member.setRevenue(0);
             member.setLocalDate(LocalDate.now());
             return member;
         }

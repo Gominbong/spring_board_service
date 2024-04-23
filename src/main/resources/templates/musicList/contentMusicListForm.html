@@ -50,8 +50,11 @@
     <div id='buy_div' style="display: none">
         <form style="margin-top: 20px;">
             <h1>구매하시겠습니까</h1>
-            <button type="button" class="btn btn-lg btn-primary"
+            <button type="button" class="btn btn-lg btn-primary" th:if="${member.cash >= musicList.price}"
                     th:onclick="|location.href='@{/buyMusicList (musicListId=${musicList.id}) }'|">Yes
+            </button>
+            <button type="button" class="btn btn-lg btn-primary" th:unless="${member.cash >= musicList.price}"
+                    onclick="btnNoCash()">Yes
             </button>
         </form>
     </div>
@@ -80,12 +83,27 @@
             </button>
         </form>
     </div>
+
+
+    <div style="margin-top: 20px">
+        <button class="btn btn-lg btn-primary" th:text="${'추천 '+ musicList.likeCount}"></button>
+    </div>
+
     <script type="text/javascript">
 
         function deleteSubmit() {
             if (confirm("삭제하시겠습니까")) {
                 return true;
             } else {
+                return false;
+            }
+        }
+
+        function btnNoCash(){
+            const cash = [[${member.cash}]];
+            if (confirm("잔액이 부족합니다 잔액 = " + cash + "원 충전하시겠습니까")){
+                document.location.href="/myInfo";
+            }else{
                 return false;
             }
         }

@@ -8,6 +8,7 @@
         color: #dc3545;
     }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <div style="height: 1000px; margin-top: 20px">
     <form class="w-50 container" enctype="multipart/form-data"
           method="post" action="/addMusicList" id="addForm" onsubmit="return addSubmit()"
@@ -64,6 +65,25 @@
 </div>
 
 <script>
+    $(function(){
+
+        $("input[name=pdfFiles]").on("change", function(){
+            let maxSize = 20 * 1024 * 1024; //* 5MB 사이즈 제한
+            let fileSize = 0;
+            const length = this.files.length;
+            for (let i=0; i<length; i++){
+                const size = this.files[i].size;
+                fileSize = fileSize + size
+            }
+
+            if (fileSize > maxSize){
+                alert("파일첨부 사이즈는 20MB 이내로 가능합니다.");
+                $(this).val('');
+            }
+        });
+
+    });
+
     function addSubmit() {
         if (confirm("등록하시겠습니까")) {
             return true;

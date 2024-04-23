@@ -64,6 +64,9 @@ public class MusicListService {
         musicList.setPrice(musicListFormDto.getPrice());
         musicList.setContent(musicListFormDto.getContent());
         musicList.setLoginId(loginId);
+        musicList.setViews(0);
+        musicList.setLikeCount(0);
+        musicList.setSalesQuantity(0);
         musicList.setLocalDateTime(LocalDateTime.now().withNano(0));
         musicList.setMemberNickname(member.getNickname());
         musicListRepository.save(musicList);
@@ -76,11 +79,10 @@ public class MusicListService {
                 String Path = "C:/Users/asd/Desktop/study/pdf/";
                 String encode = originalFilename.replaceAll("[^ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9]", "_");
                 String storedFileName = System.currentTimeMillis() + "_" + encode;
-
                 try {
                     multipartFile.transferTo(new File(Path+storedFileName));
                 } catch (IOException e) {
-
+                    e.getStackTrace();
                 }
                 FileList fileList = new FileList();
                 fileList.setMusicList(musicList); //외래키 설정
@@ -146,7 +148,8 @@ public class MusicListService {
                 FileList fileList = fileRepository.findByStoredFilename(file);
                 fileList.setMusicList(null);
                 fileRepository.delete(fileList);
-
+                File file1 = new File("C:/Users/asd/Desktop/study/pdf/"+file);
+                file1.delete();
             }
         }
 

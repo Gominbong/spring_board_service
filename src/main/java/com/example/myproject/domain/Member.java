@@ -21,9 +21,9 @@ public class Member {
     private String password;
     @NotEmpty
     private String nickname;
-    private int cash;
+    private Integer cash;
     private LocalDate localDate;
-
+    private Integer revenue;
 
 
 }
