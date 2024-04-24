@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface SellBuyListRepository extends JpaRepository<SellBuyList, Long> {
@@ -20,4 +21,6 @@ public interface SellBuyListRepository extends JpaRepository<SellBuyList, Long> 
     @Query("select s from SellBuyList s inner join fetch s.musicList m where s.buyMemberLoginId = :loginId")
     Page<SellBuyList> findMyBuyList(Pageable pageable, String loginId);
 
+    @Query("select s from SellBuyList s inner join fetch s.musicList m where s.sellMemberLoginId = :loginId")
+    Page<SellBuyList> findMySellList(Pageable pageable, String loginId);
 }

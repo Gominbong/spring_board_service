@@ -16,6 +16,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
 @Slf4j
@@ -25,31 +27,41 @@ public class LoginController {
     private final MusicListService musicListService;
 
     @GetMapping("/")
-    public String login(@RequestParam(value = "page", defaultValue = "0")  int page,
-                               HttpServletRequest request, Model model) {
+    public String home(@RequestParam(value = "page", defaultValue = "0") int page,
+                       HttpServletRequest request, Model model) {
         model.addAttribute("menu", "home");
         HttpSession session = request.getSession(false);
         log.info("페이지 정보 확인 = '{}' ", page);
 
-        if (session != null){
-            String loginId = (String)session.getAttribute("loginId");
+        if (session != null) {
+            String loginId = (String) session.getAttribute("loginId");
             model.addAttribute("loginId", loginId);
         }
 
         Page<MusicList> paging = musicListService.findMusicList(page);
+
+
         model.addAttribute("page", page);
         model.addAttribute("paging", paging);
         log.info("전체 페이지수 확인 = '{}'", paging.getTotalPages());
-        int temp = page/7;
-        int start = temp* 7;
+        int temp = page / 7;
+        int start = temp * 7;
 
-        if (paging.getTotalPages() - start > 7 ){
+        if (paging.getTotalPages() == 0) {
+                log.info("여기11111 = {}", paging.getTotalPages());
+                model.addAttribute("start", start);
+                model.addAttribute("end", paging.getTotalPages());
+        } else if (paging.getTotalPages() - start > 7) {
+            log.info("여기22222 = {}", paging.getTotalPages());
             model.addAttribute("start", start);
-            model.addAttribute("end", start+6);
-        }else{
+            model.addAttribute("end", start + 6);
+        } else if (paging.getTotalPages() < 6){
+            log.info("여기33333 = {}", paging.getTotalPages());
             model.addAttribute("start", start);
             model.addAttribute("end", paging.getTotalPages()-1);
         }
+
+
 
         log.info("스타트 페이지 확인 해보기 = '{}' ", start);
 
@@ -81,7 +93,7 @@ public class LoginController {
         session.setAttribute("loginId", loginFormDto.getId());
 
         log.info("세션 로그인 아이디 = '{}'", loginFormDto.getId());
-        return "redirect:"+url;
+        return "redirect:" + url;
     }
 
     @GetMapping("/login")
@@ -93,7 +105,7 @@ public class LoginController {
 
     @PostMapping("/login")
     public String login(@Valid LoginFormDto loginFormDto,
-                               BindingResult bindingResult, HttpServletRequest request) {
+                        BindingResult bindingResult, HttpServletRequest request) {
         Member result = loginService.login(loginFormDto);
 
         log.info("암호화된비밀번호가져오기= '{}'", result);

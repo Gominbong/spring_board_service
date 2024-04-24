@@ -13,8 +13,7 @@ public class LikeCount {
     @GeneratedValue
     private Long id;
     private Integer count;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "musicList_id")
-    private MusicList musicList;
+    private String loginId;
+    private Long musicListId;
 
 }

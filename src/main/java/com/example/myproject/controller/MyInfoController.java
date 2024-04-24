@@ -11,11 +11,23 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Controller
 public class MyInfoController {
 
     private final MemberService memberService;
+
+
+    @GetMapping("/cart")
+    public String cart(HttpServletRequest request, Model model){
+
+        HttpSession session = request.getSession();
+        String loginId = (String) session.getAttribute("loginId");
+        model.addAttribute("loginId", loginId);
+        return "/login/cartForm";
+    }
 
     @GetMapping("/myInfo")
     public String myInfo(HttpServletRequest request, Model model) {
@@ -27,7 +39,6 @@ public class MyInfoController {
             Member member = memberService.findByLoginId(loginId);
 
             model.addAttribute("member", member);
-
         }
 
         return "/login/myInfoForm";

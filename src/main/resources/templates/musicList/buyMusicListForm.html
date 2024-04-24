@@ -34,23 +34,23 @@
             <table class="table table-striped table-bordered">
                 <thead>
                 <tr>
-                    <th>구매일</th>
-                    <th>곡제목</th>
-                    <th>만든이</th>
-                    <th>악기</th>
-                    <th>난이도</th>
-                    <th>가격</th>
+                    <th style="width: 11%">구매일</th>
+                    <th style="width: 45%">곡제목</th>
+                    <th style="width: 15%">만든이</th>
+                    <th style="width: 7%">악기</th>
+                    <th style="width: 7%">난이도</th>
+                    <th style="width: 9%">가격</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr class="table_row_color" th:each="musicList : ${paging}">
-                    <td style="width: 10%" th:text="${musicList.localDate}"></td>
-                    <td style="width: 50%" th:text="${musicList.musicList.title}" class="table_title_fontcolor"
+                    <td th:text="${musicList.localDate}"></td>
+                    <td th:text="${musicList.musicList.title}" class="table_title_fontcolor"
                         th:onclick="|location.href='@{/content (musicListId=${musicList.musicList.id}) }'|"></td>
                     <td th:text="${musicList.musicList.memberNickname}"></td>
-                    <td style="width: 8%" th:text="${musicList.musicList.type}"></td>
-                    <td style="width: 8%" th:text="${musicList.musicList.level}"></td>
-                    <td style="width: 8%" th:text="${musicList.musicList.price}"></td>
+                    <td th:text="${musicList.musicList.type}"></td>
+                    <td th:text="${musicList.musicList.level}"></td>
+                    <td th:text="${musicList.musicList.price}"></td>
                 </tr>
                 </tbody>
             </table>
@@ -60,29 +60,40 @@
 
 </div>
 
-
 <ul class="pagination justify-content-center">
-    <li class="page-item" th:if="${start==0}">
-        <a class="page-link" th:href="@{|?page=${start}|}"> << </a>
+    <li class="page-item">
+        <a class="page-link" th:if="${start==0}" th:href="@{|?page=${start}|}"> << </a>
     </li>
-    <li class="page-item" th:if="${start!=0}">
-        <a class="page-link" th:href="@{|?page=${start -1}|}"> << </a>
+    <li class="page-item">
+        <a class="page-link" th:if="${start>0}" th:href="@{|?page=${start -1}|}"> << </a>
     </li>
+
     <li class="page-item" th:classappend="${!paging.hasPrevious} ? 'disabled'">
         <a class="page-link" th:href="@{|?page=${paging.number -1}|}"> < </a>
     </li>
+
     <li class="page-item" th:classappend="${page == paging.number} ? 'active'"
         th:each="page : ${#numbers.sequence(start, end)}">
         <a class="page-link" th:text="${page+1}" th:href="@{|?page=${page}|}"></a>
     </li>
+
     <li class="page-item" th:classappend="${!paging.hasNext} ? 'disabled'">
         <a class="page-link" th:href="@{|?page=${paging.number+1}|}"> > </a>
     </li>
-    <li class="page-item" th:if="${paging.getTotalPages() - start < 8}">
-        <a class="page-link" th:href="@{|?page=${paging.getTotalPages() -1}|}"> >> </a>
+
+    <li class="page-item">
+        <a class="page-link" th:if="${paging.getTotalPages() == 0}"
+           th:href="@{|?page=${paging.getTotalPages()}|}"> >> </a>
     </li>
-    <li class="page-item" th:if="${paging.getTotalPages() - start > 8}">
-        <a class="page-link" th:href="@{|?page=${start+7}|}"> >> </a>
+
+    <li class="page-item">
+        <a class="page-link" th:if="${paging.getTotalPages() != 0}"
+           th:href="@{|?page=${paging.getTotalPages()-1}|}"> >> </a>
+    </li>
+
+    <li class="page-item">
+        <a class="page-link" th:if="${paging.getTotalPages() - start > 6}"
+           th:href="@{|?page=${start+7}|}"> >> </a>
     </li>
 </ul>
 

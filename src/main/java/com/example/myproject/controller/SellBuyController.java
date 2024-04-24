@@ -16,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+
 @Controller
 @RequiredArgsConstructor
 @Slf4j
@@ -54,24 +55,34 @@ public class SellBuyController {
         String loginId = (String)session.getAttribute("loginId");
         model.addAttribute("loginId", loginId);
         Member member = memberService.findByLoginId(loginId);
-        Page<SellBuyList> paging = sellBuyListService.findBuyList(page, loginId);
-        if (member==null){
-            log.info("조회실패");
-        }
         model.addAttribute("member", member);
+        Page<SellBuyList> paging = sellBuyListService.findSellList(page, loginId);
+        model.addAttribute("page", page);
         model.addAttribute("paging", paging);
-        int temp = page/7;
-        int start = temp* 7;
+        log.info("전체 페이지수 확인 = '{}'", paging.getTotalPages());
+        int temp = page / 7;
+        int start = temp * 7;
 
-        if (paging.getTotalPages() - start > 7 ){
+        if (paging.getTotalPages() == 0) {
+            log.info("여기11111 = {}", paging.getTotalPages());
             model.addAttribute("start", start);
-            model.addAttribute("end", start+6);
-        }else{
+            model.addAttribute("end", paging.getTotalPages());
+        } else if (paging.getTotalPages() - start > 7) {
+            log.info("여기22222 = {}", paging.getTotalPages());
+            model.addAttribute("start", start);
+            model.addAttribute("end", start + 6);
+        } else if (paging.getTotalPages() < 6){
+            log.info("여기33333 = {}", paging.getTotalPages());
             model.addAttribute("start", start);
             model.addAttribute("end", paging.getTotalPages()-1);
         }
 
+
+
         log.info("스타트 페이지 확인 해보기 = '{}' ", start);
+
+        log.info("스타트 페이지 확인 해보기 = '{}' ", start);
+
 
         return "/musicList/sellMusicListForm";
     }
@@ -88,9 +99,6 @@ public class SellBuyController {
 
         Page<SellBuyList> paging = sellBuyListService.findBuyList(page, loginId);
 
-        if (paging==null){
-            log.info("조회실패");
-        }
         for (SellBuyList sellBuyList : paging) {
             log.info("SellBuyList 테이블 기본키Id = {}", sellBuyList.getId());
             log.info("SellBuyList 테이블 구매자아이디 = {}", sellBuyList.getBuyMemberLoginId());
@@ -105,22 +113,28 @@ public class SellBuyController {
 
         model.addAttribute("page", page);
         model.addAttribute("paging", paging);
-
-
         log.info("전체 페이지수 확인 = '{}'", paging.getTotalPages());
+        int temp = page / 7;
+        int start = temp * 7;
 
-        int temp = page/7;
-        int start = temp* 7;
-
-        if (paging.getTotalPages() - start > 7 ){
+        if (paging.getTotalPages() == 0) {
+            log.info("여기11111 = {}", paging.getTotalPages());
             model.addAttribute("start", start);
-            model.addAttribute("end", start+6);
-        }else{
+            model.addAttribute("end", paging.getTotalPages());
+        } else if (paging.getTotalPages() - start > 7) {
+            log.info("여기22222 = {}", paging.getTotalPages());
+            model.addAttribute("start", start);
+            model.addAttribute("end", start + 6);
+        } else if (paging.getTotalPages() < 6){
+            log.info("여기33333 = {}", paging.getTotalPages());
             model.addAttribute("start", start);
             model.addAttribute("end", paging.getTotalPages()-1);
         }
 
+
+
         log.info("스타트 페이지 확인 해보기 = '{}' ", start);
+
 
         return "/musicList/buyMusicListForm";
     }

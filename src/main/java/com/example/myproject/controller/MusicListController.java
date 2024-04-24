@@ -28,6 +28,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -64,11 +65,16 @@ public class MusicListController {
         String loginId = (String) session.getAttribute("loginId");
         model.addAttribute("loginId", loginId);
 
-
         MusicList musicList = musicListService.findById(id);
         List<FileList> fileList = fileListService.findByFiles(id);
         SellBuyList sellBuyList = sellBuyListService.myBuyInfo(musicList, loginId);
         Member member = memberService.findByLoginId(loginId);
+        if (member == null){
+            model.addAttribute("memberCash",-1);
+        }else{
+            Integer memberCash = member.getCash();
+            model.addAttribute("memberCash", memberCash);
+        }
 
 
         if (musicList.getSoftDelete() != null) {
@@ -80,7 +86,6 @@ public class MusicListController {
             log.info("ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ");
         }
 
-        model.addAttribute("member", member);
         model.addAttribute("fileList", fileList);
         model.addAttribute("musicList", musicList);
         model.addAttribute("sellBuyList", sellBuyList);

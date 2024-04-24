@@ -21,7 +21,7 @@ public class InitDb {
     static int a = 0;
     @PostConstruct
     public void init() {
-/*        for(int i=0; i<20; i++){
+/*        for(int i=0; i<200; i++){
             initService.dbInit1();
         }*/
     }

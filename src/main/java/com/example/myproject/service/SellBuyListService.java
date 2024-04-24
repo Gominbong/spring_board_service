@@ -13,6 +13,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -52,6 +54,11 @@ public class SellBuyListService {
     public Page<SellBuyList> findBuyList(int page, String loginId) {
         Pageable pageable = PageRequest.of(page, 15);
         return sellBuyListRepository.findMyBuyList(pageable, loginId);
+    }
+
+    public Page<SellBuyList> findSellList(int page, String loginId) {
+        Pageable pageable = PageRequest.of(page, 15);
+        return sellBuyListRepository.findMySellList(pageable, loginId);
     }
 
 }

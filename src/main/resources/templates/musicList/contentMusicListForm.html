@@ -49,14 +49,19 @@
     </div>
 
     <div id='buy_div' style="display: none">
-        <form style="margin-top: 20px;">
+        <form style="margin-top: 20px">
             <h1>구매하시겠습니까</h1>
-            <button type="button" class="btn btn-lg btn-primary" th:if="${member.cash >= musicList.price}"
+            <button type="button" class="btn btn-lg btn-primary" th:if="${memberCash == -1}"
+                    onclick="btnLogin()">Yes
+            </button>
+            <button type="button" class="btn btn-lg btn-primary" th:if="${memberCash >= musicList.price}"
                     th:onclick="|location.href='@{/buyMusicList (musicListId=${musicList.id}) }'|">Yes
             </button>
-            <button type="button" class="btn btn-lg btn-primary" th:unless="${member.cash >= musicList.price}"
+            <button type="button" class="btn btn-lg btn-primary"
+                    th:if="${memberCash < musicList.price and memberCash != -1}"
                     onclick="btnNoCash()">Yes
             </button>
+
         </form>
     </div>
 
@@ -100,8 +105,17 @@
             }
         }
 
+        function btnLogin(){
+            if (confirm("구매하려면로그인하시겠습니까")) {
+                document.location.href="/buyMusicList?musicListId=[[${musicList.id}]]";
+
+            } else {
+                return false;
+            }
+        }
+
         function btnNoCash(){
-            const cash = [[${member.cash}]];
+            const cash = [[${memberCash}]];
             if (confirm("잔액이 부족합니다 잔액 = " + cash + "원 충전하시겠습니까")){
                 document.location.href="/myInfo";
             }else{

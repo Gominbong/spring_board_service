@@ -27,6 +27,9 @@
                 <li><a th:if="${htmlName == 'sellList'}" href="/sellList" class="nav-link px-5 text-info">판매목록</a>
                 <li><a th:if="${htmlName != 'sellList'}" href="/sellList" class="nav-link px-5 text-white">판매목록</a>
 
+                <li><a th:if="${htmlName == 'cart'}" href="/cart" class="nav-link px-5 text-info">장바구니</a>
+                <li><a th:if="${htmlName != 'cart'}" href="/cart" class="nav-link px-5 text-white">장바구니</a>
+
                 <li><a th:if="${htmlName == 'myInfo'}" href="/myInfo" class="nav-link px-5 text-info">내정보</a>
                 <li><a th:if="${htmlName != 'myInfo'}" href="/myInfo" class="nav-link px-5 text-white">내정보</a>
             </form>
