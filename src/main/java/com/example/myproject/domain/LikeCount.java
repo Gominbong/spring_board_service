@@ -12,8 +12,7 @@ public class LikeCount {
     @Id
     @GeneratedValue
     private Long id;
-    private Integer count;
     private String loginId;
-    private Long musicListId;
+    private String musicListId;
 
 }

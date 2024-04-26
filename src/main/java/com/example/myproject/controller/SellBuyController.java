@@ -16,7 +16,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
 @Controller
 @RequiredArgsConstructor
 @Slf4j
@@ -30,13 +29,13 @@ public class SellBuyController {
                               HttpServletRequest request, HttpServletResponse response){
         HttpSession session = request.getSession();
         String loginId = (String)session.getAttribute("loginId");
+        String referer = request.getHeader("Referer");
+        log.info("이전 경로 확인 = {} ", referer);
         if(loginId == null){
             log.info("구매하시려면 로그인해주세요");
-            String referer = request.getHeader("Referer");
-            log.info("이전 경로 확인 = {} ", referer);
             Cookie cookie = new Cookie("url",referer);
             response.addCookie(cookie);
-            return"redirect:/loginInterceptor";
+            return "redirect:/loginInterceptor";
         }
         Member result = sellBuyListService.buyMusicList(id, loginId);
 
@@ -46,7 +45,7 @@ public class SellBuyController {
             log.info("구매성공");
         }
 
-        return "redirect:/content?musicListId="+id;
+        return "redirect:" + referer;
     }
     @GetMapping("/sellList")
     public String sellList(@RequestParam(value = "page", defaultValue = "0") int page,
@@ -130,8 +129,6 @@ public class SellBuyController {
             model.addAttribute("start", start);
             model.addAttribute("end", paging.getTotalPages()-1);
         }
-
-
 
         log.info("스타트 페이지 확인 해보기 = '{}' ", start);
 

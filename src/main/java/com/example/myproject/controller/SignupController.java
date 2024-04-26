@@ -18,20 +18,14 @@ public class SignupController {
     private final SignupService signupService;
 
     @GetMapping("/signup")
-    public String signForm(Model model) {
+    public String sign(Model model) {
 
         model.addAttribute("signupFormDto", new SignupFormDto());
         return "/login/signupForm";
     }
 
-    @GetMapping("/signupComplete")
-    public String signForm(){
-
-        return "/login/signupCompleteForm";
-    }
-
     @PostMapping("/signup")
-    public String signForm(SignupFormDto signupFormDto, Model model ) {
+    public String sign(SignupFormDto signupFormDto, Model model ) {
 
         Map<String, String> errors = signupService.createMember(signupFormDto);
 
@@ -40,6 +34,6 @@ public class SignupController {
             return "/login/signupForm";
         }
         log.info("가입성공");
-        return "redirect:/signupComplete";
+        return "redirect:/";
     }
 }

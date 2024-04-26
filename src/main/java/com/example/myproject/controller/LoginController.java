@@ -5,7 +5,9 @@ import com.example.myproject.domain.MusicList;
 import com.example.myproject.dto.LoginFormDto;
 import com.example.myproject.service.MusicListService;
 import com.example.myproject.service.LoginService;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,8 +17,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -28,9 +28,12 @@ public class LoginController {
 
     @GetMapping("/")
     public String home(@RequestParam(value = "page", defaultValue = "0") int page,
-                       HttpServletRequest request, Model model) {
+                       HttpServletRequest request, HttpServletResponse response, Model model) {
         model.addAttribute("menu", "home");
         HttpSession session = request.getSession(false);
+        String requestURI = request.getRequestURI();
+        Cookie cookie = new Cookie("url", requestURI);
+        response.addCookie(cookie);
         log.info("페이지 정보 확인 = '{}' ", page);
 
         if (session != null) {
@@ -39,7 +42,6 @@ public class LoginController {
         }
 
         Page<MusicList> paging = musicListService.findMusicList(page);
-
 
         model.addAttribute("page", page);
         model.addAttribute("paging", paging);
@@ -61,21 +63,19 @@ public class LoginController {
             model.addAttribute("end", paging.getTotalPages()-1);
         }
 
-
-
         log.info("스타트 페이지 확인 해보기 = '{}' ", start);
 
         return "home";
     }
 
     @GetMapping("/loginInterceptor")
-    public String loginBuyForm(Model model) {
+    public String loginInterceptor(Model model) {
         model.addAttribute("loginFormDto", new LoginFormDto());
         return "/login/loginInterceptorForm";
     }
 
     @PostMapping("/loginInterceptor")
-    public String loginBuyForm(@CookieValue("url") String url, @Valid LoginFormDto loginFormDto,
+    public String loginInterceptor(@CookieValue("url") String url, @Valid LoginFormDto loginFormDto,
                                BindingResult bindingResult, HttpServletRequest request) {
         Member result = loginService.login(loginFormDto);
         log.info("로그인후 돌아갈 경로 확인 = '{}'", url);
@@ -97,14 +97,17 @@ public class LoginController {
     }
 
     @GetMapping("/login")
-    public String loginForm(Model model) {
-
+    public String login(Model model, HttpServletRequest request, HttpServletResponse response) {
+        String referer = request.getHeader("Referer");
+        Cookie cookie = new Cookie("url", referer);
+        log.info("이전 위치 url = {}", referer);
+        response.addCookie(cookie);
         model.addAttribute("loginFormDto", new LoginFormDto());
         return "/login/loginForm";
     }
 
     @PostMapping("/login")
-    public String login(@Valid LoginFormDto loginFormDto,
+    public String login(@CookieValue("url") String url, @Valid LoginFormDto loginFormDto,
                         BindingResult bindingResult, HttpServletRequest request) {
         Member result = loginService.login(loginFormDto);
 
@@ -122,7 +125,7 @@ public class LoginController {
         session.setAttribute("loginId", loginFormDto.getId());
 
         log.info("세션 로그인 아이디 = '{}'", loginFormDto.getId());
-        return "redirect:/";
+        return "redirect:" + url;
     }
 
     @PostMapping("/logout")

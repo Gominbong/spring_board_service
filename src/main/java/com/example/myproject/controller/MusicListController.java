@@ -1,34 +1,27 @@
 package com.example.myproject.controller;
 
-import com.example.myproject.domain.FileList;
-import com.example.myproject.domain.Member;
-import com.example.myproject.domain.MusicList;
-import com.example.myproject.domain.SellBuyList;
+import com.example.myproject.domain.*;
 import com.example.myproject.dto.MusicListFormDto;
 import com.example.myproject.dto.UpdateMusicListFormDto;
-import com.example.myproject.service.FileListService;
-import com.example.myproject.service.MemberService;
-import com.example.myproject.service.MusicListService;
-import com.example.myproject.service.SellBuyListService;
+import com.example.myproject.service.*;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import java.net.MalformedURLException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -39,6 +32,7 @@ public class MusicListController {
     private final FileListService fileListService;
     private final SellBuyListService sellBuyListService;
     private final MemberService memberService;
+    private final LikeCountService likeCountService;
 
     @GetMapping("/download/{id}")
     public ResponseEntity<Resource> downloadAttach(@PathVariable Long id) throws MalformedURLException {
@@ -59,23 +53,24 @@ public class MusicListController {
     }
 
     @GetMapping("/content")
-    public String contentForm(@RequestParam("musicListId") Long id, Model model,
-                              HttpServletRequest request) throws MalformedURLException {
+    public String content(@RequestParam("musicListId") Long id, Model model,
+                              HttpServletRequest request, HttpServletResponse response)
+            throws MalformedURLException {
         HttpSession session = request.getSession();
         String loginId = (String) session.getAttribute("loginId");
         model.addAttribute("loginId", loginId);
-
+        LikeCount likeCount = likeCountService.findMyLike(id, loginId);
         MusicList musicList = musicListService.findById(id);
         List<FileList> fileList = fileListService.findByFiles(id);
         SellBuyList sellBuyList = sellBuyListService.myBuyInfo(musicList, loginId);
         Member member = memberService.findByLoginId(loginId);
+
         if (member == null){
             model.addAttribute("memberCash",-1);
         }else{
             Integer memberCash = member.getCash();
             model.addAttribute("memberCash", memberCash);
         }
-
 
         if (musicList.getSoftDelete() != null) {
             log.info("삭제된 게시글 입니다.");
@@ -86,6 +81,11 @@ public class MusicListController {
             log.info("ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ");
         }
 
+        if (likeCount != null){
+            model.addAttribute("likeCount", 1);
+        }else{
+            model.addAttribute("likeCount", 0);
+        }
         model.addAttribute("fileList", fileList);
         model.addAttribute("musicList", musicList);
         model.addAttribute("sellBuyList", sellBuyList);
@@ -137,9 +137,9 @@ public class MusicListController {
 
         return "/musicList/editMusicListForm";
     }
-    
+
     @GetMapping("/addMusicList")
-    public String addItemForm(HttpServletRequest request, Model model) {
+    public String addMusicList(HttpServletRequest request, Model model) {
 
         log.info("등록 페이지 입니다.");
         HttpSession session = request.getSession();
@@ -151,17 +151,8 @@ public class MusicListController {
         return "/musicList/addMusicListForm";
     }
 
-
-    @ResponseStatus(HttpStatus.PAYLOAD_TOO_LARGE)
-    @ExceptionHandler(MaxUploadSizeExceededException.class)
-    public String handleSizeLimitExceededException(MaxUploadSizeExceededException ex) {
-        log.info("MaxUploadSizeExceededException :: " + ex.getLocalizedMessage());
-        log.info("getMessage :: " + ex.getMessage());
-
-        return "redirect:/";
-    }
     @PostMapping("/addMusicList")
-    public String addItemForm(MusicListFormDto musicListFormDto, HttpServletRequest request, Model model) {
+    public String addMusicList(MusicListFormDto musicListFormDto, HttpServletRequest request, Model model) {
 
         HttpSession session = request.getSession();
         String loginId = (String) session.getAttribute("loginId");
@@ -176,6 +167,22 @@ public class MusicListController {
         }
 
         return "redirect:/";
+    }
+
+    @GetMapping("/likeCount")
+    public String likeCount(@RequestParam("musicListId") Long id,
+                            HttpServletRequest request, HttpServletResponse response, Model model){
+        String referer = request.getHeader("Referer");
+        HttpSession session = request.getSession();
+        String loginId = (String)session.getAttribute("loginId");
+        LikeCount like = likeCountService.like(id, loginId);
+        if (like != null){
+            log.info("추천 성공");
+        }else {
+            log.info("추천은 1개아이디당 한번만가능");
+        }
+
+        return "redirect:" + referer;
     }
 
 }

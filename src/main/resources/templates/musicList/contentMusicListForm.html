@@ -51,17 +51,9 @@
     <div id='buy_div' style="display: none">
         <form style="margin-top: 20px">
             <h1>구매하시겠습니까</h1>
-            <button type="button" class="btn btn-lg btn-primary" th:if="${memberCash == -1}"
-                    onclick="btnLogin()">Yes
-            </button>
-            <button type="button" class="btn btn-lg btn-primary" th:if="${memberCash >= musicList.price}"
-                    th:onclick="|location.href='@{/buyMusicList (musicListId=${musicList.id}) }'|">Yes
-            </button>
             <button type="button" class="btn btn-lg btn-primary"
-                    th:if="${memberCash < musicList.price and memberCash != -1}"
-                    onclick="btnNoCash()">Yes
+                    onclick="btnBuy()">Yes
             </button>
-
         </form>
     </div>
 
@@ -92,10 +84,25 @@
 
 
     <div style="margin-top: 20px">
-        <button class="btn btn-lg btn-primary" th:text="${'추천 '+ musicList.likeCount}"></button>
+        <button class="btn btn-lg btn-primary" th:text="${'추천 '+ musicList.likeCount}"
+                onclick="btnLike()"></button>
     </div>
 
     <script type="text/javascript">
+
+        function btnLike() {
+            const memberCash = [[${memberCash}]];
+            const likeCount = [[${likeCount}]];
+            if (memberCash < 0) {
+                if (confirm("추천하려면로그인하세요")) {
+                    document.location.href = "/login";
+                }
+            } else if (likeCount > 0) {
+                alert('아이디당1개추천만가능합니다')
+            } else {
+                document.location.href = "/likeCount?musicListId=[[${musicList.id}]]"
+            }
+        }
 
         function deleteSubmit() {
             if (confirm("삭제하시겠습니까")) {
@@ -105,21 +112,27 @@
             }
         }
 
-        function btnLogin(){
-            if (confirm("구매하려면로그인하시겠습니까")) {
-                document.location.href="/buyMusicList?musicListId=[[${musicList.id}]]";
-
-            } else {
-                return false;
-            }
-        }
-
-        function btnNoCash(){
-            const cash = [[${memberCash}]];
-            if (confirm("잔액이 부족합니다 잔액 = " + cash + "원 충전하시겠습니까")){
-                document.location.href="/myInfo";
-            }else{
-                return false;
+        function btnBuy() {
+            const memberCash = [[${memberCash}]];
+            const musicPrice = [[${musicList.price}]];
+            if (memberCash < 0) {
+                if (confirm("구매하시려면로그인하시겠습니까")) {
+                    document.location.href = "/buyMusicList?musicListId=[[${musicList.id}]]";
+                } else {
+                    return false;
+                }
+            } else if (memberCash >= musicPrice) {
+                if (confirm("정말구매하시겠습니까")) {
+                    document.location.href = "/buyMusicList?musicListId=[[${musicList.id}]]";
+                } else {
+                    return false;
+                }
+            } else if (memberCash < musicPrice) {
+                if (confirm("잔액이부족합니다충전하시겠습니까")) {
+                    document.location.href = "/myInfo";
+                } else {
+                    return false;
+                }
             }
         }
 
