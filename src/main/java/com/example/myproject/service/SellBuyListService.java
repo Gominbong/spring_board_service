@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
@@ -52,12 +53,12 @@ public class SellBuyListService {
     }
 
     public Page<SellBuyList> findBuyList(int page, String loginId) {
-        Pageable pageable = PageRequest.of(page, 15);
+        Pageable pageable = PageRequest.of(page, 15, Sort.by(Sort.Direction.DESC, "id"));
         return sellBuyListRepository.findMyBuyList(pageable, loginId);
     }
 
     public Page<SellBuyList> findSellList(int page, String loginId) {
-        Pageable pageable = PageRequest.of(page, 15);
+        Pageable pageable = PageRequest.of(page, 15, Sort.by(Sort.Direction.DESC, "id"));
         return sellBuyListRepository.findMySellList(pageable, loginId);
     }
 

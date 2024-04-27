@@ -9,15 +9,18 @@
         <li>제목 <p th:text="*{title}"></p></li>
         <li>만든이 <p th:text="*{memberNickname}"></p></li>
         <li>가격 <p th:text="*{price}"></p></li>
+        <li>판매량 <p th:text="*{salesQuantity}"></p></li>
         <li>등록일 <p th:text="*{localDateTime}"></p></li>
         <li>내용 <p style="white-space: pre-line" th:text="*{content}"></p></li>
         <li th:if="${sellBuyList!=null}">구매일<p th:text="${sellBuyList.localDate}"></p></li>
         <li>첨부파일
             <div style="max-height: 150px; overflow: auto">
                 <table th:if="${sellBuyList} or ${#strings.equals(loginId,musicList.loginId)}">
-                    <tr th:each="fileList : ${fileList}">
+                    <tr th:each="fileLists : ${fileList}">
                         <td>
-                            <a th:href="|/download/${fileList.id}|" th:text="${fileList.originalFilename}"></a>
+                            <p style="color: blue; text-decoration: underline;  cursor: pointer;"
+                               th:text="${fileLists.originalFilename}"
+                               th:onclick="download([[${fileLists.id}]])"></p>
                         </td>
                     </tr>
                 </table>
@@ -90,17 +93,40 @@
 
     <script type="text/javascript">
 
+        function download(fileListId){
+            const form = document.createElement('form');
+            form.method = 'post';
+            form.action = '/download';
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'fileListId'
+            input.value = fileListId;
+            form.appendChild(input);
+            document.body.appendChild(form);
+            form.submit();
+        }
+
         function btnLike() {
             const memberCash = [[${memberCash}]];
             const likeCount = [[${likeCount}]];
-            if (memberCash < 0) {
+            const musicListId = [[${musicList.Id}]];
+            if (memberCash == -1) {
                 if (confirm("추천하려면로그인하세요")) {
                     document.location.href = "/login";
                 }
-            } else if (likeCount > 0) {
+            } else if (likeCount == 1) {
                 alert('아이디당1개추천만가능합니다')
             } else {
-                document.location.href = "/likeCount?musicListId=[[${musicList.id}]]"
+                const form = document.createElement('form');
+                form.method = 'post';
+                form.action = '/likeCount';
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'musicListId'
+                input.value = musicListId;
+                form.appendChild(input);
+                document.body.appendChild(form);
+                form.submit();
             }
         }
 
@@ -113,17 +139,36 @@
         }
 
         function btnBuy() {
+            const musicListId = [[${musicList.Id}]];
             const memberCash = [[${memberCash}]];
             const musicPrice = [[${musicList.price}]];
-            if (memberCash < 0) {
+            if (memberCash == -1) {
                 if (confirm("구매하시려면로그인하시겠습니까")) {
-                    document.location.href = "/buyMusicList?musicListId=[[${musicList.id}]]";
+                    const form = document.createElement('form');
+                    form.method = 'post';
+                    form.action = '/buyMusicList';
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'musicListId'
+                    input.value = musicListId;
+                    form.appendChild(input);
+                    document.body.appendChild(form);
+                    form.submit();
                 } else {
                     return false;
                 }
             } else if (memberCash >= musicPrice) {
                 if (confirm("정말구매하시겠습니까")) {
-                    document.location.href = "/buyMusicList?musicListId=[[${musicList.id}]]";
+                    const form = document.createElement('form');
+                    form.method = 'post';
+                    form.action = '/buyMusicList';
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'musicListId'
+                    input.value = musicListId;
+                    form.appendChild(input);
+                    document.body.appendChild(form);
+                    form.submit();
                 } else {
                     return false;
                 }

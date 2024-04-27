@@ -96,11 +96,10 @@
         const storeFilename = row.cells[0].innerText;
         const originalFilename = row.cells[1].innerText;
 
-;
         if (confirm(originalFilename+"삭제하시겟습니까")) {
             const formData = document.getElementById("formId");
             const input = document.createElement('input');
-            input.type = "hidden"
+            input.type = "hidden";
             input.name = "filename";
             input.value = storeFilename;
             formData.appendChild(input);

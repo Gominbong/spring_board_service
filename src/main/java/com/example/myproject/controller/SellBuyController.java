@@ -2,6 +2,7 @@ package com.example.myproject.controller;
 
 import com.example.myproject.domain.Member;
 import com.example.myproject.domain.SellBuyList;
+import com.example.myproject.dto.BuyMusicListDto;
 import com.example.myproject.service.MemberService;
 import com.example.myproject.service.SellBuyListService;
 import jakarta.servlet.http.Cookie;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
@@ -24,9 +26,9 @@ public class SellBuyController {
     private final SellBuyListService sellBuyListService;
     private final MemberService memberService;
 
-    @GetMapping("/buyMusicList")
-    public String buyComplete(@RequestParam("musicListId") Long id,
-                              HttpServletRequest request, HttpServletResponse response){
+    @PostMapping("/buyMusicList")
+    public String buyComplete(BuyMusicListDto buyMusicListDto, HttpServletRequest request,
+                              HttpServletResponse response){
         HttpSession session = request.getSession();
         String loginId = (String)session.getAttribute("loginId");
         String referer = request.getHeader("Referer");
@@ -37,7 +39,7 @@ public class SellBuyController {
             response.addCookie(cookie);
             return "redirect:/loginInterceptor";
         }
-        Member result = sellBuyListService.buyMusicList(id, loginId);
+        Member result = sellBuyListService.buyMusicList(buyMusicListDto.getMusicListId(), loginId);
 
         if (result == null){
             log.info("잔액부족");

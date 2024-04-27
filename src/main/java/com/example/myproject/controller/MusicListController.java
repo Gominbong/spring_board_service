@@ -1,10 +1,11 @@
 package com.example.myproject.controller;
 
 import com.example.myproject.domain.*;
+import com.example.myproject.dto.DownloadDto;
+import com.example.myproject.dto.LikeCountDto;
 import com.example.myproject.dto.MusicListFormDto;
 import com.example.myproject.dto.UpdateMusicListFormDto;
 import com.example.myproject.service.*;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -34,9 +35,9 @@ public class MusicListController {
     private final MemberService memberService;
     private final LikeCountService likeCountService;
 
-    @GetMapping("/download/{id}")
-    public ResponseEntity<Resource> downloadAttach(@PathVariable Long id) throws MalformedURLException {
-        FileList file = fileListService.findById(id);
+    @PostMapping("/download")
+    public ResponseEntity<Resource> downloadAttach(DownloadDto downloadDto) throws MalformedURLException {
+        FileList file = fileListService.findById(downloadDto.getFileListId());
 
         String originalFilename = file.getOriginalFilename();
         String storedFilename = file.getStoredFilename();
@@ -64,6 +65,12 @@ public class MusicListController {
         List<FileList> fileList = fileListService.findByFiles(id);
         SellBuyList sellBuyList = sellBuyListService.myBuyInfo(musicList, loginId);
         Member member = memberService.findByLoginId(loginId);
+        if (likeCount != null){
+            log.info("아이디1개당1개추천만가능합니다.");
+            model.addAttribute("likeCount", 1);
+        }else{
+            model.addAttribute("likeCount", 0);
+        }
 
         if (member == null){
             model.addAttribute("memberCash",-1);
@@ -72,20 +79,16 @@ public class MusicListController {
             model.addAttribute("memberCash", memberCash);
         }
 
-        if (musicList.getSoftDelete() != null) {
+        if (musicList.getSoftDelete() != null && musicList.getSalesQuantity() == 0) {
+            log.info("총판매수량 = {}", musicList.getSalesQuantity());
             log.info("삭제된 게시글 입니다.");
             return "/musicList/deletedMusicListForm";
         }
 
         if (fileList.isEmpty()) {
-            log.info("ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ");
+            log.info("첨부파일없다.");
         }
 
-        if (likeCount != null){
-            model.addAttribute("likeCount", 1);
-        }else{
-            model.addAttribute("likeCount", 0);
-        }
         model.addAttribute("fileList", fileList);
         model.addAttribute("musicList", musicList);
         model.addAttribute("sellBuyList", sellBuyList);
@@ -169,13 +172,12 @@ public class MusicListController {
         return "redirect:/";
     }
 
-    @GetMapping("/likeCount")
-    public String likeCount(@RequestParam("musicListId") Long id,
-                            HttpServletRequest request, HttpServletResponse response, Model model){
+    @PostMapping("/likeCount")
+    public String likeCount(LikeCountDto likeCountDto, HttpServletRequest request){
         String referer = request.getHeader("Referer");
         HttpSession session = request.getSession();
         String loginId = (String)session.getAttribute("loginId");
-        LikeCount like = likeCountService.like(id, loginId);
+        LikeCount like = likeCountService.like(likeCountDto.getMusicListId(), loginId);
         if (like != null){
             log.info("추천 성공");
         }else {
