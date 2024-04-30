@@ -12,6 +12,9 @@
         color: darkviolet !important;
         cursor: pointer;
     }
+    .asd{
+        color: limegreen;
+    }
 </style>
 <body>
 <div>
@@ -64,7 +67,7 @@
 </div>
 
 
-<ul class="pagination justify-content-center">
+<ul class="pagination justify-content-center" style="margin-top: 20px">
     <li class="page-item">
         <a class="page-link" th:if="${start==0}" th:href="@{|?page=${start}|}"> << </a>
     </li>

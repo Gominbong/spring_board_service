@@ -8,7 +8,7 @@ import java.util.List;
 @Repository
 public interface FileListRepository extends JpaRepository<FileList, Long> {
 
-    List<FileList> findByMusicList_Id(Long id);
+    List<FileList> findByMusicListId(Long musicListId);
 
     FileList findByStoredFilename(String storedFilename);
 

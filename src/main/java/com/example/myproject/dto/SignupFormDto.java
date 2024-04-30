@@ -7,6 +7,7 @@ import java.time.LocalDate;
 public class SignupFormDto {
     private String id;
     private String pw;
+    private String pwCheck;
     private String nick;
     private LocalDate localDate;
 

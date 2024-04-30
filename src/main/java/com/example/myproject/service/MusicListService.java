@@ -141,7 +141,7 @@ public class MusicListService {
         musicList.setPrice(updateMusicListFormDto.getPrice());
         musicList.setContent(updateMusicListFormDto.getContent());
 
-        String[] filename = updateMusicListFormDto.getFilename();
+        List<String> filename = updateMusicListFormDto.getFilename();
         log.info("업데이트디티오 = {}", updateMusicListFormDto.toString());
         if (filename != null){
             for (String file : filename) {

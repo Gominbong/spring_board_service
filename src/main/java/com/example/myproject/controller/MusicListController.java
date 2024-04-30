@@ -1,10 +1,7 @@
 package com.example.myproject.controller;
 
 import com.example.myproject.domain.*;
-import com.example.myproject.dto.DownloadDto;
-import com.example.myproject.dto.LikeCountDto;
-import com.example.myproject.dto.MusicListFormDto;
-import com.example.myproject.dto.UpdateMusicListFormDto;
+import com.example.myproject.dto.*;
 import com.example.myproject.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -63,7 +60,7 @@ public class MusicListController {
         LikeCount likeCount = likeCountService.findMyLike(id, loginId);
         MusicList musicList = musicListService.findById(id);
         List<FileList> fileList = fileListService.findByFiles(id);
-        SellBuyList sellBuyList = sellBuyListService.myBuyInfo(musicList, loginId);
+        SellBuyList sellBuyList = sellBuyListService.myBuyInfo(id, loginId);
         Member member = memberService.findByLoginId(loginId);
         if (likeCount != null){
             log.info("아이디1개당1개추천만가능합니다.");
@@ -96,9 +93,9 @@ public class MusicListController {
     }
 
     @PostMapping("/deleteMusicList")
-    public String deleteMusicList(@RequestParam("musicListId") Long id) {
-        musicListService.deleteMusicList(id);
-        log.info("삭제할 아이디값 확인 = {} ", id);
+    public String deleteMusicList(MusicListDeleteDto musicListDeleteDto) {
+        musicListService.deleteMusicList(musicListDeleteDto.getMusicListId());
+        log.info("삭제할 아이디값 확인 = {} ", musicListDeleteDto.getMusicListId());
         log.info("논리적 삭제 완료 내용 필드값 null 업데이트해서 삭제 구분");
         return "redirect:/";
     }

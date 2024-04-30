@@ -29,7 +29,11 @@ public class SignupService {
         Member member = new Member();
         Map<String, String> errors = new HashMap<>();
         member.setLoginId(signupFormDto.getId());
-        member.setPassword(passwordEncoder.encode(signupFormDto.getPw()));
+        if (signupFormDto.getPw().equals(signupFormDto.getPwCheck())){
+            member.setPassword(passwordEncoder.encode(signupFormDto.getPw()));
+        }else{
+            errors.put("pwCheck","패스워드불일치");
+        }
         member.setNickname(signupFormDto.getNick());
         member.setCash(10000);
         member.setRevenue(0);
@@ -40,6 +44,9 @@ public class SignupService {
         }
         if (!StringUtils.hasText(signupFormDto.getPw())) {
             errors.put("pw", "패스워드필수입니다");
+        }
+        if (!StringUtils.hasText(signupFormDto.getPwCheck())) {
+            errors.put("pwCheck", "패스워드필수입니다");
         }
         if (!StringUtils.hasText(signupFormDto.getNick())) {
             errors.put("nick", "닉네임필수입니다");

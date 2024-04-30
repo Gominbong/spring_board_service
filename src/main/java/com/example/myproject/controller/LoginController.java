@@ -28,12 +28,9 @@ public class LoginController {
 
     @GetMapping("/")
     public String home(@RequestParam(value = "page", defaultValue = "0") int page,
-                       HttpServletRequest request, HttpServletResponse response, Model model) {
+                       HttpServletRequest request, Model model) {
         model.addAttribute("menu", "home");
         HttpSession session = request.getSession(false);
-        String requestURI = request.getRequestURI();
-        Cookie cookie = new Cookie("url", requestURI);
-        response.addCookie(cookie);
         log.info("페이지 정보 확인 = '{}' ", page);
 
         if (session != null) {
@@ -107,7 +104,7 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public String login(@CookieValue("url") String url, @Valid LoginFormDto loginFormDto,
+    public String login(@Valid LoginFormDto loginFormDto,
                         BindingResult bindingResult, HttpServletRequest request) {
         Member result = loginService.login(loginFormDto);
 
@@ -125,11 +122,11 @@ public class LoginController {
         session.setAttribute("loginId", loginFormDto.getId());
 
         log.info("세션 로그인 아이디 = '{}'", loginFormDto.getId());
-        return "redirect:" + url;
+        return "redirect:/";
     }
 
     @PostMapping("/logout")
-    public String logout(HttpServletRequest request) {
+    public String logout(HttpServletRequest request, HttpServletResponse response) {
 
         HttpSession session = request.getSession(false);
         if (session != null) {

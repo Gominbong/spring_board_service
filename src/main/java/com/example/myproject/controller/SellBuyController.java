@@ -45,6 +45,7 @@ public class SellBuyController {
             log.info("잔액부족");
         }else{
             log.info("구매성공");
+
         }
 
         return "redirect:" + referer;

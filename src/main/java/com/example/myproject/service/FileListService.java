@@ -16,7 +16,7 @@ public class FileListService {
 
 
     public List<FileList> findByFiles(Long id) {
-        return fileListRepository.findByMusicList_Id(id);
+        return fileListRepository.findByMusicListId(id);
     }
 
     public FileList findById(Long fileId) {

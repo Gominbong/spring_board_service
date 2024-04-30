@@ -13,8 +13,9 @@
         <li>등록일 <p th:text="*{localDateTime}"></p></li>
         <li>내용 <p style="white-space: pre-line" th:text="*{content}"></p></li>
         <li th:if="${sellBuyList!=null}">구매일<p th:text="${sellBuyList.localDate}"></p></li>
-        <li>첨부파일
-            <div style="max-height: 150px; overflow: auto">
+        <li th:if="${fileList.isEmpty()}">첨부파일 미등록</li>
+        <li th:if="${!fileList.isEmpty()}">첨부파일
+            <div style="max-height: 160px; overflow: auto">
                 <table th:if="${sellBuyList} or ${#strings.equals(loginId,musicList.loginId)}">
                     <tr th:each="fileLists : ${fileList}">
                         <td>
@@ -25,8 +26,8 @@
                     </tr>
                 </table>
             </div>
-
         </li>
+
     </ul>
 
     <div th:if="${sellBuyList==null} and ${!#strings.equals(loginId,musicList.loginId)}">
@@ -61,9 +62,11 @@
     </div>
 
     <div id='cart_div' style="display: none">
-        <form style="margin-top: 20px">
+        <form style="margin-top: 20px" method="post" th:action="@{/cartAdd}" onsubmit="return addCartSubmit()">
             <h1>장바구니담으시겟습니까</h1>
-            <button type="button" class="btn btn-lg btn-primary">Yes</button>
+            <button type="submit" th:name="musicListId" th:value="${musicList.id}"
+                    class="btn btn-lg btn-primary">Yes
+            </button>
         </form>
     </div>
 
@@ -78,10 +81,10 @@
 
     <div id='delete_div' style="display: none">
         <form style="margin-top: 20px" id="delete_form" method="post"
-              th:action="@{/deleteMusicList}" onsubmit="return deleteSubmit()">
+              action="/deleteMusicList" onsubmit="return deleteSubmit()">
+            <input type="hidden" th:name="musicListId" th:value="${musicList.id}">
             <h1>삭제하시겟습니까</h1>
-            <button type="submit" th:name="musicListId" th:value="${musicList.id}" class="btn btn-lg btn-primary">Yes
-            </button>
+            <button type="submit" class="btn btn-lg btn-primary">Yes</button>
         </form>
     </div>
 
@@ -92,6 +95,14 @@
     </div>
 
     <script type="text/javascript">
+
+        function addCartSubmit(){
+            if (confirm("장바구니에추가하시겠습니까")) {
+                return true;
+            } else {
+                return false;
+            }
+        }
 
         function download(fileListId){
             const form = document.createElement('form');
@@ -112,7 +123,7 @@
             const musicListId = [[${musicList.Id}]];
             if (memberCash == -1) {
                 if (confirm("추천하려면로그인하세요")) {
-                    document.location.href = "/login";
+                    document.location.href = "/loginInterceptor";
                 }
             } else if (likeCount == 1) {
                 alert('아이디당1개추천만가능합니다')

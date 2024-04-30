@@ -16,7 +16,7 @@ import java.util.Optional;
 @Repository
 public interface SellBuyListRepository extends JpaRepository<SellBuyList, Long> {
 
-    SellBuyList findByMusicListAndBuyMemberLoginId(MusicList id, String loginId);
+    SellBuyList findByMusicListIdAndBuyMemberLoginId(Long musicListId, String buyMemberLoginId);
 
     @Query("select s from SellBuyList s inner join fetch s.musicList m where s.buyMemberLoginId = :loginId")
     Page<SellBuyList> findMyBuyList(Pageable pageable, String loginId);
