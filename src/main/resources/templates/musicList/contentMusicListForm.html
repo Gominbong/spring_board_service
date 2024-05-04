@@ -75,13 +75,28 @@
         </form>
     </div>
 
-    <div id='cart_div' style="display: none">
-        <form style="margin-top: 20px" method="post" class="row g-2"
-              th:action="@{/cartAdd}" onsubmit="return addCartSubmit()">
+    <div id='cart_div' style="display: none" >
+        <div th:if="${loginId}">
+            <form style="margin-top: 20px" method="post" class="row g-2"
+                  th:action="@{/cartAdd}" onsubmit="return addCartSubmit()">
+                <h1>장바구니담으시겟습니까</h1>
+                <div class="col-auto">
+                    <button type="submit" th:name="musicListId" th:value="${musicList.id}"
+                            class="btn btn-lg btn-primary">Yes
+                    </button>
+                </div>
+                <div class="col-auto">
+                    <button type="button" class="btn btn-lg btn-primary"
+                            onclick="btnNo('cart_div')">No
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div th:if="${loginId==null}" class="row g-2" style="margin-top: 20px">
             <h1>장바구니담으시겟습니까</h1>
             <div class="col-auto">
-                <button type="submit" th:name="musicListId" th:value="${musicList.id}"
-                        class="btn btn-lg btn-primary">Yes
+                <button type="button" onclick="cartAddBtn()" class="btn btn-lg btn-primary">Yes
                 </button>
             </div>
             <div class="col-auto">
@@ -90,9 +105,9 @@
                 </button>
             </div>
 
+        </div>
 
-            </button>
-        </form>
+
     </div>
 
     <div id='update_div' style="display: none">
@@ -135,8 +150,7 @@
     </div>
 
     <div style="margin-bottom: 20px">
-        <button class="btn btn-lg btn-primary" th:text="${'댓글수 '+ commentList.size()}"
-                onclick="btnLike()"></button>
+        <button class="btn btn-lg btn-primary" th:text="${'댓글수 '+ commentList.size()}"></button>
     </div>
 
     <div style="width: 800px; border-color: brown;" th:each="list : ${commentList}">
@@ -275,6 +289,14 @@
         const elementById = document.getElementById(obj);
         elementById.style.display = 'none';
 
+    }
+
+    function cartAddBtn(){
+        if (confirm("장바구니추가하시겠습니까")) {
+            document.location.href = "/loginInterceptor";
+        } else {
+            return false;
+        }
     }
 
     function btnBuy() {

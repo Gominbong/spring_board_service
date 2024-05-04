@@ -73,7 +73,7 @@ public class MusicListController {
 
     @GetMapping("/content")
     public String content(@RequestParam("musicListId") Long id, Model model,
-                              HttpServletRequest request, HttpServletResponse response)
+                              HttpServletRequest request)
             throws MalformedURLException {
         HttpSession session = request.getSession();
         String loginId = (String) session.getAttribute("loginId");
