@@ -22,8 +22,8 @@ public class Member {
     @NotEmpty
     private String nickname;
     private Integer cash;
-    private LocalDate localDate;
     private Integer revenue;
+    private String createTime;
 
 
 }

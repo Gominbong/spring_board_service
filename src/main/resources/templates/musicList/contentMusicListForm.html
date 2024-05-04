@@ -1,27 +1,32 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/header :: head}"/>
+<style>
+    .addBtn:hover {
+        border-width: thin;
+        background-color: cyan;
+    }
+</style>
 <div th:replace="~{fragments/header :: header ('home')}"/>
-
-<div class="container" th:object="${musicList}" style="height: 1000px; margin-top: 20px;">
+<div class="container" th:object="${musicList}" style="margin-top: 20px">
 
     <ul style="font-size: large">
         <li>제목 <p th:text="*{title}"></p></li>
-        <li>만든이 <p th:text="*{memberNickname}"></p></li>
+        <li>글쓴이 <p th:text="*{member.nickname}"></p></li>
         <li>가격 <p th:text="*{price}"></p></li>
         <li>판매량 <p th:text="*{salesQuantity}"></p></li>
-        <li>등록일 <p th:text="*{localDateTime}"></p></li>
+        <li>등록일 <p th:text="*{createTime}"></p></li>
         <li>내용 <p style="white-space: pre-line" th:text="*{content}"></p></li>
-        <li th:if="${sellBuyList!=null}">구매일<p th:text="${sellBuyList.localDate}"></p></li>
+        <li th:if="${sellBuyList!=null}">구매일<p th:text="${sellBuyList.createTime}"></p></li>
         <li th:if="${fileList.isEmpty()}">첨부파일 미등록</li>
         <li th:if="${!fileList.isEmpty()}">첨부파일
             <div style="max-height: 160px; overflow: auto">
-                <table th:if="${sellBuyList} or ${#strings.equals(loginId,musicList.loginId)}">
-                    <tr th:each="fileLists : ${fileList}">
+                <table th:if="${sellBuyList} or ${#strings.equals(loginId, musicList.member.loginId)}">
+                    <tr th:each="list : ${fileList}">
                         <td>
                             <p style="color: blue; text-decoration: underline;  cursor: pointer;"
-                               th:text="${fileLists.originalFilename}"
-                               th:onclick="download([[${fileLists.id}]])"></p>
+                               th:text="${list.originalFilename}"
+                               th:onclick="download([[${list.id}]])"></p>
                         </td>
                     </tr>
                 </table>
@@ -30,7 +35,7 @@
 
     </ul>
 
-    <div th:if="${sellBuyList==null} and ${!#strings.equals(loginId,musicList.loginId)}">
+    <div th:if="${sellBuyList==null} and ${!#strings.equals(loginId,musicList.member.loginId)}">
         <button onclick="buyBtnClick()"
                 type="button" class="btn btn-primary btn-lg">구매하기
         </button>
@@ -43,7 +48,7 @@
         <button type="button" class="btn btn-primary btn-lg">구매한상품입니다</button>
     </div>
 
-    <div th:if="${#strings.equals(loginId,musicList.loginId)}">
+    <div th:if="${#strings.equals(loginId,musicList.member.loginId)}">
         <button onclick="updateBtnClick()"
                 type="button" class="btn btn-primary btn-lg">수정하기
         </button>
@@ -53,84 +58,234 @@
     </div>
 
     <div id='buy_div' style="display: none">
-        <form style="margin-top: 20px">
+        <form style="margin-top: 20px" class="row g-2">
             <h1>구매하시겠습니까</h1>
-            <button type="button" class="btn btn-lg btn-primary"
-                    onclick="btnBuy()">Yes
-            </button>
+            <div class="col-auto">
+                <button type="button" class="btn btn-lg btn-primary"
+                        onclick="btnBuy()">Yes
+                </button>
+            </div>
+            <div class="col-auto">
+                <button type="button" class="btn btn-lg btn-primary"
+                        onclick="btnNo('buy_div')">No
+                </button>
+            </div>
+
+
         </form>
     </div>
 
     <div id='cart_div' style="display: none">
-        <form style="margin-top: 20px" method="post" th:action="@{/cartAdd}" onsubmit="return addCartSubmit()">
+        <form style="margin-top: 20px" method="post" class="row g-2"
+              th:action="@{/cartAdd}" onsubmit="return addCartSubmit()">
             <h1>장바구니담으시겟습니까</h1>
-            <button type="submit" th:name="musicListId" th:value="${musicList.id}"
-                    class="btn btn-lg btn-primary">Yes
+            <div class="col-auto">
+                <button type="submit" th:name="musicListId" th:value="${musicList.id}"
+                        class="btn btn-lg btn-primary">Yes
+                </button>
+            </div>
+            <div class="col-auto">
+                <button type="button" class="btn btn-lg btn-primary"
+                        onclick="btnNo('cart_div')">No
+                </button>
+            </div>
+
+
             </button>
         </form>
     </div>
 
     <div id='update_div' style="display: none">
-        <form style="margin-top: 20px" method="post" th:action="@{/editMusicList}">
+        <form style="margin-top: 20px" method="post" th:action="@{/editMusicList}" class="row g-2">
             <h1>수정하시겠습니까</h1>
-            <button type="submit" th:name="musicListId" th:value="${musicList.id}"
-                    class="btn btn-lg btn-primary">Yes
-            </button>
+            <div class="col-auto">
+                <button type="submit" th:name="musicListId" th:value="${musicList.id}"
+                        class="btn btn-lg btn-primary">Yes
+                </button>
+            </div>
+            <div class="col-auto">
+                <button type="button" class="btn btn-lg btn-primary"
+                        onclick="btnNo('update_div')">No
+                </button>
+            </div>
         </form>
     </div>
 
     <div id='delete_div' style="display: none">
-        <form style="margin-top: 20px" id="delete_form" method="post"
+        <form style="margin-top: 20px" id="delete_form" method="post" class="row g-2"
               action="/deleteMusicList" onsubmit="return deleteSubmit()">
             <input type="hidden" th:name="musicListId" th:value="${musicList.id}">
             <h1>삭제하시겟습니까</h1>
-            <button type="submit" class="btn btn-lg btn-primary">Yes</button>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-lg btn-primary">Yes</button>
+            </div>
+            <div class="col-auto">
+                <button type="button" class="btn btn-lg btn-primary"
+                        onclick="btnNo('delete_div')">No
+                </button>
+            </div>
+
         </form>
     </div>
 
 
-    <div style="margin-top: 20px">
+    <div style="margin-top: 20px; margin-bottom: 20px">
         <button class="btn btn-lg btn-primary" th:text="${'추천 '+ musicList.likeCount}"
                 onclick="btnLike()"></button>
     </div>
 
-    <script type="text/javascript">
+    <div style="margin-bottom: 20px">
+        <button class="btn btn-lg btn-primary" th:text="${'댓글수 '+ commentList.size()}"
+                onclick="btnLike()"></button>
+    </div>
 
-        function addCartSubmit(){
-            if (confirm("장바구니에추가하시겠습니까")) {
-                return true;
-            } else {
-                return false;
-            }
+    <div style="width: 800px; border-color: brown;" th:each="list : ${commentList}">
+        <div th:if="${list.divWidthSize==0} and ${list.getParent()==0} and ${list.getChild1()==0}">
+            <div style="margin-left: 0%; border-width: 1px 1px 1px 1px; border-style: solid; border-color: brown">
+                <p th:text="${list.content}"></p>
+                <p th:text="${list.id}"></p>
+                <p>aaa</p>
+            </div>
+        </div>
+        <div th:if="${list.divWidthSize==0} and ${list.getParent()!=0} and ${list.getChild1()==0}">
+            <div style="margin-left: 0%; border-width: 0px 1px 1px 1px; border-style: solid; border-color: brown">
+                <p th:text="${list.content}"></p>
+                <p th:text="${list.id}"></p>
+            </div>
+        </div>
+        <div th:if="${list.divWidthSize==1}">
+            <div style="margin-left: 3%; border-width: 0px 1px 1px 1px; border-style: solid; border-color: brown">
+                <p th:text="${list.content}"></p>
+                <p th:text="${list.id}"></p>
+            </div>
+        </div>
+        <div th:if="${list.divWidthSize==2}">
+            <div style="margin-left: 6%; border-width: 0px 1px 1px 1px; border-style: solid; border-color: brown">
+                <p th:text="${list.content}"></p>
+                <p th:text="${list.id}"></p>
+            </div>
+        </div>
+        <div th:if="${list.divWidthSize==3}">
+            <div style="margin-left: 9%; border-width: 0px 1px 1px 1px; border-style: solid; border-color: brown">
+                <p th:text="${list.content}"></p>
+                <p th:text="${list.id}"></p>
+            </div>
+        </div>
+        <div th:if="${list.divWidthSize==4}">
+            <div style="margin-left: 12%; border-width: 0px 1px 1px 1px; border-style: solid; border-color: brown">
+                <p th:text="${list.content}"></p>
+                <p th:text="${list.id}"></p>
+            </div>
+        </div>
+    </div>
+
+    <div style="margin-top: 20px; min-height: 120px; width: 800px;
+     border-width: 1px 1px 1px 1px; border-style: solid; border-color: darkred">
+
+        <form method="post" action="/comment" onsubmit="return addComment()" class="row g-1"
+              style="margin-left: 15px; margin-bottom: 10px;">
+            <p style="margin-top: 10px" class="form-label">댓글 쓰기</p>
+            <input type="hidden" th:name="musicListId" th:value="${musicList.id}">
+            <div style="min-height: 80px; width: 700px; margin-bottom: 10px;">
+                <span>
+                     <textarea class="form-control" id="content" name="content" rows="3"></textarea>
+                </span>
+            </div>
+            <button class="addBtn" style="height: 80px; width: 60px; border-width: thin; margin-left: 8px;"
+                    type="submit">등록
+            </button>
+
+        </form>
+    </div>
+
+</div>
+
+<div style="margin-top: 227px"></div>
+
+<div th:replace="~{fragments/footer :: footer}"/>
+
+<div style="margin-bottom: 130px"></div>
+
+<script type="text/javascript">
+
+    document.documentElement.style.setProperty("divWidthSize", "1%");
+
+    function addComment() {
+        if (confirm("댓글등록하시겠습니까")) {
+            return true;
+        } else {
+            return false;
         }
+    }
 
-        function download(fileListId){
+    function addCartSubmit() {
+        if (confirm("장바구니에추가하시겠습니까")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function download(fileListId) {
+        const form = document.createElement('form');
+        form.method = 'post';
+        form.action = '/download';
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'fileListId'
+        input.value = fileListId;
+        form.appendChild(input);
+        document.body.appendChild(form);
+        form.submit();
+    }
+
+    function btnLike() {
+        const memberCash = [[${memberCash}]];
+        const likeCount = [[${likeCount}]];
+        const musicListId = [[${musicList.Id}]];
+        if (memberCash == -1) {
+            if (confirm("추천하려면로그인하세요")) {
+                document.location.href = "/loginInterceptor";
+            }
+        } else if (likeCount == 1) {
+            alert('아이디당1개추천만가능합니다')
+        } else {
             const form = document.createElement('form');
             form.method = 'post';
-            form.action = '/download';
+            form.action = '/likeCount';
             const input = document.createElement('input');
             input.type = 'hidden';
-            input.name = 'fileListId'
-            input.value = fileListId;
+            input.name = 'musicListId'
+            input.value = musicListId;
             form.appendChild(input);
             document.body.appendChild(form);
             form.submit();
         }
+    }
 
-        function btnLike() {
-            const memberCash = [[${memberCash}]];
-            const likeCount = [[${likeCount}]];
-            const musicListId = [[${musicList.Id}]];
-            if (memberCash == -1) {
-                if (confirm("추천하려면로그인하세요")) {
-                    document.location.href = "/loginInterceptor";
-                }
-            } else if (likeCount == 1) {
-                alert('아이디당1개추천만가능합니다')
-            } else {
+    function deleteSubmit() {
+        if (confirm("삭제하시겠습니까")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function btnNo(obj) {
+        const elementById = document.getElementById(obj);
+        elementById.style.display = 'none';
+
+    }
+
+    function btnBuy() {
+        const musicListId = [[${musicList.Id}]];
+        const memberCash = [[${memberCash}]];
+        const musicPrice = [[${musicList.price}]];
+        if (memberCash == -1) {
+            if (confirm("구매하시려면로그인하시겠습니까")) {
                 const form = document.createElement('form');
                 form.method = 'post';
-                form.action = '/likeCount';
+                form.action = '/buyMusicList';
                 const input = document.createElement('input');
                 input.type = 'hidden';
                 input.name = 'musicListId'
@@ -138,98 +293,68 @@
                 form.appendChild(input);
                 document.body.appendChild(form);
                 form.submit();
+            } else {
+                return false;
             }
-        }
-
-        function deleteSubmit() {
-            if (confirm("삭제하시겠습니까")) {
-                return true;
+        } else if (memberCash >= musicPrice) {
+            if (confirm("정말구매하시겠습니까")) {
+                const form = document.createElement('form');
+                form.method = 'post';
+                form.action = '/buyMusicList';
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'musicListId'
+                input.value = musicListId;
+                form.appendChild(input);
+                document.body.appendChild(form);
+                form.submit();
+            } else {
+                return false;
+            }
+        } else if (memberCash < musicPrice) {
+            if (confirm("잔액이부족합니다충전하시겠습니까")) {
+                document.location.href = "/myInfo";
             } else {
                 return false;
             }
         }
+    }
 
-        function btnBuy() {
-            const musicListId = [[${musicList.Id}]];
-            const memberCash = [[${memberCash}]];
-            const musicPrice = [[${musicList.price}]];
-            if (memberCash == -1) {
-                if (confirm("구매하시려면로그인하시겠습니까")) {
-                    const form = document.createElement('form');
-                    form.method = 'post';
-                    form.action = '/buyMusicList';
-                    const input = document.createElement('input');
-                    input.type = 'hidden';
-                    input.name = 'musicListId'
-                    input.value = musicListId;
-                    form.appendChild(input);
-                    document.body.appendChild(form);
-                    form.submit();
-                } else {
-                    return false;
-                }
-            } else if (memberCash >= musicPrice) {
-                if (confirm("정말구매하시겠습니까")) {
-                    const form = document.createElement('form');
-                    form.method = 'post';
-                    form.action = '/buyMusicList';
-                    const input = document.createElement('input');
-                    input.type = 'hidden';
-                    input.name = 'musicListId'
-                    input.value = musicListId;
-                    form.appendChild(input);
-                    document.body.appendChild(form);
-                    form.submit();
-                } else {
-                    return false;
-                }
-            } else if (memberCash < musicPrice) {
-                if (confirm("잔액이부족합니다충전하시겠습니까")) {
-                    document.location.href = "/myInfo";
-                } else {
-                    return false;
-                }
-            }
+    function buyBtnClick() {
+        const buyDiv = document.getElementById('buy_div');
+        const cartDiv = document.getElementById('cart_div');
+        if (buyDiv.style.display === 'none') {
+            cartDiv.style.display = 'none';
+            buyDiv.style.display = 'inline';
         }
+    }
 
-        function buyBtnClick() {
-            const buyDiv = document.getElementById('buy_div');
-            const cartDiv = document.getElementById('cart_div');
-            if (buyDiv.style.display === 'none') {
-                cartDiv.style.display = 'none';
-                buyDiv.style.display = 'inline';
-            }
+    function cartBtnClick() {
+        const buyDiv = document.getElementById('buy_div');
+        const cartDiv = document.getElementById('cart_div');
+        if (cartDiv.style.display === 'none') {
+            buyDiv.style.display = 'none';
+            cartDiv.style.display = 'inline';
         }
+    }
 
-        function cartBtnClick() {
-            const buyDiv = document.getElementById('buy_div');
-            const cartDiv = document.getElementById('cart_div');
-            if (cartDiv.style.display === 'none') {
-                buyDiv.style.display = 'none';
-                cartDiv.style.display = 'inline';
-            }
+    function updateBtnClick() {
+        const updateDiv = document.getElementById('update_div');
+        const delete_div = document.getElementById('delete_div');
+        if (updateDiv.style.display === 'none') {
+            delete_div.style.display = 'none';
+            updateDiv.style.display = 'inline';
         }
+    }
 
-        function updateBtnClick() {
-            const updateDiv = document.getElementById('update_div');
-            const delete_div = document.getElementById('delete_div');
-            if (updateDiv.style.display === 'none') {
-                delete_div.style.display = 'none';
-                updateDiv.style.display = 'inline';
-            }
+    function deleteBtnClick() {
+        const updateDiv = document.getElementById('update_div');
+        const delete_div = document.getElementById('delete_div');
+        if (delete_div.style.display === 'none') {
+            updateDiv.style.display = 'none';
+            delete_div.style.display = 'inline';
         }
+    }
 
-        function deleteBtnClick() {
-            const updateDiv = document.getElementById('update_div');
-            const delete_div = document.getElementById('delete_div');
-            if (delete_div.style.display === 'none') {
-                updateDiv.style.display = 'none';
-                delete_div.style.display = 'inline';
-            }
-        }
-
-    </script>
-</div>
-<div th:replace="~{fragments/footer :: footer}"/>
-
+</script>
 </html>

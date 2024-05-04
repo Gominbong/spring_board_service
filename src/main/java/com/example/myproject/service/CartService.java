@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -24,7 +25,10 @@ public class CartService {
 
         if (result == null){
             Cart cart = new Cart();
-            cart.setLocalDate(LocalDate.now());
+            LocalDateTime localDateTime = LocalDateTime.now().withNano(0);
+            String temp = String.valueOf(localDateTime);
+            String createTime = temp.replace("T", " ");
+            cart.setCreateTime(createTime);
             cart.setLoginId(loginId);
             cart.setMusicListTitle(musicList.getTitle());
             cart.setMusicList(musicList);

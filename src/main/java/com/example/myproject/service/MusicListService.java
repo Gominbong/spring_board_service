@@ -64,12 +64,13 @@ public class MusicListService {
         musicList.setLevel(musicListFormDto.getLevel());
         musicList.setPrice(musicListFormDto.getPrice());
         musicList.setContent(musicListFormDto.getContent());
-        musicList.setLoginId(loginId);
         musicList.setViews(0);
         musicList.setLikeCount(0);
         musicList.setSalesQuantity(0);
-        musicList.setLocalDateTime(LocalDateTime.now().withNano(0));
-        musicList.setMemberNickname(member.getNickname());
+        LocalDateTime localDateTime = LocalDateTime.now().withNano(0);
+        String temp = String.valueOf(localDateTime);
+        String createTime = temp.replace("T", " ");
+        musicList.setCreateTime(createTime);
         musicListRepository.save(musicList);
 
         List<MultipartFile> pdfFiles = musicListFormDto.getPdfFiles();
@@ -102,7 +103,7 @@ public class MusicListService {
     }
 
     public MusicList findById(Long id) {
-        return musicListRepository.findById(id).orElseThrow();
+        return musicListRepository.findByMusicList(id);
     }
 
 
@@ -147,7 +148,6 @@ public class MusicListService {
             for (String file : filename) {
                 log.info("수정페이지에서 삭제버튼누른 파일이름 = '{}'", file);
                 FileList fileList = fileRepository.findByStoredFilename(file);
-                fileList.setMusicList(null);
                 fileRepository.delete(fileList);
                 File file1 = new File("C:/Users/asd/Desktop/study/pdf/"+file);
                 file1.delete();

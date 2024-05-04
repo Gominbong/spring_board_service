@@ -11,8 +11,9 @@ public class LikeCount {
 
     @Id
     @GeneratedValue
+    @Column(name = "likeCount_id")
     private Long id;
     private String loginId;
-    private String musicListId;
+    private Long musicListId;
 
 }

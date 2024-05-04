@@ -31,6 +31,7 @@ public class MusicListController {
     private final SellBuyListService sellBuyListService;
     private final MemberService memberService;
     private final LikeCountService likeCountService;
+    private final CommentService commentService;
 
     @PostMapping("/download")
     public ResponseEntity<Resource> downloadAttach(DownloadDto downloadDto) throws MalformedURLException {
@@ -50,6 +51,26 @@ public class MusicListController {
                 .body(urlResource);
     }
 
+    @PostMapping("/comment")
+    public String commentAdd(CommentFormDto commentFormDto, HttpServletRequest request){
+        String referer = request.getHeader("Referer");
+        HttpSession session = request.getSession();
+        String loginId = (String) session.getAttribute("loginId");
+
+        List<Comment> commentList = commentService.findMusicListId(commentFormDto.getMusicListId());
+        if (commentList.isEmpty()){
+            int parent = 0;
+            Comment comment = commentService.commentAdd(commentFormDto, loginId, parent);
+        }else{
+            List<Comment> byMusicListIdAndDivWidthSize =
+                    commentService.findByMusicListIdAndDivWidthSize(commentFormDto.getMusicListId());
+            int parent = byMusicListIdAndDivWidthSize.size();
+            Comment comment = commentService.commentAdd(commentFormDto, loginId, parent);
+        }
+
+        return "redirect:" + referer;
+    }
+
     @GetMapping("/content")
     public String content(@RequestParam("musicListId") Long id, Model model,
                               HttpServletRequest request, HttpServletResponse response)
@@ -62,6 +83,16 @@ public class MusicListController {
         List<FileList> fileList = fileListService.findByFiles(id);
         SellBuyList sellBuyList = sellBuyListService.myBuyInfo(id, loginId);
         Member member = memberService.findByLoginId(loginId);
+        List<Comment> commentList = commentService.findMusicListId(id);
+
+        for (Comment comment : commentList) {
+            String localDateTime = String.valueOf(comment.getCreateTime());
+            String replace = localDateTime.replace("T", " ");
+            log.info("댓글확인 = {}",replace);
+        }
+
+        model.addAttribute("commentList", commentList);
+
         if (likeCount != null){
             log.info("아이디1개당1개추천만가능합니다.");
             model.addAttribute("likeCount", 1);
@@ -169,6 +200,9 @@ public class MusicListController {
         return "redirect:/";
     }
 
+
+
+
     @PostMapping("/likeCount")
     public String likeCount(LikeCountDto likeCountDto, HttpServletRequest request){
         String referer = request.getHeader("Referer");
@@ -183,5 +217,7 @@ public class MusicListController {
 
         return "redirect:" + referer;
     }
+
+
 
 }

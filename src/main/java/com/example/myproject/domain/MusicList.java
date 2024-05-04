@@ -20,15 +20,13 @@ public class MusicList {
     @ManyToOne (fetch = LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
-    private String loginId;
-    private String memberNickname;
     private String title;
     @Column(columnDefinition = "text")
     private String content;
     private String type;
     private String level;
     private Integer price;
-    private LocalDateTime localDateTime;
+    private String createTime;
     private String softDelete;
     private Integer salesQuantity;
     private Integer likeCount;

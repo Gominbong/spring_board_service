@@ -103,14 +103,14 @@ public class SellBuyController {
 
         for (SellBuyList sellBuyList : paging) {
             log.info("SellBuyList 테이블 기본키Id = {}", sellBuyList.getId());
-            log.info("SellBuyList 테이블 구매자아이디 = {}", sellBuyList.getBuyMemberLoginId());
-            log.info("SellBuyList 테이블 판매자아이디 = {}", sellBuyList.getSellMemberLoginId());
-            log.info("SellBuyList 테이블 구매판매시간 = {}", sellBuyList.getLocalDate());
+            log.info("SellBuyList 테이블 구매자아이디 = {}", sellBuyList.getBuyMember().getLoginId());
+            log.info("SellBuyList 테이블 판매자아이디 = {}", sellBuyList.getSellMember().getLoginId());
+            log.info("SellBuyList 테이블 구매판매시간 = {}", sellBuyList.getCreateTime());
             log.info("SellBuyList 테이블 구매판매시간 = {}", sellBuyList.getMusicList());
 
             log.info("MusicList 테이블 기본키Id = {}", sellBuyList.getMusicList().getId());
             log.info("MusicList 테이블 제목 = {}", sellBuyList.getMusicList().getTitle());
-            log.info("MusicList 테이블 글쓴이닉네임 = {}", sellBuyList.getMusicList().getMemberNickname());
+            log.info("MusicList 테이블 글쓴이닉네임 = {}", sellBuyList.getMusicList().getMember().getNickname());
         }
 
         model.addAttribute("page", page);

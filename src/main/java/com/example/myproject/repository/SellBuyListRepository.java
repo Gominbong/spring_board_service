@@ -16,11 +16,16 @@ import java.util.Optional;
 @Repository
 public interface SellBuyListRepository extends JpaRepository<SellBuyList, Long> {
 
-    SellBuyList findByMusicListIdAndBuyMemberLoginId(Long musicListId, String buyMemberLoginId);
 
-    @Query("select s from SellBuyList s inner join fetch s.musicList m where s.buyMemberLoginId = :loginId")
+    SellBuyList findByMusicListIdAndBuyMemberLoginId(Long musicListId, String loginId);
+
+    @Query("select s from SellBuyList s inner join fetch s.musicList musicList inner join fetch" +
+            " s.buyMember buyMember inner join fetch s.sellMember sellMember" +
+            " where s.buyMember.loginId = :loginId")
     Page<SellBuyList> findMyBuyList(Pageable pageable, String loginId);
 
-    @Query("select s from SellBuyList s inner join fetch s.musicList m where s.sellMemberLoginId = :loginId")
+    @Query("select s from SellBuyList s inner join fetch s.musicList musicList inner join fetch" +
+            " s.buyMember buyMember inner join fetch s.sellMember sellMember" +
+            " where s.sellMember.loginId = :loginId")
     Page<SellBuyList> findMySellList(Pageable pageable, String loginId);
 }

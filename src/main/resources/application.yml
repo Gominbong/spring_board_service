@@ -38,7 +38,6 @@ logging:
     org.hibernate.SQL: debug
     org.apache.coyote.http11: debug
 
-
 server:
   servlet:
     session:

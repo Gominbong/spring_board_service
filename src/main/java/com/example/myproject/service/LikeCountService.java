@@ -19,14 +19,14 @@ public class LikeCountService {
 
     @Transactional
     public LikeCount like(Long id, String loginId){
-        String musicListId = String.valueOf(id);
+
         MusicList musicList = musicListRepository.findById(id).orElseThrow();
-        LikeCount result = likeCountRepository.findByMusicListIdAndLoginId(musicListId, loginId);
+        LikeCount result = likeCountRepository.findByMusicListIdAndLoginId(id, loginId);
 
         if (result == null) {
             LikeCount likeCount = new LikeCount();
             likeCount.setLoginId(loginId);
-            likeCount.setMusicListId(musicListId);
+            likeCount.setMusicListId(id);
             musicList.setLikeCount(musicList.getLikeCount() + 1);
             likeCountRepository.save(likeCount);
 
@@ -37,8 +37,7 @@ public class LikeCountService {
     }
 
     public LikeCount findMyLike(Long id, String loginId) {
-        String musicListId = String.valueOf(id);
-        return likeCountRepository.findByMusicListIdAndLoginId(musicListId, loginId);
+        return likeCountRepository.findByMusicListIdAndLoginId(id, loginId);
 
     }
 }

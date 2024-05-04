@@ -52,9 +52,9 @@
 
         <div style="max-height: 190px; overflow: auto">
             <table class="table table-bordered">
-                <tr th:each="fileList : ${fileList}" style="color: brown; text-decoration: underline; !important;">
-                    <td style="display: none" th:text="${fileList.storedFilename}"></td>
-                    <td th:text="${fileList.originalFilename}"></td>
+                <tr th:each="list : ${fileList}" style="color: brown; text-decoration: underline; !important;">
+                    <td style="display: none" th:text="${list.storedFilename}"></td>
+                    <td th:text="${list.originalFilename}"></td>
                     <td>
                         <button type="button" class="edit" th:class="btn-primary" onclick="remove_tr(this)">삭제</button>
                     </td>

@@ -4,7 +4,6 @@ import com.example.myproject.domain.Cart;
 import com.example.myproject.domain.Member;
 import com.example.myproject.domain.MusicList;
 import com.example.myproject.domain.SellBuyList;
-import com.example.myproject.dto.CartDto;
 import com.example.myproject.repository.CartRepository;
 import com.example.myproject.repository.MemberRepository;
 import com.example.myproject.repository.MusicListRepository;
@@ -17,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -31,27 +31,31 @@ public class SellBuyListService {
 
 
         MusicList musicList = musicListRepository.findById(id).orElseThrow();
-        Member BuyMember = memberRepository.findByLoginId(loginId);
-        Member sellMember = memberRepository.findByLoginId(musicList.getLoginId());
+        Member buyMember = memberRepository.findByLoginId(loginId);
+        Member sellMember = memberRepository.findById(musicList.getMember().getId()).orElseThrow();
+
         Cart cart = cartRepository.findByLoginIdAndMusicListId(loginId, id);
         if (cart != null){
             cartRepository.delete(cart);
         }
-        if (BuyMember.getCash() >= musicList.getPrice()){
+        if (buyMember.getCash() >= musicList.getPrice()){
             SellBuyList sellBuyList = new SellBuyList();
             sellBuyList.setMusicList(musicList);
-            sellBuyList.setBuyMemberLoginId(loginId);
-            sellBuyList.setSellMemberLoginId(musicList.getLoginId());
-            sellBuyList.setLocalDate(LocalDate.now());
+            sellBuyList.setBuyMember(buyMember);
+            sellBuyList.setSellMember(sellMember);
+            LocalDateTime localDateTime = LocalDateTime.now().withNano(0);
+            String temp = String.valueOf(localDateTime);
+            String createTime = temp.replace("T", " ");
+            sellBuyList.setCreateTime(createTime);
             sellBuyListRepository.save(sellBuyList);
             musicList.setSalesQuantity(musicList.getSalesQuantity()+1);
-            BuyMember.setCash(BuyMember.getCash() - musicList.getPrice());
+            buyMember.setCash(buyMember.getCash() - musicList.getPrice());
             sellMember.setRevenue(sellMember.getRevenue() + musicList.getPrice());
         }else{
            return null;
         }
 
-        return  BuyMember;
+        return  buyMember;
     }
 
 
