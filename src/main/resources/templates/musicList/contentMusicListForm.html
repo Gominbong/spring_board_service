@@ -8,32 +8,36 @@
     }
 </style>
 <div th:replace="~{fragments/header :: header ('home')}"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <div class="container" th:object="${musicList}" style="margin-top: 20px">
 
-    <ul style="font-size: large">
-        <li>제목 <p th:text="*{title}"></p></li>
-        <li>글쓴이 <p th:text="*{member.nickname}"></p></li>
-        <li>가격 <p th:text="*{price}"></p></li>
-        <li>판매량 <p th:text="*{salesQuantity}"></p></li>
-        <li>등록일 <p th:text="*{createTime}"></p></li>
-        <li>내용 <p style="white-space: pre-line" th:text="*{content}"></p></li>
-        <li th:if="${sellBuyList!=null}">구매일<p th:text="${sellBuyList.createTime}"></p></li>
-        <li th:if="${fileList.isEmpty()}">첨부파일 미등록</li>
-        <li th:if="${!fileList.isEmpty()}">첨부파일
-            <div style="max-height: 160px; overflow: auto">
-                <table th:if="${sellBuyList} or ${#strings.equals(loginId, musicList.member.loginId)}">
-                    <tr th:each="list : ${fileList}">
-                        <td>
-                            <p style="color: blue; text-decoration: underline;  cursor: pointer;"
-                               th:text="${list.originalFilename}"
-                               th:onclick="download([[${list.id}]])"></p>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        </li>
+    <div style="width: 800px">
+        <ul style="font-size: large">
+            <li>제목 <p th:text="*{title}"></p></li>
+            <li>글쓴이 <p th:text="*{member.nickname}"></p></li>
+            <li>가격 <p th:text="*{price}"></p></li>
+            <li>판매량 <p th:text="*{salesQuantity}"></p></li>
+            <li>등록일 <p th:text="*{createTime}"></p></li>
+            <li>내용 <p style="white-space: pre-line" th:text="*{content}"></p></li>
+            <li th:if="${sellBuyList!=null}">구매일<p th:text="${sellBuyList.createTime}"></p></li>
+            <li th:if="${fileList.isEmpty()}">첨부파일 미등록</li>
+            <li th:if="${!fileList.isEmpty()}">첨부파일
+                <div style="max-height: 160px; overflow: auto">
+                    <table th:if="${sellBuyList} or ${#strings.equals(loginId, musicList.member.loginId)}">
+                        <tr th:each="list : ${fileList}">
+                            <td>
+                                <p style="color: blue; text-decoration: underline;  cursor: pointer;"
+                                   th:text="${list.originalFilename}"
+                                   th:onclick="download([[${list.id}]])"></p>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </li>
 
-    </ul>
+        </ul>
+    </div>
+
 
     <div th:if="${sellBuyList==null} and ${!#strings.equals(loginId,musicList.member.loginId)}">
         <button onclick="buyBtnClick()"
@@ -70,12 +74,10 @@
                         onclick="btnNo('buy_div')">No
                 </button>
             </div>
-
-
         </form>
     </div>
 
-    <div id='cart_div' style="display: none" >
+    <div id='cart_div' style="display: none">
         <div th:if="${loginId}">
             <form style="margin-top: 20px" method="post" class="row g-2"
                   th:action="@{/cartAdd}" onsubmit="return addCartSubmit()">
@@ -128,7 +130,7 @@
 
     <div id='delete_div' style="display: none">
         <form style="margin-top: 20px" id="delete_form" method="post" class="row g-2"
-              action="/deleteMusicList" onsubmit="return deleteSubmit()">
+              action="/deleteMusicList" onsubmit="return musicListDeleteSubmit()">
             <input type="hidden" th:name="musicListId" th:value="${musicList.id}">
             <h1>삭제하시겟습니까</h1>
             <div class="col-auto">
@@ -143,76 +145,282 @@
         </form>
     </div>
 
-
     <div style="margin-top: 20px; margin-bottom: 20px">
         <button class="btn btn-lg btn-primary" th:text="${'추천 '+ musicList.likeCount}"
                 onclick="btnLike()"></button>
     </div>
 
     <div style="margin-bottom: 20px">
-        <button class="btn btn-lg btn-primary" th:text="${'댓글수 '+ commentList.size()}"></button>
+        <button class="btn btn-lg btn-primary" th:text="${'댓글수 '+ totalComment}"></button>
     </div>
 
-    <div style="width: 800px; border-color: brown;" th:each="list : ${commentList}">
-        <div th:if="${list.divWidthSize==0} and ${list.getParent()==0} and ${list.getChild1()==0}">
-            <div style="margin-left: 0%; border-width: 1px 1px 1px 1px; border-style: solid; border-color: brown">
-                <p th:text="${list.content}"></p>
-                <p th:text="${list.id}"></p>
-                <p>aaa</p>
-            </div>
-        </div>
-        <div th:if="${list.divWidthSize==0} and ${list.getParent()!=0} and ${list.getChild1()==0}">
-            <div style="margin-left: 0%; border-width: 0px 1px 1px 1px; border-style: solid; border-color: brown">
-                <p th:text="${list.content}"></p>
-                <p th:text="${list.id}"></p>
-            </div>
-        </div>
-        <div th:if="${list.divWidthSize==1}">
-            <div style="margin-left: 3%; border-width: 0px 1px 1px 1px; border-style: solid; border-color: brown">
-                <p th:text="${list.content}"></p>
-                <p th:text="${list.id}"></p>
-            </div>
-        </div>
-        <div th:if="${list.divWidthSize==2}">
-            <div style="margin-left: 6%; border-width: 0px 1px 1px 1px; border-style: solid; border-color: brown">
-                <p th:text="${list.content}"></p>
-                <p th:text="${list.id}"></p>
-            </div>
-        </div>
-        <div th:if="${list.divWidthSize==3}">
-            <div style="margin-left: 9%; border-width: 0px 1px 1px 1px; border-style: solid; border-color: brown">
-                <p th:text="${list.content}"></p>
-                <p th:text="${list.id}"></p>
-            </div>
-        </div>
-        <div th:if="${list.divWidthSize==4}">
-            <div style="margin-left: 12%; border-width: 0px 1px 1px 1px; border-style: solid; border-color: brown">
-                <p th:text="${list.content}"></p>
-                <p th:text="${list.id}"></p>
-            </div>
-        </div>
-    </div>
 
-    <div style="margin-top: 20px; min-height: 120px; width: 800px;
+
+
+
+
+    <div style="max-width: 800px">
+        <div th:if="${!firstMusicListId.isEmpty()}" th:each="list : ${firstMusicListId}"
+             style="border-width: 1px 1px 1px 0px; border-style: solid; border-color: brown">
+            <div style="display: inline-block; margin-top: 10px; margin-left: 10px;">
+                <p class="fw-bold" th:text="${list.member.nickname} + ' 님'"></p>
+            </div>
+
+            <div style="display: inline-block; margin-left: 10px;">
+                <p th:text="'['+${list.createTime}+']'"></p>
+            </div>
+
+            <div style="float: right; width: 15px;"><br></div>
+
+            <div style="float: right; margin-top: 9px;">
+                <form>
+                    <button type="button" style="border: none" onclick="reply(this, '0')">답글</button>
+                    <button type="button" style="border: none; display: none;" th:text="${list.id}"></button>
+                </form>
+            </div>
+
+            <div style="float: right; margin-top: 9px; margin-right: 20px;">
+                <form th:if="${list.member.loginId.equals(loginId)}">
+                    <button type="submit" style="border: none">수정</button>
+                    <button type="button" style="border: none" method="post" onclick="commentDelete(this)"
+                            th:name="commentId" th:value="${list.id}">삭제
+                    </button>
+                </form>
+            </div>
+
+            <div style="width: 780px; margin-left: 15px;">
+                <p style="white-space: pre-line" th:text="${list.content}"></p>
+            </div>
+        </div>
+
+
+
+
+
+
+        <div th:each="list : ${commentList}">
+
+            <div th:if="${list.divWidthSize == 0}" style="border-width: 0px 1px 1px 0px; border-style: solid; border-color: brown">
+                <div style="display: inline-block; margin-top: 10px; margin-left: 10px;">
+                    <p class="fw-bold" th:text="${list.member.nickname} + ' 님'"></p>
+                </div>
+
+                <div style="display: inline-block; margin-left: 10px;">
+                    <p th:text="'['+${list.createTime}+']'"></p>
+                </div>
+
+                <div style="float: right; width: 15px;"><br></div>
+
+                <div style="float: right; margin-top: 9px;">
+                    <form>
+                        <button type="button" style="border: none" onclick="reply(this, 0)">답글</button>
+                        <button type="button" style="border: none; display: none;" th:text="${list.id}"></button>
+                    </form>
+                </div>
+
+                <div style="float: right; margin-top: 9px; margin-right: 20px;">
+                    <form th:if="${list.member.loginId.equals(loginId)}">
+                        <button type="submit" style="border: none">수정</button>
+                        <button type="button" style="border: none" method="post" onclick="commentDelete(this)"
+                                th:name="commentId" th:value="${list.id}">삭제
+                        </button>
+                    </form>
+                </div>
+
+                <div style="width: 780px; margin-left: 15px;">
+                    <p style="white-space: pre-line" th:text="${list.content}"></p>
+                </div>
+            </div>
+
+            <div th:if="${list.divWidthSize == 1}" style="margin-left: 3%;
+          border-width: 0px 1px 1px 0px; border-style: solid; border-color: brown">
+                <div style="display: inline-block; margin-top: 10px; margin-left: 10px;">
+                    <p class="fw-bold" th:text="${list.member.nickname} + ' 님'"></p>
+                </div>
+
+                <div style="display: inline-block; margin-left: 10px;">
+                    <p th:text="'['+${list.createTime}+']'"></p>
+                </div>
+
+                <div style="float: right; width: 15px;"><br></div>
+
+                <div style="float: right; margin-top: 9px;">
+                    <form>
+                        <button type="button" style="border: none" onclick="reply(this, 3)">답글</button>
+                        <button type="button" style="border: none; display: none;" th:text="${list.id}"></button>
+                    </form>
+                </div>
+
+                <div style="float: right; margin-top: 9px; margin-right: 20px;">
+                    <form th:if="${list.member.loginId.equals(loginId)}">
+                        <button type="submit" style="border: none">수정</button>
+                        <button type="button" style="border: none" method="post" onclick="commentDelete(this)"
+                                th:name="commentId" th:value="${list.id}">삭제
+                        </button>
+                    </form>
+                </div>
+
+                <div style="width: 780px; margin-left: 15px;">
+                    <p style="white-space: pre-line" th:text="${list.content}"></p>
+                </div>
+            </div>
+
+            <div th:if="${list.divWidthSize == 2}" style="margin-left: 6%;
+         border-width: 0px 1px 1px 0px; border-style: solid; border-color: brown">
+                <div style="display: inline-block; margin-top: 10px; margin-left: 10px;">
+                    <p class="fw-bold" th:text="${list.member.nickname} + ' 님'"></p>
+                </div>
+
+                <div style="display: inline-block; margin-left: 10px;">
+                    <p th:text="'['+${list.createTime}+']'"></p>
+                </div>
+
+                <div style="float: right; width: 15px;"><br></div>
+
+                <div style="float: right; margin-top: 9px;">
+                    <form>
+                        <button type="button" style="border: none" onclick="reply(this, 6)">답글</button>
+                        <button type="button" style="border: none; display: none;" th:text="${list.id}"></button>
+                    </form>
+                </div>
+
+                <div style="float: right; margin-top: 9px; margin-right: 20px;">
+                    <form th:if="${list.member.loginId.equals(loginId)}">
+                        <button type="submit" style="border: none">수정</button>
+                        <button type="button" style="border: none" method="post" onclick="commentDelete(this)"
+                                th:name="commentId" th:value="${list.id}">삭제
+                        </button>
+                    </form>
+                </div>
+
+                <div style="width: 780px; margin-left: 15px;">
+                    <p style="white-space: pre-line" th:text="${list.content}"></p>
+                </div>
+            </div>
+
+            <div th:if="${list.divWidthSize == 3}" style="margin-left: 9%;
+        border-width: 0px 1px 1px 0px; border-style: solid; border-color: brown">
+                <div style="display: inline-block; margin-top: 10px; margin-left: 10px;">
+                    <p class="fw-bold" th:text="${list.member.nickname} + ' 님'"></p>
+                </div>
+
+                <div style="display: inline-block; margin-left: 10px;">
+                    <p th:text="'['+${list.createTime}+']'"></p>
+                </div>
+
+                <div style="float: right; width: 15px;"><br></div>
+
+                <div style="float: right; margin-top: 9px;">
+                    <form>
+                        <button type="button" style="border: none" onclick="reply(this, 9)">답글</button>
+                        <button type="button" style="border: none; display: none;" th:text="${list.id}"></button>
+                    </form>
+                </div>
+
+                <div style="float: right; margin-top: 9px; margin-right: 20px;">
+                    <form th:if="${list.member.loginId.equals(loginId)}">
+                        <button type="submit" style="border: none">수정</button>
+                        <button type="button" style="border: none" method="post" onclick="commentDelete(this)"
+                                th:name="commentId" th:value="${list.id}">삭제
+                        </button>
+                    </form>
+                </div>
+
+                <div style="width: 780px; margin-left: 15px;">
+                    <p style="white-space: pre-line" th:text="${list.content}"></p>
+                </div>
+            </div>
+
+            <div th:if="${list.divWidthSize == 4}" style="margin-left: 12%;
+         border-width: 0px 1px 1px 0px; border-style: solid; border-color: brown">
+                <div style="display: inline-block; margin-top: 10px; margin-left: 10px;">
+                    <p class="fw-bold" th:text="${list.member.nickname} + ' 님'"></p>
+                </div>
+
+                <div style="display: inline-block; margin-left: 10px;">
+                    <p th:text="'['+${list.createTime}+']'"></p>
+                </div>
+
+                <div style="float: right; width: 15px;"><br></div>
+
+                <div style="float: right; margin-top: 9px;">
+                    <form>
+                        <button type="button" style="border: none" onclick="reply(this, 12)">답글</button>
+                        <button type="button" style="border: none; display: none;" th:text="${list.id}"></button>
+                    </form>
+                </div>
+
+                <div style="float: right; margin-top: 9px; margin-right: 20px;">
+                    <form th:if="${list.member.loginId.equals(loginId)}">
+                        <button type="submit" style="border: none">수정</button>
+                        <button type="button" style="border: none" method="post" onclick="commentDelete(this)"
+                                th:name="commentId" th:value="${list.id}">삭제
+                        </button>
+                    </form>
+                </div>
+
+                <div style="width: 780px; margin-left: 15px;">
+                    <p style="white-space: pre-line" th:text="${list.content}"></p>
+                </div>
+            </div>
+
+        </div>
+
+
+
+
+
+
+        <div style="margin-top: 20px; min-height: 120px; width: 800px;
      border-width: 1px 1px 1px 1px; border-style: solid; border-color: darkred">
-
-        <form method="post" action="/comment" onsubmit="return addComment()" class="row g-1"
-              style="margin-left: 15px; margin-bottom: 10px;">
-            <p style="margin-top: 10px" class="form-label">댓글 쓰기</p>
-            <input type="hidden" th:name="musicListId" th:value="${musicList.id}">
-            <div style="min-height: 80px; width: 700px; margin-bottom: 10px;">
-                <span>
-                     <textarea class="form-control" id="content" name="content" rows="3"></textarea>
+            <form method="post" action="/comment" class="row g-1"
+                  style="margin-left: 15px; margin-bottom: 10px;">
+                <p style="margin-top: 10px" class="form-label">댓글 쓰기</p>
+                <input type="hidden" th:name="musicListId" th:value="${musicList.id}">
+                <div style="min-height: 80px; width: 700px; margin-bottom: 10px;">
+                <span th:if="${memberCash == -1}">
+                     <textarea class="form-control" onfocus="blur()"
+                               rows="3" placeholder="댓글 달려면 로그인 하세요"
+                               onclick="loginComment()"></textarea>
                 </span>
-            </div>
-            <button class="addBtn" style="height: 80px; width: 60px; border-width: thin; margin-left: 8px;"
-                    type="submit">등록
-            </button>
+                    <span th:if="${memberCash != -1}">
+                    <textarea class="form-control"
+                              id="commentContent" name="commentContent" rows="3"></textarea>
+                </span>
 
-        </form>
+
+                </div>
+                <button th:if="${memberCash == -1}" type="button" onclick="loginComment()"
+                        style="height: 80px; width: 60px; border-width: thin; margin-left: 8px;">등록
+                </button>
+
+                <button th:if="${memberCash != -1}" type="button" onclick="addComment(this)"
+                        style="height: 80px; width: 60px; border-width: thin; margin-left: 8px;">등록
+                </button>
+
+
+            </form>
+        </div>
+
+
+        <div id="reply" style="min-height: 120px; display: block; width: 800px; display: none;
+        border-width: 0px 1px 1px 0px; border-style: solid; border-color: darkred">
+
+            <form id="replyForm" method="post" action="/replyAdd"
+                  class="row g-1" style="margin-left: 10%; margin-bottom: 10px; max-width: 800px;">
+                <p style="margin-top: 10px" class="form-label">답글 쓰기</p>
+                <textarea style="width: 90%" class="form-control" id="replyContent" name="replyContent" rows="3"></textarea>
+
+                <button id="replySubmitBtn" style="height: 80px; width: 50px; border-width: thin; margin-left: 8px;"
+                        type="button" name="addReply" value="" onclick="addCommentReply(this)">등록</button>
+
+            </form>
+        </div>
     </div>
 
-</div>
+
+
+
 
 <div style="margin-top: 227px"></div>
 
@@ -222,13 +430,104 @@
 
 <script type="text/javascript">
 
-    document.documentElement.style.setProperty("divWidthSize", "1%");
+    function commentDelete(obj) {
+        const commentId = obj.value;
+        if (confirm("댓글삭제하시겠습니까?")) {
 
-    function addComment() {
-        if (confirm("댓글등록하시겠습니까")) {
-            return true;
+            const form = document.createElement('form');
+            form.method = 'post';
+            form.action = '/commentDelete';
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'commentId'
+            input.value = commentId;
+            form.appendChild(input);
+            document.body.appendChild(form);
+            form.submit();
         } else {
-            return false;
+
+        }
+    }
+
+
+    function loginComment() {
+        if (confirm("댓글달려면 로그인하시겠습니까")) {
+            document.location.href = "/loginInterceptor";
+        } else {
+            return;
+        }
+    }
+
+    function reply(obj, divSize) {
+        console.log(divSize);
+        const memberCash = [[${memberCash}]];
+        if (memberCash == -1){
+            if (confirm("답글달려면로그인하시겠습니까")){
+                document.location.href = "/loginInterceptor";
+                return;
+            }else{
+                return;
+            }
+        }
+        //대댓글 div
+        const replyDiv = document.getElementById('reply');
+        // 답글버튼 누를시 현재 누른 위치 밑에 대댓글Div 가 붙어있는지 체크후 없다면
+        // 제일 첫번째 우선순위로 대댓글Div display none 상태로 바꾼다
+        // 왜냐하면 1번째 댓글에 답글버튼 클릭하면 바로 밑에 대댓글Div 붙이고 display block 상태인데
+        // 2번째 댓글에 답글버튼 클릭하면 1번째 댓글 밑에 대댓글Div display none 상태로 미리 바꿔놔야
+        // 1번댓글의 대댓글Div 이동시켜 2번째댓글Div 바로아래로 이동시킨후 block 상태로 변경가능하기때문
+        if ($(obj).parent().parent().parent().next().attr('id') !== 'reply') {
+            console.log("aaa");
+            replyDiv.style.display = 'none';
+        } else {
+            console.log("asd");
+            console.log($(obj).parent().parent().parent().next().attr('id'));
+        }
+
+        //댓글 div 안에 답글 버튼 클릭시 보여주거나 숨김
+        if (replyDiv.style.display === 'none') {
+            console.log("ccc");
+            //댓글 클릭시 바로 밑으로 이동시킴
+            $(obj).parent().parent().parent().after(replyDiv);
+            replyDiv.style.display = 'block';
+        } else {
+            console.log("ddd");
+            replyDiv.style.display = 'none';
+        }
+
+        const commentId = $(obj).next().text();
+        console.log("zz" + commentId);
+
+        const form = document.getElementById('replyForm');
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'commentId';
+        input.value = commentId;
+        form.append(input);
+        form.style.marginLeft = (divSize+3) + "%";
+
+    }
+
+
+    function addCommentReply(obj) {
+
+        const textarea = document.getElementById('replyContent').value;
+        const replaceAll = textarea.replaceAll(' ', '');
+        if (replaceAll.length === 0) {
+            alert("답글내용입력하세요")
+        } else {
+            obj.form.submit();
+        }
+
+    }
+
+    function addComment(obj) {
+        const textarea = document.getElementById('commentContent').value;
+        const replaceAll = textarea.replaceAll(' ', '');
+        if (replaceAll.length === 0) {
+            confirm("댓글 내용을 입력하세요");
+        } else {
+            obj.form.submit();
         }
     }
 
@@ -277,7 +576,7 @@
         }
     }
 
-    function deleteSubmit() {
+    function musicListDeleteSubmit() {
         if (confirm("삭제하시겠습니까")) {
             return true;
         } else {
@@ -291,7 +590,7 @@
 
     }
 
-    function cartAddBtn(){
+    function cartAddBtn() {
         if (confirm("장바구니추가하시겠습니까")) {
             document.location.href = "/loginInterceptor";
         } else {

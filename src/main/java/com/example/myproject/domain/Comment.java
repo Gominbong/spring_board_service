@@ -3,8 +3,6 @@ package com.example.myproject.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import java.time.LocalDateTime;
-
 import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
@@ -30,7 +28,7 @@ public class Comment {
     private int child4;
     private String createTime;
     private int divWidthSize;
-
+    private String softDelete;
 
 
 

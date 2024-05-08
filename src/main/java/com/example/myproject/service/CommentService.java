@@ -4,17 +4,22 @@ import com.example.myproject.domain.Comment;
 import com.example.myproject.domain.Member;
 import com.example.myproject.domain.MusicList;
 import com.example.myproject.dto.CommentFormDto;
+import com.example.myproject.dto.CommentReplyFormDto;
 import com.example.myproject.repository.CommentRepository;
 import com.example.myproject.repository.MemberRepository;
 import com.example.myproject.repository.MusicListRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class CommentService {
 
@@ -36,7 +41,7 @@ public class CommentService {
         comment.setMember(member);
         comment.setDivWidthSize(0);
         comment.setParent(parent);
-        comment.setContent(commentFormDto.getContent());
+        comment.setContent(commentFormDto.getCommentContent());
         comment.setChild1(0);
         comment.setChild2(0);
         comment.setChild3(0);
@@ -45,11 +50,106 @@ public class CommentService {
         return comment;
     }
 
-    public List<Comment> findMusicListId(Long id) {
-        return commentRepository.findMusicListId(id);
+    public List<Comment> findCommentList(Long id) {
+        Pageable pageable = PageRequest.of(0, 1000);
+        return commentRepository.findCommentList(id);
     }
 
     public List<Comment> findByMusicListIdAndDivWidthSize(Long musicListId) {
         return commentRepository.findByMusicListIdAndDivWidthSize(musicListId, 0);
+    }
+
+    @Transactional
+    public void softDelete(Long commentId) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow();
+        comment.setSoftDelete("yes");
+    }
+
+    public Page<Comment> findFirstCommentList(Long id) {
+        Pageable pageable = PageRequest.of(0, 1);
+        return commentRepository.findFirstCommentList(pageable, id);
+    }
+
+
+    public void replyAdd(CommentReplyFormDto commentReplyFormDto, String loginId) {
+        Member member = memberRepository.findByLoginId(loginId);
+        // divWidthSize 0이면 댓글이고 1,2,3,4면 대댓글 이다
+        // 댓글 추가시 parent 0부터 시작 해 +1 씩 증가
+        // parent 0에 대댓글 추가시 부모 parent 0을 넣고 child1에 +1로 순서를 셋팅한다
+        // divWidthSize 1이면 parent child1 넣고
+        // divWidthSize 2이면 parent child1 child2 넣는식으로 셋팅한다.
+        // 대댓글 깊이 5단계인데 원하는 깊이만큼 추가로 만들 수 있다.
+        Comment comment = commentRepository.findCommentId(commentReplyFormDto.getCommentId());
+        Long musicListId = comment.getMusicList().getId();
+        int parentId = comment.getParent();
+        int child1 = comment.getChild1();
+        int child2 = comment.getChild2();
+        int child3 = comment.getChild3();
+        int child4 = comment.getChild4();
+
+        Comment reply = new Comment();
+        LocalDateTime localDateTime = LocalDateTime.now().withNano(0);
+        String temp = String.valueOf(localDateTime);
+        String createTime = temp.replace("T", " ");
+        reply.setCreateTime(createTime);
+        reply.setContent(commentReplyFormDto.getReplyContent());
+        reply.setMusicList(comment.getMusicList());
+        reply.setMember(member);
+        reply.setMusicList(comment.getMusicList());
+
+        switch (comment.getDivWidthSize()) {
+            case 0 -> {
+                List<Comment> parent = commentRepository.findParent(musicListId, parentId);
+                for (Comment list : parent) {
+                    log.info("부모확인 = {}", list.getChild1());
+                }
+                reply.setDivWidthSize(1);
+                reply.setParent(comment.getParent());
+                reply.setChild1(parent.get(0).getChild1() +1);
+                reply.setChild2(0);
+                reply.setChild3(0);
+                reply.setChild4(0);
+            }
+            case 1 -> {
+                List<Comment> parent = commentRepository.findParentChild1(musicListId, parentId, child1);
+                for (Comment list : parent) {
+                    log.info("부모확인 = {}", list.getChild2());
+                }
+                reply.setDivWidthSize(2);
+                reply.setParent(comment.getParent());
+                reply.setChild1(comment.getChild1());
+                reply.setChild2(parent.get(0).getChild2() +1);
+                reply.setChild3(0);
+                reply.setChild4(0);
+            }
+            case 2 -> {
+                List<Comment> parent = commentRepository.
+                        findParentChild1Child2(musicListId, parentId, child1, child2);
+                for (Comment list : parent) {
+                    log.info("부모확인 = {}", list.getChild2());
+                }
+                reply.setDivWidthSize(3);
+                reply.setParent(comment.getParent());
+                reply.setChild1(comment.getChild1());
+                reply.setChild2(comment.getChild2());
+                reply.setChild3(parent.get(0).getChild3() +1);
+                reply.setChild4(0);
+            }
+            case 3, 4 -> {
+                List<Comment> parent = commentRepository.
+                        findParentChild1Child2Child3(musicListId, parentId, child1, child2, child3);
+                for (Comment list : parent) {
+                    log.info("부모확인 = {}", list.getChild3());
+                }
+                reply.setDivWidthSize(4);
+                reply.setParent(comment.getParent());
+                reply.setChild1(comment.getChild1());
+                reply.setChild2(comment.getChild2());
+                reply.setChild3(comment.getChild3());
+                reply.setChild4(parent.get(0).getChild4() +1);
+            }
+        }
+        commentRepository.save(reply);
+
     }
 }

@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -51,13 +52,34 @@ public class MusicListController {
                 .body(urlResource);
     }
 
+
+    @PostMapping("/commentDelete")
+    public String commentDelete(CommentDeleteDto commentDeleteDto, HttpServletRequest request){
+        commentService.softDelete(commentDeleteDto.getCommentId());
+        String referer = request.getHeader("Referer");
+        return "redirect:" + referer;
+    }
+
+    @PostMapping("replyAdd")
+    public String replyAdd(CommentReplyFormDto commentReplyFormDto, HttpServletRequest request){
+        String referer = request.getHeader("Referer");
+        HttpSession session = request.getSession();
+        String loginId = (String) session.getAttribute("loginId");
+
+        log.info("대댓글 comment id 값 = {}", commentReplyFormDto.getCommentId());
+        log.info("대댓글 내용 = {}", commentReplyFormDto.getReplyContent());
+
+        commentService.replyAdd(commentReplyFormDto, loginId);
+
+        return "redirect:" + referer;
+    }
+
     @PostMapping("/comment")
     public String commentAdd(CommentFormDto commentFormDto, HttpServletRequest request){
         String referer = request.getHeader("Referer");
         HttpSession session = request.getSession();
         String loginId = (String) session.getAttribute("loginId");
-
-        List<Comment> commentList = commentService.findMusicListId(commentFormDto.getMusicListId());
+        List<Comment> commentList = commentService.findCommentList(commentFormDto.getMusicListId());
         if (commentList.isEmpty()){
             int parent = 0;
             Comment comment = commentService.commentAdd(commentFormDto, loginId, parent);
@@ -83,15 +105,22 @@ public class MusicListController {
         List<FileList> fileList = fileListService.findByFiles(id);
         SellBuyList sellBuyList = sellBuyListService.myBuyInfo(id, loginId);
         Member member = memberService.findByLoginId(loginId);
-        List<Comment> commentList = commentService.findMusicListId(id);
+        Page<Comment> findFirstCommentList = commentService.findFirstCommentList(id);
+        model.addAttribute("firstMusicListId", findFirstCommentList);
+        List<Comment> commentList = commentService.findCommentList(id);
 
-        for (Comment comment : commentList) {
-            String localDateTime = String.valueOf(comment.getCreateTime());
-            String replace = localDateTime.replace("T", " ");
-            log.info("댓글확인 = {}",replace);
+        if (commentList.size()==0){
+            model.addAttribute("totalComment", 0);
+        }else{
+            commentList.remove(0);
+            int totalComment = commentList.size() + findFirstCommentList.getSize();
+            model.addAttribute("totalComment", totalComment);
         }
 
         model.addAttribute("commentList", commentList);
+
+        log.info("댓글 개수 확인해보기 = {}", commentList.size());
+        log.info("댓글 개수 확인해보기 = {}", findFirstCommentList.getSize());
 
         if (likeCount != null){
             log.info("아이디1개당1개추천만가능합니다.");

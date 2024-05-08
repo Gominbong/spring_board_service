@@ -66,7 +66,12 @@ public class LoginController {
     }
 
     @GetMapping("/loginInterceptor")
-    public String loginInterceptor(Model model) {
+    public String loginInterceptor(@CookieValue("url") String url, Model model,
+                                   HttpServletRequest request, HttpServletResponse response) {
+
+        log.info("클릭된 url = {}", url);
+        Cookie cookie = new Cookie("url", url);
+        response.addCookie(cookie);
         model.addAttribute("loginFormDto", new LoginFormDto());
         return "/login/loginInterceptorForm";
     }
@@ -94,11 +99,8 @@ public class LoginController {
     }
 
     @GetMapping("/login")
-    public String login(Model model, HttpServletRequest request, HttpServletResponse response) {
-        String referer = request.getHeader("Referer");
-        Cookie cookie = new Cookie("url", referer);
-        log.info("이전 위치 url = {}", referer);
-        response.addCookie(cookie);
+    public String login(Model model) {
+
         model.addAttribute("loginFormDto", new LoginFormDto());
         return "/login/loginForm";
     }

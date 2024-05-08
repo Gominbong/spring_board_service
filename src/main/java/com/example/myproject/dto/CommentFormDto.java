@@ -6,6 +6,6 @@ import lombok.Data;
 public class CommentFormDto {
     private Long musicListId;
     private Long parent;
-    private String content;
+    private String commentContent;
 
 }
