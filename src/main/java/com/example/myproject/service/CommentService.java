@@ -3,8 +3,10 @@ package com.example.myproject.service;
 import com.example.myproject.domain.Comment;
 import com.example.myproject.domain.Member;
 import com.example.myproject.domain.MusicList;
+import com.example.myproject.dto.CommentDeleteDto;
 import com.example.myproject.dto.CommentFormDto;
 import com.example.myproject.dto.CommentReplyFormDto;
+import com.example.myproject.dto.CommentUpdateDto;
 import com.example.myproject.repository.CommentRepository;
 import com.example.myproject.repository.MemberRepository;
 import com.example.myproject.repository.MusicListRepository;
@@ -26,6 +28,15 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final MusicListRepository musicListRepository;
     private final MemberRepository memberRepository;
+
+
+
+    @Transactional
+    public void commentDelete(CommentDeleteDto commentId) {
+        Comment comment = commentRepository.findById(commentId.getCommentId()).orElseThrow();
+        comment.setSoftDelete("yes");
+        comment.setContent(null);
+    }
 
     @Transactional
     public Comment commentAdd(CommentFormDto commentFormDto, String loginId, int parent) {
@@ -57,12 +68,6 @@ public class CommentService {
 
     public List<Comment> findByMusicListIdAndDivWidthSize(Long musicListId) {
         return commentRepository.findByMusicListIdAndDivWidthSize(musicListId, 0);
-    }
-
-    @Transactional
-    public void softDelete(Long commentId) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow();
-        comment.setSoftDelete("yes");
     }
 
     public Page<Comment> findFirstCommentList(Long id) {
@@ -151,5 +156,16 @@ public class CommentService {
         }
         commentRepository.save(reply);
 
+    }
+
+
+    @Transactional
+    public void commentEdit(CommentUpdateDto commentUpdateDto) {
+        Comment comment = commentRepository.findById(commentUpdateDto.getCommentId()).orElseThrow();
+        comment.setContent(commentUpdateDto.getCommentEditContent());
+        LocalDateTime localDateTime = LocalDateTime.now().withNano(0);
+        String temp = String.valueOf(localDateTime);
+        String createTime = temp.replace("T", " ");
+        comment.setCreateTime(createTime);
     }
 }

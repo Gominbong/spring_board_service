@@ -4,7 +4,7 @@ import com.example.myproject.domain.FileList;
 import com.example.myproject.domain.Member;
 import com.example.myproject.domain.MusicList;
 import com.example.myproject.dto.MusicListFormDto;
-import com.example.myproject.dto.UpdateMusicListFormDto;
+import com.example.myproject.dto.MusicListUpdateDto;
 import com.example.myproject.repository.MusicListRepository;
 import com.example.myproject.repository.FileListRepository;
 import com.example.myproject.repository.MemberRepository;
@@ -115,20 +115,20 @@ public class MusicListService {
     }
 
     @Transactional
-    public Map<String, String> updateMusicList(Long id, UpdateMusicListFormDto updateMusicListFormDto) {
+    public Map<String, String> updateMusicList(Long id, MusicListUpdateDto musicListUpdateDto) {
 
         Map<String, String> errors = new HashMap<>();
 
-        if (!StringUtils.hasText(updateMusicListFormDto.getType())){
+        if (!StringUtils.hasText(musicListUpdateDto.getType())){
             errors.put("type", "악기타입 입력 필수입니다");
         }
-        if (!StringUtils.hasText(updateMusicListFormDto.getTitle())){
+        if (!StringUtils.hasText(musicListUpdateDto.getTitle())){
             errors.put("title", "제목 입력 필수입니다");
         }
-        if (!StringUtils.hasText(updateMusicListFormDto.getLevel())){
+        if (!StringUtils.hasText(musicListUpdateDto.getLevel())){
             errors.put("level", "난이도 입력 필수입니다 ");
         }
-        if (updateMusicListFormDto.getPrice()==null){
+        if (musicListUpdateDto.getPrice()==null){
             errors.put("price", "가격 입력 필수입니다 ");
         }
         if (!errors.isEmpty()){
@@ -136,14 +136,14 @@ public class MusicListService {
         }
 
         MusicList musicList = musicListRepository.findById(id).orElseThrow();
-        musicList.setTitle(updateMusicListFormDto.getTitle());
-        musicList.setType(updateMusicListFormDto.getType());
-        musicList.setLevel(updateMusicListFormDto.getLevel());
-        musicList.setPrice(updateMusicListFormDto.getPrice());
-        musicList.setContent(updateMusicListFormDto.getContent());
+        musicList.setTitle(musicListUpdateDto.getTitle());
+        musicList.setType(musicListUpdateDto.getType());
+        musicList.setLevel(musicListUpdateDto.getLevel());
+        musicList.setPrice(musicListUpdateDto.getPrice());
+        musicList.setContent(musicListUpdateDto.getContent());
 
-        List<String> filename = updateMusicListFormDto.getFilename();
-        log.info("업데이트디티오 = {}", updateMusicListFormDto.toString());
+        List<String> filename = musicListUpdateDto.getFilename();
+        log.info("업데이트디티오 = {}", musicListUpdateDto.toString());
         if (filename != null){
             for (String file : filename) {
                 log.info("수정페이지에서 삭제버튼누른 파일이름 = '{}'", file);
@@ -154,7 +154,7 @@ public class MusicListService {
             }
         }
 
-        List<MultipartFile> pdfFiles = updateMusicListFormDto.getPdfFiles();
+        List<MultipartFile> pdfFiles = musicListUpdateDto.getPdfFiles();
         if(!pdfFiles.get(0).isEmpty()){
             for(MultipartFile multipartFile : pdfFiles ){
                 String originalFilename = multipartFile.getOriginalFilename();
@@ -177,16 +177,16 @@ public class MusicListService {
         return null;
     }
 
-    public UpdateMusicListFormDto setUpdateMusicListFormDto(Long id) {
-        UpdateMusicListFormDto updateMusicListFormDto = new UpdateMusicListFormDto();
+    public MusicListUpdateDto setmusicListUpdateDto(Long id) {
+        MusicListUpdateDto musicListUpdateDto = new MusicListUpdateDto();
         MusicList musicList = musicListRepository.findById(id).orElseThrow();
-        updateMusicListFormDto.setTitle(musicList.getTitle());
-        updateMusicListFormDto.setType(musicList.getType());
-        updateMusicListFormDto.setLevel(musicList.getLevel());
-        updateMusicListFormDto.setPrice(musicList.getPrice());
-        updateMusicListFormDto.setContent(musicList.getContent());
+        musicListUpdateDto.setTitle(musicList.getTitle());
+        musicListUpdateDto.setType(musicList.getType());
+        musicListUpdateDto.setLevel(musicList.getLevel());
+        musicListUpdateDto.setPrice(musicList.getPrice());
+        musicListUpdateDto.setContent(musicList.getContent());
 
-        return updateMusicListFormDto;
+        return musicListUpdateDto;
 
     }
 }

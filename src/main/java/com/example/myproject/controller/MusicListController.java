@@ -4,7 +4,6 @@ import com.example.myproject.domain.*;
 import com.example.myproject.dto.*;
 import com.example.myproject.service.*;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,11 +51,20 @@ public class MusicListController {
                 .body(urlResource);
     }
 
+    @PostMapping("/commentEdit")
+    public String commentEdit(CommentUpdateDto commentUpdateDto, HttpServletRequest request) {
+        String referer = request.getHeader("Referer");
+        log.info("여기기기기기이 = {}", referer);
+        commentService.commentEdit(commentUpdateDto);
+
+        return "redirect:" + referer;
+    }
 
     @PostMapping("/commentDelete")
     public String commentDelete(CommentDeleteDto commentDeleteDto, HttpServletRequest request){
-        commentService.softDelete(commentDeleteDto.getCommentId());
         String referer = request.getHeader("Referer");
+        commentService.commentDelete(commentDeleteDto);
+
         return "redirect:" + referer;
     }
 
@@ -105,22 +113,9 @@ public class MusicListController {
         List<FileList> fileList = fileListService.findByFiles(id);
         SellBuyList sellBuyList = sellBuyListService.myBuyInfo(id, loginId);
         Member member = memberService.findByLoginId(loginId);
-        Page<Comment> findFirstCommentList = commentService.findFirstCommentList(id);
-        model.addAttribute("firstMusicListId", findFirstCommentList);
         List<Comment> commentList = commentService.findCommentList(id);
-
-        if (commentList.size()==0){
-            model.addAttribute("totalComment", 0);
-        }else{
-            commentList.remove(0);
-            int totalComment = commentList.size() + findFirstCommentList.getSize();
-            model.addAttribute("totalComment", totalComment);
-        }
-
         model.addAttribute("commentList", commentList);
-
         log.info("댓글 개수 확인해보기 = {}", commentList.size());
-        log.info("댓글 개수 확인해보기 = {}", findFirstCommentList.getSize());
 
         if (likeCount != null){
             log.info("아이디1개당1개추천만가능합니다.");
@@ -162,7 +157,7 @@ public class MusicListController {
 
     @PostMapping("/EditMusicList")
     public String updateMusicListComplete(@RequestParam("musicListId") Long id,
-                                          UpdateMusicListFormDto updateMusicListFormDto,
+                                          MusicListUpdateDto musicListUpdateDto,
                                           HttpServletRequest request, Model model) {
 
         log.info("업데이트 뮤직리스트 아이디 = {}", id);
@@ -171,7 +166,7 @@ public class MusicListController {
         model.addAttribute("loginId", loginId);
         model.addAttribute("musicListId", id);
         List<FileList> fileList = fileListService.findByFiles(id);
-        Map<String, String> errors = musicListService.updateMusicList(id, updateMusicListFormDto);
+        Map<String, String> errors = musicListService.updateMusicList(id, musicListUpdateDto);
         if (errors != null) {
             model.addAttribute("fileList", fileList);
             model.addAttribute("errors", errors);
@@ -188,10 +183,10 @@ public class MusicListController {
         HttpSession session = request.getSession();
         String loginId = (String) session.getAttribute("loginId");
         model.addAttribute("loginId", loginId);
-        UpdateMusicListFormDto updateMusicListFormDto = musicListService.setUpdateMusicListFormDto(id);
+        MusicListUpdateDto musicListUpdateDto = musicListService.setmusicListUpdateDto(id);
         List<FileList> fileList = fileListService.findByFiles(id);
 
-        model.addAttribute("updateMusicListFormDto", updateMusicListFormDto);
+        model.addAttribute("musicListUpdateDto", musicListUpdateDto);
         model.addAttribute("fileList", fileList);
         model.addAttribute("musicListId", id);
 

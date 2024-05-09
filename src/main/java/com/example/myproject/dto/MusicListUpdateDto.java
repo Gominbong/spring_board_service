@@ -10,7 +10,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class UpdateMusicListFormDto {
+public class MusicListUpdateDto {
 
     private String title;
     private String type;
