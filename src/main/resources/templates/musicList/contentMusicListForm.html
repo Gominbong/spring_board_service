@@ -436,7 +436,7 @@
 
         function loginComment() {
             if (confirm("댓글달려면 로그인하시겠습니까")) {
-                document.location.href = "/loginInterceptor";
+                document.location.href = "/login";
             } else {
                 return;
             }
@@ -447,7 +447,7 @@
             const memberCash = [[${memberCash}]];
             if (memberCash == -1) {
                 if (confirm("답글달려면로그인하시겠습니까")) {
-                    document.location.href = "/loginInterceptor";
+                    document.location.href = "/login";
                     return;
                 } else {
                     return;
@@ -542,7 +542,7 @@
             const musicListId = [[${musicList.Id}]];
             if (memberCash == -1) {
                 if (confirm("추천하려면로그인하세요")) {
-                    document.location.href = "/loginInterceptor";
+                    document.location.href = "/login";
                 }
             } else if (likeCount == 1) {
                 alert('아이디당1개추천만가능합니다')
@@ -576,7 +576,7 @@
 
         function cartAddBtn() {
             if (confirm("장바구니추가하시겠습니까")) {
-                document.location.href = "/loginInterceptor";
+                document.location.href = "/login";
             } else {
                 return false;
             }

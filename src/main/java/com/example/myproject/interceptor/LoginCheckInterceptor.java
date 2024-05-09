@@ -23,7 +23,7 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
             log.info("세션에 loginId 값이 없음 로그인하세요");
             Cookie cookie = new Cookie("url", requestURI);
             response.addCookie(cookie);
-            response.sendRedirect("/loginInterceptor");
+            response.sendRedirect("/login");
         }
 
         return true;

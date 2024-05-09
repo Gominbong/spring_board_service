@@ -37,7 +37,7 @@ public class SellBuyController {
             log.info("구매하시려면 로그인해주세요");
             Cookie cookie = new Cookie("url",referer);
             response.addCookie(cookie);
-            return "redirect:/loginInterceptor";
+            return "redirect:/login";
         }
         Member result = sellBuyListService.buyMusicList(buyMusicListDto.getMusicListId(), loginId);
 

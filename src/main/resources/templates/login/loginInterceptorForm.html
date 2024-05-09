@@ -43,7 +43,7 @@
 <div style="height: 810px">
   <body class="text-center">
   <main class="form-signin" style="margin-top: 210px">
-    <form method="post" action="/loginInterceptor" th:object="${loginFormDto}">
+    <form method="post" action="/login" th:object="${loginFormDto}">
       <div th:if="${#fields.hasGlobalErrors()}">
         <h6 style="margin-bottom: 20px" class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">전체 오류 메시지</h6>
       </div>

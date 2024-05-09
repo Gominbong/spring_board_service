@@ -29,6 +29,8 @@ public class LoginController {
     @GetMapping("/")
     public String home(@RequestParam(value = "page", defaultValue = "0") int page,
                        HttpServletRequest request, Model model) {
+        String referer = request.getHeader("Referer");
+
         model.addAttribute("menu", "home");
         HttpSession session = request.getSession(false);
         log.info("페이지 정보 확인 = '{}' ", page);
@@ -65,51 +67,21 @@ public class LoginController {
         return "home";
     }
 
-    @GetMapping("/loginInterceptor")
-    public String loginInterceptor(@CookieValue("url") String url, Model model,
-                                   HttpServletRequest request, HttpServletResponse response) {
-
-        log.info("클릭된 url = {}", url);
-        Cookie cookie = new Cookie("url", url);
-        response.addCookie(cookie);
-        model.addAttribute("loginFormDto", new LoginFormDto());
-        return "/login/loginInterceptorForm";
-    }
-
-    @PostMapping("/loginInterceptor")
-    public String loginInterceptor(@CookieValue("url") String url, @Valid LoginFormDto loginFormDto,
-                               BindingResult bindingResult, HttpServletRequest request) {
-        Member result = loginService.login(loginFormDto);
-        log.info("로그인후 돌아갈 경로 확인 = '{}'", url);
-        log.info("암호화된비밀번호가져오기= '{}'", result);
-        if (bindingResult.hasErrors()) {
-            return "/login/loginInterceptorForm";
-        }
-        if (result == null) {
-            log.info("로그인 실패");
-            bindingResult.reject("loginFail", "아이디 또는 비밀번호 맞지 않습니다");
-            return "/login/loginInterceptorForm";
-        }
-
-        HttpSession session = request.getSession();
-        session.setAttribute("loginId", loginFormDto.getId());
-
-        log.info("세션 로그인 아이디 = '{}'", loginFormDto.getId());
-        return "redirect:" + url;
-    }
-
     @GetMapping("/login")
-    public String login(Model model) {
+    public String login(Model model, HttpServletRequest request, HttpServletResponse response) {
 
+        String referer = request.getHeader("Referer");
+        Cookie cookie = new Cookie("url", referer);
+        response.addCookie(cookie);
         model.addAttribute("loginFormDto", new LoginFormDto());
         return "/login/loginForm";
     }
 
     @PostMapping("/login")
-    public String login(@Valid LoginFormDto loginFormDto,
-                        BindingResult bindingResult, HttpServletRequest request) {
+    public String login(@CookieValue("url") String url, @Valid LoginFormDto loginFormDto,
+                               BindingResult bindingResult, HttpServletRequest request) {
         Member result = loginService.login(loginFormDto);
-
+        log.info("로그인후 돌아갈 경로 확인 = '{}'", url);
         log.info("암호화된비밀번호가져오기= '{}'", result);
         if (bindingResult.hasErrors()) {
             return "/login/loginForm";
@@ -124,18 +96,26 @@ public class LoginController {
         session.setAttribute("loginId", loginFormDto.getId());
 
         log.info("세션 로그인 아이디 = '{}'", loginFormDto.getId());
-        return "redirect:/";
+
+
+        boolean signup = url.contains("signup");
+        if (signup){
+            return "redirect:/";
+        }
+
+        return "redirect:" + url;
     }
 
     @PostMapping("/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) {
 
+        String referer = request.getHeader("Referer");
         HttpSession session = request.getSession(false);
         if (session != null) {
             session.invalidate();
             log.info("세션 로그아웃 되었습니다");
         }
 
-        return "redirect:/";
+        return "redirect:" + referer ;
     }
 }
