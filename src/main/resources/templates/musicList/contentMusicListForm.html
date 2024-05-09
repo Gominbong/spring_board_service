@@ -177,7 +177,6 @@
                     </form>
                 </div>
 
-
                 <div th:if="${list.softDelete==null}" style="float: right; margin-top: 9px; margin-right: 20px;">
                     <form th:if="${list.member.loginId.equals(loginId)}">
                         <button type="button" style="border: none" onclick="commentEdit(this, 0)">수정</button>
@@ -494,12 +493,7 @@
             console.log(divSize);
 
             const commentEditDiv = document.getElementById('commentEdit');
-            //대댓글 div
-            // 답글버튼 누를시 현재 누른 위치 밑에 대댓글Div 가 붙어있는지 체크후 없다면
-            // 제일 첫번째 우선순위로 대댓글Div display none 상태로 바꾼다
-            // 왜냐하면 1번째 댓글에 답글버튼 클릭하면 바로 밑에 대댓글Div 붙이고 display block 상태인데
-            // 2번째 댓글에 답글버튼 클릭하면 1번째 댓글 밑에 대댓글Div display none 상태로 미리 바꿔놔야
-            // 1번댓글의 대댓글Div 이동시켜 2번째댓글Div 바로아래로 이동시킨후 block 상태로 변경가능하기때문
+
             if ($(obj).parent().parent().next().next().text().length === 0) {
                 console.log("aaa");
                 commentEditDiv.style.display = 'none';
@@ -507,7 +501,6 @@
                 console.log("asd");
             }
 
-            //댓글 div 안에 답글 버튼 클릭시 보여주거나 숨김
             if (commentEditDiv.style.display === 'none') {
                 $(obj).parent().parent().parent().append(commentEditDiv);
                 console.log("ccc");
