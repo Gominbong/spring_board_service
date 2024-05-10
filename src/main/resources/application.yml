@@ -1,18 +1,18 @@
 spring:
   servlet:
     multipart:
-      max-file-size: 50MB
-      max-request-size: 50MB
-  datasource:
-    url: jdbc:h2:tcp://localhost/~/MyProject
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
+      max-file-size: 20MB
+      max-request-size: 20MB
   #datasource:
-    #url: jdbc:mysql://localhost:3306/shop
-    #username: root
-    #password: 1234
-    #driver-class-name: com.mysql.cj.jdbc.Driver
+    #url: jdbc:h2:tcp://localhost/~/MyProject
+    #username: sa
+    #password:
+    #driver-class-name: org.h2.Driver
+  datasource:
+    url: jdbc:mysql://localhost:3306/shop
+    username: root
+    password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
   devtools:
     livereload:
       enabled: false
@@ -30,8 +30,8 @@ spring:
         format_sql: true
         use_sql_comments: true
     open-in-view: false
-    #database: mysql
-    #database-platform: org.hibernate.dialect.MySQLDialect
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQLDialect
 
 logging:
   level:
