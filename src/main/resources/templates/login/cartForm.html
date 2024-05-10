@@ -49,13 +49,13 @@
             <th style="width: 5%">삭제</th>
             <th style="width: 5%">구매</th>
             <th style="width: 8%">추가일</th>
-            <th style="width: 30%">곡제목</th>
-            <th style="width: 15%">만든이</th>
-            <th style="width: 5%">악기</th>
-            <th style="width: 5%">난이도</th>
-            <th style="width: 5%">가격</th>
-            <th style="width: 5%">판매량</th>
-            <th style="width: 5%">추천수</th>
+            <th style="width: 22%">곡제목</th>
+            <th style="width: 13%">만든이</th>
+            <th style="width: 6%">악기</th>
+            <th style="width: 6%">난이도</th>
+            <th style="width: 6%">가격</th>
+            <th style="width: 6%">판매량</th>
+            <th style="width: 6%">추천수</th>
             <th style="display: none">musicListId</th>
             <th style="display: none">cartListId</th>
         </tr>
@@ -68,7 +68,7 @@
             </td>
             <td>
                 <form method="post" th:action="@{/cartDelete}" onsubmit="return deleteSubmit()">
-                    <button class="table_title_deleteBtn" type="submit" style="border-width: thin"
+                     <button class="table_title_deleteBtn" type="submit" style="border-width: thin"
                             th:name="cartId" th:value="${list.id}">삭제
                     </button>
                 </form>
@@ -168,7 +168,7 @@
                 if (i > 0) {
                     if (check.checked) {
                         const row = $(check).parent().parent().get(0);
-                        const cartListId = row.cells[11].innerText;
+                        const cartListId = row.cells[12].innerText;
                         const input = document.createElement('input');
                         const input1 = document.createElement('input');
                         input.type = 'hidden';

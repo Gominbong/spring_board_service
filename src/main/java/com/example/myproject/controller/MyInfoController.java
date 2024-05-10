@@ -2,12 +2,10 @@ package com.example.myproject.controller;
 
 import com.example.myproject.domain.Cart;
 import com.example.myproject.domain.Member;
-import com.example.myproject.dto.CartBuyMultiDto;
-import com.example.myproject.dto.CartDeleteMultiDto;
-import com.example.myproject.dto.CartDto;
-import com.example.myproject.dto.MyInfoDto;
+import com.example.myproject.dto.*;
 import com.example.myproject.service.CartService;
 import com.example.myproject.service.MemberService;
+import com.example.myproject.service.MyInfoService;
 import com.example.myproject.service.SellBuyListService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -19,7 +17,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +28,7 @@ public class MyInfoController {
     private final MemberService memberService;
     private final CartService cartService;
 
+    private final MyInfoService myInfoService;
     private final SellBuyListService sellBuyListService;
 
     @PostMapping("/cartBuy")
@@ -70,6 +68,7 @@ public class MyInfoController {
 
     @PostMapping("/cartDeleteMulti")
     public String cartDeleteMulti(CartDeleteMultiDto cartDeleteMultiDto){
+        log.info("아아아아아아");
         log.info(cartDeleteMultiDto.toString());
         List<Long> cartListId = cartDeleteMultiDto.getCartListId();
         for (Long id : cartListId) {
@@ -133,13 +132,44 @@ public class MyInfoController {
         return "/login/myInfoForm";
     }
 
-    @PostMapping("/myInfo")
-    public String myInfo(MyInfoDto myInfoDto, HttpServletRequest request, Model model){
+
+    @PostMapping("/myInfoEdit")
+    public String myInfoEdit(MyInfoEditDto myInfoEditDto, HttpServletRequest request, Model model){
+        HttpSession session = request.getSession();
+        String loginId = (String) session.getAttribute("loginId");
+        model.addAttribute("loginId", loginId);
+        Map<String, String> errors = myInfoService.myInfoEdit(myInfoEditDto, loginId);
+
+        if (errors != null){
+            model.addAttribute("errors", errors);
+            model.addAttribute("loginId", loginId);
+            Member member = memberService.findByLoginId(loginId);
+
+            model.addAttribute("member", member);
+            return "/login/myInfoForm";
+        }
+
+        return "redirect:/myInfo";
+    }
+
+
+    @PostMapping("/addCash")
+    public String addCash(AddCashDto addCashDto, HttpServletRequest request, Model model){
 
         HttpSession session = request.getSession();
         String loginId = (String)session.getAttribute("loginId");
+        model.addAttribute("loginId", loginId);
+        Map<String, String> errors = memberService.addCash(loginId, addCashDto);
 
-        memberService.addCash(loginId, myInfoDto);
+        if (errors != null){
+            model.addAttribute("errors", errors);
+            model.addAttribute("loginId", loginId);
+            Member member = memberService.findByLoginId(loginId);
+            model.addAttribute("member", member);
+            return "/login/myInfoForm";
+        }
+
+
         return "redirect:/myInfo";
     }
 

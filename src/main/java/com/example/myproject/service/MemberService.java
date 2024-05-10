@@ -1,13 +1,15 @@
 package com.example.myproject.service;
 
 import com.example.myproject.domain.Member;
-import com.example.myproject.dto.MyInfoDto;
+import com.example.myproject.dto.AddCashDto;
 import com.example.myproject.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -23,9 +25,23 @@ public class MemberService {
 
 
     @Transactional
-    public void addCash(String loginId, MyInfoDto myInfoDto) {
+    public Map<String, String> addCash(String loginId, AddCashDto addCashDto) {
+
+        Map<String, String> errors = new HashMap<>();
+
+        if (addCashDto.getCash() == null){
+            errors.put("cash", "충전할금액입력하세요");
+        }
+
+        if (!errors.isEmpty()){
+            return errors;
+        }
+
+
         Member member = memberRepository.findByLoginId(loginId);
-        member.setCash(member.getCash() + myInfoDto.getCash());
+        member.setCash(member.getCash() + addCashDto.getCash());
+
+        return null;
     }
 
 }

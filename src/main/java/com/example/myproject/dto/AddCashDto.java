@@ -3,7 +3,7 @@ package com.example.myproject.dto;
 import lombok.Data;
 
 @Data
-public class MyInfoDto {
+public class AddCashDto {
 
-    private int cash;
+    private Integer cash;
 }

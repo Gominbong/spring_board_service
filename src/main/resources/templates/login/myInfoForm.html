@@ -2,10 +2,29 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/header :: head}"/>
 <div th:replace="~{fragments/header :: header ('myInfo')}"/>
-
+<style>
+    .field-error{
+        border-color: #dc3545;
+        color: #dc3545;
+    }
+</style>
 <div class="container" style="height: 1020px; margin-top: 20px">
 
-    <ul style="font-size: large" th:if="${member}">
+    <button class="btn btn-lg btn-primary">닉네임 변경</button>
+
+    <div>
+
+        <div id='changeNickname'>
+            <form style="margin-top: 20px;" method="post" action="/myInfoEdit" onsubmit="return changeNickname()">
+                <lebel>변경할닉네임</lebel>
+                <input type="text" name="nickname" />
+                <button type="submit">변경하기</button>
+                <lebel class="field-error" th:if="${errors?.containsKey('nickname')}" th:text="${errors['nickname']}"></lebel>
+            </form>
+        </div>
+    </div>
+
+    <ul style="font-size: large; margin-top: 20px;" th:if="${member}">
         <li>보유 캐시 <p th:text="${member.cash}"></p></li>
         <li>총 판매금액 <p th:text="${member.revenue}"></p></li>
         <li>아이디 <p th:text="${member.loginId}"></p></li>
@@ -13,28 +32,28 @@
 
     </ul>
 
-    <button class="btn btn-lg btn-primary" onclick="btnClick()">가상머니충전</button>
+    <button class="btn btn-lg btn-primary">가상머니충전</button>
 
-    <div id='my-div' style="visibility: hidden">
-        <form style="margin-top: 20px;" method="post" action="/myInfo" onsubmit="return formSubmit()">
+    <div id='addCash'>
+        <form style="margin-top: 20px;" method="post" action="/addCash" onsubmit="return addCashForm()">
             <lebel>충전금액</lebel>
             <input type="number" min="0" name="cash"/>
-            <input type="submit" value="충전하기"/>
+            <button type="submit">충전하기</button>
+            <label class="field-error" th:if="${errors?.containsKey('cash')}" th:text="${errors['cash']}"></label>
         </form>
     </div>
 
     <script type="text/javascript">
-        function btnClick() {
-            const myDiv = document.getElementById('my-div');
 
-            if (myDiv.style.visibility === 'hidden') {
-                myDiv.style.visibility = 'visible';
+        function changeNickname(){
+            if (confirm("변경하시겠습니까")) {
+                return true;
             } else {
-                myDiv.style.visibility = 'hidden';
+                return false;
             }
         }
 
-        function formSubmit() {
+        function addCashForm() {
             if (confirm("충전하시겠습니까")) {
                 return true;
             } else {

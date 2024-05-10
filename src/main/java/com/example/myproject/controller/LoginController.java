@@ -67,6 +67,42 @@ public class LoginController {
         return "home";
     }
 
+    @GetMapping("/loginInterceptor")
+    public String loginInterceptor(Model model, HttpServletRequest request, HttpServletResponse response) {
+
+        model.addAttribute("loginFormDto", new LoginFormDto());
+        return "/login/loginForm";
+    }
+
+    @PostMapping("/loginInterceptor")
+    public String loginInterceptor(@CookieValue("url") String url, @Valid LoginFormDto loginFormDto,
+                               BindingResult bindingResult, HttpServletRequest request) {
+        Member result = loginService.login(loginFormDto);
+        log.info("로그인후 돌아갈 경로 확인 = '{}'", url);
+        log.info("암호화된비밀번호가져오기= '{}'", result);
+        if (bindingResult.hasErrors()) {
+            return "/login/loginForm";
+        }
+        if (result == null) {
+            log.info("로그인 실패");
+            bindingResult.reject("loginFail", "아이디 또는 비밀번호 맞지 않습니다");
+            return "/login/loginForm";
+        }
+
+        HttpSession session = request.getSession();
+        session.setAttribute("loginId", loginFormDto.getId());
+
+        log.info("세션 로그인 아이디 = '{}'", loginFormDto.getId());
+
+
+        boolean signup = url.contains("signup");
+        if (signup){
+            return "redirect:/";
+        }
+
+        return "redirect:" + url;
+    }
+
     @GetMapping("/login")
     public String login(Model model, HttpServletRequest request, HttpServletResponse response) {
 
