@@ -38,6 +38,7 @@ public class MusicListService {
     public Map<String, String> createAddItem(HttpServletRequest request, MusicListFormDto musicListFormDto,
                                              String loginId) {
 
+
         Map<String, String> errors = new HashMap<>();
 
         if (!StringUtils.hasText(musicListFormDto.getTitle())){
@@ -77,8 +78,14 @@ public class MusicListService {
 
         if(!pdfFiles.get(0).isEmpty()){
             for(MultipartFile multipartFile : pdfFiles ){
+                String os = System.getProperty("os.name").toLowerCase();
+                String Path;
+                if (os.contains("win")){
+                    Path = "C:/Users/asd/Desktop/study/pdf/";
+                }else{
+                    Path = "/home/pdfFile/";
+                }
                 String originalFilename = multipartFile.getOriginalFilename();
-                String Path = "C:/Users/asd/Desktop/study/pdf/";
                 String encode = originalFilename.replaceAll("[^ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9]", "_");
                 String storedFileName = System.currentTimeMillis() + "_" + encode;
                 try {
@@ -146,10 +153,17 @@ public class MusicListService {
         log.info("업데이트디티오 = {}", musicListUpdateDto.toString());
         if (filename != null){
             for (String file : filename) {
+                String os = System.getProperty("os.name").toLowerCase();
+                String Path;
+                if (os.contains("win")){
+                    Path = "C:/Users/asd/Desktop/study/pdf/";
+                }else{
+                    Path = "/home/pdfFile/";
+                }
                 log.info("수정페이지에서 삭제버튼누른 파일이름 = '{}'", file);
                 FileList fileList = fileRepository.findByStoredFilename(file);
                 fileRepository.delete(fileList);
-                File file1 = new File("C:/Users/asd/Desktop/study/pdf/"+file);
+                File file1 = new File(Path+file);
                 file1.delete();
             }
         }
@@ -157,8 +171,15 @@ public class MusicListService {
         List<MultipartFile> pdfFiles = musicListUpdateDto.getPdfFiles();
         if(!pdfFiles.get(0).isEmpty()){
             for(MultipartFile multipartFile : pdfFiles ){
+
+                String os = System.getProperty("os.name").toLowerCase();
+                String Path;
+                if (os.contains("win")){
+                    Path = "C:/Users/asd/Desktop/study/pdf/";
+                }else{
+                    Path = "/home/pdfFile/";
+                }
                 String originalFilename = multipartFile.getOriginalFilename();
-                String Path = "C:/Users/asd/Desktop/study/pdf/";
                 String encode = originalFilename.replaceAll("[^ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9]", "_");
                 String storedFileName = System.currentTimeMillis() + "_" + encode;
 
@@ -177,7 +198,7 @@ public class MusicListService {
         return null;
     }
 
-    public MusicListUpdateDto setmusicListUpdateDto(Long id) {
+    public MusicListUpdateDto setMusicListUpdateDto(Long id) {
         MusicListUpdateDto musicListUpdateDto = new MusicListUpdateDto();
         MusicList musicList = musicListRepository.findById(id).orElseThrow();
         musicListUpdateDto.setTitle(musicList.getTitle());

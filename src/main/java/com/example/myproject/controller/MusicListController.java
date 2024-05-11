@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -39,7 +38,15 @@ public class MusicListController {
 
         String originalFilename = file.getOriginalFilename();
         String storedFilename = file.getStoredFilename();
-        String Path = "C:/Users/asd/Desktop/study/pdf/" + storedFilename;
+        String os = System.getProperty("os.name").toLowerCase();
+        String Path1;
+        if (os.contains("win")){
+            Path1 = "C:/Users/asd/Desktop/study/pdf/";
+        }else{
+            Path1 = "/home/pdfFile/";
+        }
+
+        String Path = Path1 + storedFilename;
 
         UrlResource urlResource = new UrlResource("file:" + Path);
 
@@ -183,7 +190,7 @@ public class MusicListController {
         HttpSession session = request.getSession();
         String loginId = (String) session.getAttribute("loginId");
         model.addAttribute("loginId", loginId);
-        MusicListUpdateDto musicListUpdateDto = musicListService.setmusicListUpdateDto(id);
+        MusicListUpdateDto musicListUpdateDto = musicListService.setMusicListUpdateDto(id);
         List<FileList> fileList = fileListService.findByFiles(id);
 
         model.addAttribute("musicListUpdateDto", musicListUpdateDto);
