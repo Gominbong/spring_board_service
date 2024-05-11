@@ -21,13 +21,15 @@ public class WebConfig implements WebMvcConfigurer {
         return new BCryptPasswordEncoder();
     }
 
+
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+
         CacheControl cacheControl = CacheControl
                 .maxAge(600, TimeUnit.SECONDS)
                 .mustRevalidate();
 
         registry.addResourceHandler("/**")
-                .addResourceLocations("classpath:/static/")
+                .addResourceLocations("classpath:/static/", "classpath:/templates/")
                 .setCacheControl(cacheControl);
     }
 

@@ -38,23 +38,17 @@ public class MusicListController {
 
         String originalFilename = file.getOriginalFilename();
         String storedFilename = file.getStoredFilename();
-        String os = System.getProperty("os.name").toLowerCase();
-        String Path1;
-        if (os.contains("win")){
-            Path1 = "C:/Users/asd/Desktop/study/pdf/";
-        }else{
-            Path1 = "/home/pdfFile/";
-        }
+        String Path = "/upload/" + storedFilename;
 
-        String Path = Path1 + storedFilename;
 
-        UrlResource urlResource = new UrlResource("file:" + Path);
+        UrlResource urlResource = new UrlResource("file:"+Path);
 
         String encodedUploadFileName = URLEncoder.encode(originalFilename, StandardCharsets.UTF_8);
         String contentDisposition = "attachment; filename=\"" + encodedUploadFileName + "\"";
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition) //다운로드받는파일명
+
                 .body(urlResource);
     }
 
@@ -112,6 +106,9 @@ public class MusicListController {
     public String content(@RequestParam("musicListId") Long id, Model model,
                               HttpServletRequest request)
             throws MalformedURLException {
+
+        String property = System.getProperty("java.io.tmpdir");
+        log.info("프로퍼티 확인 = {}", property);
         HttpSession session = request.getSession();
         String loginId = (String) session.getAttribute("loginId");
         model.addAttribute("loginId", loginId);
@@ -151,7 +148,7 @@ public class MusicListController {
         model.addAttribute("fileList", fileList);
         model.addAttribute("musicList", musicList);
         model.addAttribute("sellBuyList", sellBuyList);
-        return "/musicList/contentMusicListForm";
+        return "musicList/contentMusicListForm";
     }
 
     @PostMapping("/deleteMusicList")
@@ -177,7 +174,7 @@ public class MusicListController {
         if (errors != null) {
             model.addAttribute("fileList", fileList);
             model.addAttribute("errors", errors);
-            return "/musicList/editMusicListForm";
+            return "musicList/editMusicListForm";
         }
 
         return "redirect:/";
@@ -197,7 +194,7 @@ public class MusicListController {
         model.addAttribute("fileList", fileList);
         model.addAttribute("musicListId", id);
 
-        return "/musicList/editMusicListForm";
+        return "musicList/editMusicListForm";
     }
 
     @GetMapping("/addMusicList")
@@ -210,7 +207,7 @@ public class MusicListController {
         log.info("세션 로그인한 아이디 = '{}' ", loginId);
         model.addAttribute("musicListFormDto", new MusicListFormDto());
 
-        return "/musicList/addMusicListForm";
+        return "musicList/addMusicListForm";
     }
 
     @PostMapping("/addMusicList")
@@ -225,7 +222,7 @@ public class MusicListController {
         Map<String, String> errors = musicListService.createAddItem(request, musicListFormDto, loginId);
         if (errors != null) {
             model.addAttribute("errors", errors);
-            return "/musicList/addMusicListForm";
+            return "musicList/addMusicListForm";
         }
 
         return "redirect:/";

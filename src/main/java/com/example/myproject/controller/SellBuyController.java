@@ -37,7 +37,7 @@ public class SellBuyController {
             log.info("구매하시려면 로그인해주세요");
             Cookie cookie = new Cookie("url",referer);
             response.addCookie(cookie);
-            return "redirect:/login";
+            return "redirect:login";
         }
         Member result = sellBuyListService.buyMusicList(buyMusicListDto.getMusicListId(), loginId);
 
@@ -86,7 +86,7 @@ public class SellBuyController {
         log.info("스타트 페이지 확인 해보기 = '{}' ", start);
 
 
-        return "/musicList/sellMusicListForm";
+        return "musicList/sellMusicListForm";
     }
 
     @GetMapping("/buyList")
@@ -136,7 +136,7 @@ public class SellBuyController {
         log.info("스타트 페이지 확인 해보기 = '{}' ", start);
 
 
-        return "/musicList/buyMusicListForm";
+        return "musicList/buyMusicListForm";
     }
 
 }

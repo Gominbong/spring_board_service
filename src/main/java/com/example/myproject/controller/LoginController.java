@@ -62,8 +62,6 @@ public class LoginController {
             model.addAttribute("end", paging.getTotalPages()-1);
         }
 
-        log.info("스타트 페이지 확인 해보기 = '{}' ", start);
-
         return "home";
     }
 
@@ -71,7 +69,7 @@ public class LoginController {
     public String loginInterceptor(Model model, HttpServletRequest request, HttpServletResponse response) {
 
         model.addAttribute("loginFormDto", new LoginFormDto());
-        return "/login/loginForm";
+        return "login/loginForm";
     }
 
     @PostMapping("/loginInterceptor")
@@ -81,12 +79,12 @@ public class LoginController {
         log.info("로그인후 돌아갈 경로 확인 = '{}'", url);
         log.info("암호화된비밀번호가져오기= '{}'", result);
         if (bindingResult.hasErrors()) {
-            return "/login/loginForm";
+            return "login/loginForm";
         }
         if (result == null) {
             log.info("로그인 실패");
             bindingResult.reject("loginFail", "아이디 또는 비밀번호 맞지 않습니다");
-            return "/login/loginForm";
+            return "login/loginForm";
         }
 
         HttpSession session = request.getSession();
@@ -110,7 +108,7 @@ public class LoginController {
         Cookie cookie = new Cookie("url", referer);
         response.addCookie(cookie);
         model.addAttribute("loginFormDto", new LoginFormDto());
-        return "/login/loginForm";
+        return "login/loginForm";
     }
 
     @PostMapping("/login")
@@ -120,12 +118,12 @@ public class LoginController {
         log.info("로그인후 돌아갈 경로 확인 = '{}'", url);
         log.info("암호화된비밀번호가져오기= '{}'", result);
         if (bindingResult.hasErrors()) {
-            return "/login/loginForm";
+            return "login/loginForm";
         }
         if (result == null) {
             log.info("로그인 실패");
             bindingResult.reject("loginFail", "아이디 또는 비밀번호 맞지 않습니다");
-            return "/login/loginForm";
+            return "login/loginForm";
         }
 
         HttpSession session = request.getSession();

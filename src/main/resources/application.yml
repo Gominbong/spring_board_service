@@ -1,9 +1,11 @@
 spring:
   servlet:
     multipart:
-      max-file-size: 20MB
-      max-request-size: 20MB
-  #datasource:
+      max-file-size: 25MB
+      max-request-size: 25MB
+      enabled: true
+      location: /upload/
+    #datasource:
     #url: jdbc:h2:tcp://localhost/~/MyProject
     #username: sa
     #password:
@@ -20,7 +22,6 @@ spring:
     cache: false
   thymeleaf:
     cache: false
-
   jpa:
     hibernate:
       ddl-auto: update

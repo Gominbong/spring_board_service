@@ -26,7 +26,7 @@ public class SignupController {
     public String sign(Model model) {
 
         model.addAttribute("signupFormDto", new SignupFormDto());
-        return "/login/signupForm";
+        return "login/signupForm";
     }
 
     @PostMapping("/signup")
@@ -35,7 +35,7 @@ public class SignupController {
         Map<String, String> errors = signupService.createMember(signupFormDto);
         if (errors != null) {
             model.addAttribute("errors", errors);
-            return "/login/signupForm";
+            return "login/signupForm";
         }
         log.info("가입성공");
         return "redirect:/";

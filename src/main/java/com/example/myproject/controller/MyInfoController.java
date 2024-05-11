@@ -44,7 +44,7 @@ public class MyInfoController {
         }
 
         log.info("여여여여기기기");
-        return "redirect:/cart";
+        return "redirect:cart";
     }
 
     @PostMapping("/cartBuyMulti")
@@ -63,7 +63,7 @@ public class MyInfoController {
             cartService.deleteCartList(id);
         }
 
-        return "redirect:/cart";
+        return "redirect:cart";
     }
 
     @PostMapping("/cartDeleteMulti")
@@ -74,14 +74,14 @@ public class MyInfoController {
         for (Long id : cartListId) {
             cartService.deleteCartList(id);
         }
-        return "redirect:/cart";
+        return "redirect:cart";
     }
 
     @PostMapping("/cartDelete")
     public String cartDelete(@RequestParam("cartId") Long id){
 
         cartService.deleteCartList(id);
-        return "redirect:/cart";
+        return "redirect:cart";
     }
 
     @PostMapping("/cartAdd")
@@ -91,7 +91,7 @@ public class MyInfoController {
         String loginId = (String) session.getAttribute("loginId");
         Cart cart = cartService.createCart(id, loginId);
 
-        return "redirect:/cart";
+        return "redirect:cart";
     }
 
     @GetMapping("/cart")
@@ -114,7 +114,7 @@ public class MyInfoController {
         }
         model.addAttribute("cartList", cartList);
 
-        return "/login/cartForm";
+        return "login/cartForm";
     }
 
     @GetMapping("/myInfo")
@@ -129,7 +129,7 @@ public class MyInfoController {
             model.addAttribute("member", member);
         }
 
-        return "/login/myInfoForm";
+        return "login/myInfoForm";
     }
 
 
@@ -146,10 +146,10 @@ public class MyInfoController {
             Member member = memberService.findByLoginId(loginId);
 
             model.addAttribute("member", member);
-            return "/login/myInfoForm";
+            return "login/myInfoForm";
         }
 
-        return "redirect:/myInfo";
+        return "redirect:myInfo";
     }
 
 
@@ -166,11 +166,11 @@ public class MyInfoController {
             model.addAttribute("loginId", loginId);
             Member member = memberService.findByLoginId(loginId);
             model.addAttribute("member", member);
-            return "/login/myInfoForm";
+            return "login/myInfoForm";
         }
 
 
-        return "redirect:/myInfo";
+        return "redirect:myInfo";
     }
 
 
