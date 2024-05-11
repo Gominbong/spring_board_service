@@ -39,8 +39,6 @@ public class MusicListController {
         String originalFilename = file.getOriginalFilename();
         String storedFilename = file.getStoredFilename();
         String Path = "/upload/" + storedFilename;
-
-
         UrlResource urlResource = new UrlResource("file:"+Path);
 
         String encodedUploadFileName = URLEncoder.encode(originalFilename, StandardCharsets.UTF_8);
