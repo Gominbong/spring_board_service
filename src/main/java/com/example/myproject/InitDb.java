@@ -20,14 +20,11 @@ public class InitDb {
 
     private final InitService initService;
     static int a = 0;
-    static int b = 0;
-    static int c = 0;
-    static int d = 100;
 
     @PostConstruct
     public void init() {
 
-/*        for(int i=0; i<200; i++){
+/*        for(int i=0; i<5; i++){
             initService.dbInit1();
         }*/
     }

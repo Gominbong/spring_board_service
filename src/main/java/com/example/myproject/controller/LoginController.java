@@ -53,7 +53,7 @@ public class LoginController {
         }else if (start ==0 && paging.getTotalPages() <=7){
             log.info("여기33333 = {}", paging.getTotalPages());
             model.addAttribute("start", 0);
-            model.addAttribute("end", paging.getTotalPages());
+            model.addAttribute("end", paging.getTotalPages() -1);
         }else if (start != 0 && paging.getTotalPages() - start <=7){
             log.info("여기44444 = {}", paging.getTotalPages());
             model.addAttribute("start", start);
