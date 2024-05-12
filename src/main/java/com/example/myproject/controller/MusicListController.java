@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -38,7 +40,14 @@ public class MusicListController {
 
         String originalFilename = file.getOriginalFilename();
         String storedFilename = file.getStoredFilename();
-        String Path = "/upload/" + storedFilename;
+        String os = System.getProperty("os.name").toLowerCase();
+        String Path;
+        if (os.contains("win")){
+            Path = "C:/Users/asd/Desktop/study/pdf/" + storedFilename;
+        }else{
+            Path = "/upload/" + storedFilename;
+        }
+
         UrlResource urlResource = new UrlResource("file:"+Path);
 
         String encodedUploadFileName = URLEncoder.encode(originalFilename, StandardCharsets.UTF_8);
@@ -46,7 +55,6 @@ public class MusicListController {
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition) //다운로드받는파일명
-
                 .body(urlResource);
     }
 
@@ -225,8 +233,6 @@ public class MusicListController {
 
         return "redirect:/";
     }
-
-
 
 
     @PostMapping("/likeCount")

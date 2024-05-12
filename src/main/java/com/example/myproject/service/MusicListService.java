@@ -80,10 +80,20 @@ public class MusicListService {
                 String originalFilename = multipartFile.getOriginalFilename();
                 String encode = originalFilename.replaceAll("[^ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9]", "_");
                 String storedFileName = System.currentTimeMillis() + "_" + encode;
-                try {
-                    multipartFile.transferTo(new File(storedFileName));
-                } catch (IOException e) {
-                    e.getStackTrace();
+
+                String os = System.getProperty("os.name").toLowerCase();
+                if (os.contains("win")){
+                    try {
+                        multipartFile.transferTo(new File("C:/Users/asd/Desktop/study/pdf/"+storedFileName));
+                    } catch (IOException e) {
+                        e.getStackTrace();
+                    }
+                } else{
+                    try {
+                        multipartFile.transferTo(new File(storedFileName));
+                    } catch (IOException e) {
+                        e.getStackTrace();
+                    }
                 }
                 FileList fileList = new FileList();
                 fileList.setMusicList(musicList); //외래키 설정
@@ -148,8 +158,16 @@ public class MusicListService {
                 log.info("수정페이지에서 삭제버튼누른 파일이름 = '{}'", file);
                 FileList fileList = fileRepository.findByStoredFilename(file);
                 fileRepository.delete(fileList);
-                File file1 = new File("/upload/"+file);
-                file1.delete();
+
+                String os = System.getProperty("os.name").toLowerCase();
+                if (os.contains("win")){
+                    File file1 = new File("C:/Users/asd/Desktop/study/pdf/"+file);
+                    file1.delete();
+                } else{
+                    File file1 = new File("/upload/"+file);
+                    file1.delete();
+                }
+
             }
         }
 
