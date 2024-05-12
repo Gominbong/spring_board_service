@@ -9,7 +9,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -56,6 +58,39 @@ public class MusicListController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition) //다운로드받는파일명
                 .body(urlResource);
+    }
+
+    @GetMapping("/search")
+    public String search(SearchDto searchDto, @RequestParam(value = "page", defaultValue = "0") int page,
+                         HttpServletRequest request, Model model){
+
+        log.info("검색 한거 = {}", searchDto.getNickname());
+        log.info("검색 한거 = {}", searchDto.getSearch());
+        log.info("검색 한거 = {}", searchDto.getTitle());
+
+        HttpSession session = request.getSession();
+        String loginId = (String) session.getAttribute("loginId");
+        model.addAttribute("loginId", loginId);
+
+        Page<MusicList> paging = musicListService.findMusicList(page);
+        model.addAttribute("page", page);
+        model.addAttribute("paging", paging);
+        log.info("전체 페이지수 확인 = '{}'", paging.getTotalPages());
+        int temp = page / 7;
+        int start = temp * 7;
+        log.info("스타트 페이지 확인 = '{}'", start);
+
+        if (paging.getTotalPages() ==0 || paging.getTotalPages()==1){
+            log.info("여기11111 = {}", paging.getTotalPages());
+            model.addAttribute("start", 0);
+            model.addAttribute("end", 0);
+        }else{
+            log.info("여기2222 = {}", paging.getTotalPages());
+            model.addAttribute("start", start);
+            model.addAttribute("end", start +6);
+        }
+
+        return "home";
     }
 
     @PostMapping("/commentEdit")

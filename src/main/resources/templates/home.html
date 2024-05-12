@@ -91,15 +91,16 @@
 
 </div>
 <div class="container">
-    <form class="row g-2 justify-content-center" style="margin-bottom: 154px">
+    <form class="row g-2 justify-content-center"
+          style="margin-bottom: 154px" method="get" action="/search">
         <div class="col-auto">
-            <select class="form-select">
-                <option selected>제목검색</option>
-                <option>글작성자</option>
+            <select name="select" class="form-select">
+                <option type="text" name="title" value="title">제목검색</option>
+                <option type="text" name="nickname" value="nickname">글작성자</option>
             </select>
         </div>
         <div class="col-3">
-            <input type="search" class="form-control" placeholder="악보를 검색하세요" aria-label="Search">
+            <input type="search" name="search" class="form-control" placeholder="악보를 검색하세요" aria-label="Search">
         </div>
 
         <div class="col-auto">

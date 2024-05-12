@@ -29,8 +29,6 @@ public class LoginController {
     @GetMapping("/")
     public String home(@RequestParam(value = "page", defaultValue = "0") int page,
                        HttpServletRequest request, Model model) {
-        String referer = request.getHeader("Referer");
-
         model.addAttribute("menu", "home");
         HttpSession session = request.getSession(false);
         log.info("페이지 정보 확인 = '{}' ", page);
@@ -41,7 +39,6 @@ public class LoginController {
         }
 
         Page<MusicList> paging = musicListService.findMusicList(page);
-
         model.addAttribute("page", page);
         model.addAttribute("paging", paging);
         log.info("전체 페이지수 확인 = '{}'", paging.getTotalPages());
@@ -53,14 +50,19 @@ public class LoginController {
             log.info("여기11111 = {}", paging.getTotalPages());
             model.addAttribute("start", 0);
             model.addAttribute("end", 0);
-        }else{
+        }else if (start ==0 && paging.getTotalPages() <=7){
+            log.info("여기33333 = {}", paging.getTotalPages());
+            model.addAttribute("start", 0);
+            model.addAttribute("end", paging.getTotalPages());
+        }else if (start != 0 && paging.getTotalPages() - start <=7){
+            log.info("여기44444 = {}", paging.getTotalPages());
             model.addAttribute("start", start);
-            model.addAttribute("end", start +6);
+            model.addAttribute("end", paging.getTotalPages()-1);
+        } else {
+            log.info("여기2222 = {}", paging.getTotalPages());
+                model.addAttribute("start", start);
+                model.addAttribute("end", start +6);
         }
-
-
-
-
 
         return "home";
     }
