@@ -131,8 +131,6 @@ public class LoginController {
 
         log.info("세션 로그인 아이디 = '{}'", loginFormDto.getId());
 
-
-
         if (url.contains("signup")){
             return "redirect:/";
         }
