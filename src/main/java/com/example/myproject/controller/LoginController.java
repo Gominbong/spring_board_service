@@ -47,20 +47,20 @@ public class LoginController {
         log.info("전체 페이지수 확인 = '{}'", paging.getTotalPages());
         int temp = page / 7;
         int start = temp * 7;
+        log.info("스타트 페이지 확인 = '{}'", start);
 
-        if (paging.getTotalPages() == 0) {
-                log.info("여기11111 = {}", paging.getTotalPages());
-                model.addAttribute("start", start);
-                model.addAttribute("end", paging.getTotalPages());
-        } else if (paging.getTotalPages() - start > 7) {
-            log.info("여기22222 = {}", paging.getTotalPages());
+        if (paging.getTotalPages() ==0 || paging.getTotalPages()==1){
+            log.info("여기11111 = {}", paging.getTotalPages());
+            model.addAttribute("start", 0);
+            model.addAttribute("end", 0);
+        }else{
             model.addAttribute("start", start);
-            model.addAttribute("end", start + 6);
-        } else if (paging.getTotalPages() < 6){
-            log.info("여기33333 = {}", paging.getTotalPages());
-            model.addAttribute("start", start);
-            model.addAttribute("end", paging.getTotalPages()-1);
+            model.addAttribute("end", start +6);
         }
+
+
+
+
 
         return "home";
     }

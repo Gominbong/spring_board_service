@@ -1,21 +1,16 @@
 package com.example.myproject;
 
-import com.example.myproject.domain.Comment;
+
 import com.example.myproject.domain.Member;
 import com.example.myproject.domain.MusicList;
 import com.example.myproject.service.MemberService;
-import com.example.myproject.service.MusicListService;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Slf4j
@@ -32,12 +27,9 @@ public class InitDb {
     @PostConstruct
     public void init() {
 
-
-
-
-        for(int i=0; i<150; i++){
+/*        for(int i=0; i<200; i++){
             initService.dbInit1();
-        }
+        }*/
     }
 
 
