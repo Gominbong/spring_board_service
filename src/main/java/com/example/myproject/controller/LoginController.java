@@ -132,11 +132,13 @@ public class LoginController {
         log.info("세션 로그인 아이디 = '{}'", loginFormDto.getId());
 
 
-        boolean signup = url.contains("signup");
-        if (signup){
+
+        if (url.contains("signup")){
             return "redirect:/";
         }
-
+        if (url.contains("login")){
+            return "redirect:/";
+        }
         return "redirect:" + url;
     }
 
