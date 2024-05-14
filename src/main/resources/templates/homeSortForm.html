@@ -66,24 +66,24 @@
     <ul class="pagination justify-content-center" style="margin-top: 20px">
 
         <li class="page-item" th:classappend="${start==0} ? 'disabled'">
-            <a class="page-link" th:href="@{|?page=${start -1}|}"> << </a>
+            <a class="page-link" th:href="@{|?sortType=${homeSortDto.getSortType()}&page=${start -1}|}"> << </a>
         </li>
 
         <li class="page-item" th:classappend="${!paging.hasPrevious} ? 'disabled'">
-            <a class="page-link" th:href="@{|?page=${paging.number -1}|}"> < </a>
+            <a class="page-link" th:href="@{|?sortType=${homeSortDto.getSortType()}&page=${paging.number -1}|}"> < </a>
         </li>
 
         <li class="page-item" th:classappend="${page == paging.number} ? 'active'"
             th:each="page : ${#numbers.sequence(start, end)}">
-            <a class="page-link" th:text="${page+1}" th:href="@{|?page=${page}|}"></a>
+            <a class="page-link" th:text="${page+1}" th:href="@{|?sortType=${homeSortDto.getSortType()}&page=${page}|}"></a>
         </li>
 
         <li class="page-item" th:classappend="${!paging.hasNext} ? 'disabled'">
-            <a class="page-link" th:href="@{|?page=${paging.number+1}|}"> > </a>
+            <a class="page-link" th:href="@{|?sortType=${homeSortDto.getSortType()}&page=${paging.number+1}|}"> > </a>
         </li>
 
         <li class="page-item" th:classappend="${paging.getTotalPages()-start<=7} ? 'disabled'">
-            <a class="page-link" th:href="@{|?page=${start+7}|}"> >> </a>
+            <a class="page-link" th:href="@{|?sortType=${homeSortDto.getSortType()}&page=${start+7}|}"> >> </a>
         </li>
 
     </ul>

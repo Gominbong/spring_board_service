@@ -3,8 +3,10 @@ package com.example.myproject.service;
 import com.example.myproject.domain.FileList;
 import com.example.myproject.domain.Member;
 import com.example.myproject.domain.MusicList;
+import com.example.myproject.dto.HomeSortDto;
 import com.example.myproject.dto.MusicListFormDto;
 import com.example.myproject.dto.MusicListUpdateDto;
+import com.example.myproject.dto.SearchDto;
 import com.example.myproject.repository.MusicListRepository;
 import com.example.myproject.repository.FileListRepository;
 import com.example.myproject.repository.MemberRepository;
@@ -205,5 +207,39 @@ public class MusicListService {
 
         return musicListUpdateDto;
 
+    }
+
+    public Page<MusicList> musicListSearch(int page, SearchDto searchDto) {
+        Pageable pageable = PageRequest.of(page, 15);
+        if (searchDto.getSearchType().equals("SearchTitle")){
+            return musicListRepository.findMusicListByTitleContains(pageable, searchDto.getSearch());
+        }
+        if (searchDto.getSearchType().equals("SearchNickname")){
+            return musicListRepository.findMusicListByNickname(pageable, searchDto.getSearch());
+        }
+        log.info("ㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹ");
+        return null;
+    }
+
+    public Page<MusicList> homeSort(int page, HomeSortDto homeSortDto) {
+
+        if (homeSortDto.getSortType().equals("null")){
+            Pageable pageable = PageRequest.of(page, 15, Sort.by(Sort.Direction.DESC, "id"));
+            return musicListRepository.findBySoftDeleteIsNull(pageable);
+        }
+        if (homeSortDto.getSortType().equals("sortPrice")){
+            Pageable pageable = PageRequest.of(page, 15, Sort.by(Sort.Direction.DESC, "price"));
+            return musicListRepository.findBySoftDeleteIsNull(pageable);
+        }
+        if (homeSortDto.getSortType().equals("sortLike")){
+            Pageable pageable = PageRequest.of(page, 15, Sort.by(Sort.Direction.DESC, "likeCount"));
+            return musicListRepository.findBySoftDeleteIsNull(pageable);
+        }
+        if (homeSortDto.getSortType().equals("sortQuantity")){
+            Pageable pageable = PageRequest.of(page, 15, Sort.by(Sort.Direction.DESC, "salesQuantity"));
+            return musicListRepository.findBySoftDeleteIsNull(pageable);
+        }
+
+        return null;
     }
 }

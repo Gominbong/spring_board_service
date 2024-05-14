@@ -11,13 +11,10 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -51,7 +48,6 @@ public class MusicListController {
         }
 
         UrlResource urlResource = new UrlResource("file:"+Path);
-
         String encodedUploadFileName = URLEncoder.encode(originalFilename, StandardCharsets.UTF_8);
         String contentDisposition = "attachment; filename=\"" + encodedUploadFileName + "\"";
 
@@ -60,19 +56,32 @@ public class MusicListController {
                 .body(urlResource);
     }
 
-    @GetMapping("/search")
-    public String search(SearchDto searchDto, @RequestParam(value = "page", defaultValue = "0") int page,
-                         HttpServletRequest request, Model model){
-
-        log.info("검색 한거 = {}", searchDto.getNickname());
-        log.info("검색 한거 = {}", searchDto.getSearch());
-        log.info("검색 한거 = {}", searchDto.getTitle());
-
+    @GetMapping("/selectSort")
+    public String selectSort(HttpServletRequest request, Model model){
+        model.addAttribute("menu", "home");
         HttpSession session = request.getSession();
         String loginId = (String) session.getAttribute("loginId");
         model.addAttribute("loginId", loginId);
 
-        Page<MusicList> paging = musicListService.findMusicList(page);
+
+
+
+
+
+
+        return "homeSortForm";
+    }
+
+    @GetMapping("/homeSort")
+    public String homeSort(HomeSortDto homeSortDto, HttpServletRequest request, Model model,
+                       @RequestParam(value = "page", defaultValue = "0") int page){
+        HttpSession session = request.getSession();
+        String loginId = (String) session.getAttribute("loginId");
+        model.addAttribute("loginId", loginId);
+        model.addAttribute("menu", "home");
+
+        model.addAttribute("homeSortDto", homeSortDto);
+        Page<MusicList> paging = musicListService.homeSort(page, homeSortDto);
         model.addAttribute("page", page);
         model.addAttribute("paging", paging);
         log.info("전체 페이지수 확인 = '{}'", paging.getTotalPages());
@@ -84,13 +93,61 @@ public class MusicListController {
             log.info("여기11111 = {}", paging.getTotalPages());
             model.addAttribute("start", 0);
             model.addAttribute("end", 0);
-        }else{
+        }else if (start ==0 && paging.getTotalPages() <=7){
+            log.info("여기33333 = {}", paging.getTotalPages());
+            model.addAttribute("start", 0);
+            model.addAttribute("end", paging.getTotalPages() -1);
+        }else if (start != 0 && paging.getTotalPages() - start <=7){
+            log.info("여기44444 = {}", paging.getTotalPages());
+            model.addAttribute("start", start);
+            model.addAttribute("end", paging.getTotalPages()-1);
+        } else {
             log.info("여기2222 = {}", paging.getTotalPages());
             model.addAttribute("start", start);
             model.addAttribute("end", start +6);
         }
 
-        return "home";
+        return "homeSortForm";
+    }
+
+    @GetMapping("/search")
+    public String search(SearchDto searchDto, @RequestParam(value = "page", defaultValue = "0") int page,
+                         HttpServletRequest request, Model model){
+        model.addAttribute("menu", "home");
+        model.addAttribute("searchDto", searchDto);
+        log.info("셀릭트창 확인 = {} " , searchDto.getSearchType());
+        HttpSession session = request.getSession();
+        String loginId = (String) session.getAttribute("loginId");
+        model.addAttribute("loginId", loginId);
+        Page<MusicList> paging = musicListService.musicListSearch(page, searchDto);
+
+
+        model.addAttribute("page", page);
+        model.addAttribute("paging", paging);
+        log.info("전체 페이지수 확인 = '{}'", paging.getTotalPages());
+        int temp = page / 7;
+        int start = temp * 7;
+        log.info("스타트 페이지 확인 = '{}'", start);
+
+        if (paging.getTotalPages() ==0 || paging.getTotalPages()==1){
+            log.info("여기11111 = {}", paging.getTotalPages());
+            model.addAttribute("start", 0);
+            model.addAttribute("end", 0);
+        }else if (start ==0 && paging.getTotalPages() <=7){
+            log.info("여기33333 = {}", paging.getTotalPages());
+            model.addAttribute("start", 0);
+            model.addAttribute("end", paging.getTotalPages() -1);
+        }else if (start != 0 && paging.getTotalPages() - start <=7){
+            log.info("여기44444 = {}", paging.getTotalPages());
+            model.addAttribute("start", start);
+            model.addAttribute("end", paging.getTotalPages()-1);
+        } else {
+            log.info("여기2222 = {}", paging.getTotalPages());
+            model.addAttribute("start", start);
+            model.addAttribute("end", start +6);
+        }
+
+        return "musicListSearchForm";
     }
 
     @PostMapping("/commentEdit")

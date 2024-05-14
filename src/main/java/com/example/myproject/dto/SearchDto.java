@@ -4,9 +4,8 @@ import lombok.Data;
 
 @Data
 public class SearchDto {
-    private String select;
+    private String searchType;
     private String search;
-    private String title;
-    private String nickname;
+
 
 }

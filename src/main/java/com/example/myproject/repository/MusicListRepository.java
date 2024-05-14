@@ -22,4 +22,15 @@ public interface MusicListRepository extends JpaRepository<MusicList, Long> {
             " musicList.member member where musicList.id = :musicListId")
     MusicList findByMusicList(Long musicListId);
 
+
+    @Query("select musicList from MusicList musicList inner join fetch" +
+            " musicList.member member where musicList.softDelete is null and" +
+            " musicList.title like concat('%', :title, '%')")
+    Page<MusicList> findMusicListByTitleContains(Pageable pageable, String title);
+
+
+    @Query("select musicList from MusicList musicList inner join fetch" +
+            " musicList.member member where musicList.softDelete is null and" +
+            " member.nickname like concat('%', :nickname, '%')")
+    Page<MusicList> findMusicListByNickname(Pageable pageable, String nickname);
 }
