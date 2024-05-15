@@ -118,6 +118,7 @@ public class MusicListController {
         String loginId = (String) session.getAttribute("loginId");
         model.addAttribute("loginId", loginId);
         model.addAttribute("menu", "home");
+        log.info("홈 정렬 디티오 확인 = {}", homeSortDto.getSortType());
         model.addAttribute("homeSortDto", homeSortDto);
         Page<MusicList> paging = musicListService.homeSort(page, homeSortDto);
         model.addAttribute("page", page);
