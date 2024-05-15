@@ -114,16 +114,8 @@
 
     $(function (){
 
-        const result = $("#searchType").val();
         const result1 = $("#sortType").val();
-        console.log(result);
         console.log(result1);
-        if (result === 'searchTitle'){
-            $("#selectBox option:eq(0)").attr('selected', 'selected');
-        }else if (result === 'searchNickname'){
-            $("#selectBox option:eq(1)").attr('selected', 'selected');
-        }
-
 
         if (result1 === 'null'){
             $("#selectBox1 option:eq(0)").attr('selected', 'selected');
