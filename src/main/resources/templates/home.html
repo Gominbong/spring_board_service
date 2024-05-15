@@ -94,12 +94,12 @@
           style="margin-bottom: 154px" method="get" action="/search">
         <div class="col-auto">
             <select id="selectBox" onchange="selectOption()" class="form-select">
-                <option>제목검색</option>
-                <option>글작성자</option>
+                <option value="optionTitleSearch">제목검색</option>
+                <option value="optionNicknameSearch">글작성자</option>
             </select>
         </div>
         <div class="col-3">
-            <input id="searchType" type="hidden" name="searchType" value="SearchTitle">
+            <input id="searchType" type="hidden" name="searchType" value="searchTitle">
             <input type="search" name="search" class="form-control" placeholder="악보를 검색하세요" aria-label="Search">
         </div>
 
@@ -134,13 +134,16 @@
 
     function selectOption(){
         const text = $("#selectBox option:selected").text();
+
         console.log(text);
         if (text === '제목검색'){
             const input = document.getElementById("searchType");
-            input.value = "SearchTitle";
+            input.value = "searchTitle";
+
+
         } else if(text === '글작성자'){
             const input = document.getElementById("searchType");
-            input.value = "SearchNickname";
+            input.value = "searchNickname";
         }
     }
 </script>

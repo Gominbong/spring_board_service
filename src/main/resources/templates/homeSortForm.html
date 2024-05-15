@@ -27,7 +27,7 @@
             </select>
         </div>
         <div class="col-auto">
-            <input id="sortType" type="hidden" name="sortType" value="null">
+            <input id="sortType" type="hidden" name="sortType" th:value="${homeSortDto.sortType}">
             <button type="submit" class="btn btn-primary mb-3">확인</button>
         </div>
     </form>
@@ -99,7 +99,7 @@
             </select>
         </div>
         <div class="col-3">
-            <input id="searchType" type="hidden" name="searchType" value="SearchTitle">
+            <input id="searchType" type="hidden" name="searchType" value="searchTitle">
             <input type="search" name="search" class="form-control" placeholder="악보를 검색하세요" aria-label="Search">
         </div>
 
@@ -112,6 +112,31 @@
 <div th:replace="~{fragments/footer :: footer}"/>
 <script type="text/javascript">
 
+    $(function (){
+
+        const result = $("#searchType").val();
+        const result1 = $("#sortType").val();
+        $("#")
+        console.log(result);
+        console.log(result1);
+        if (result === 'searchTitle'){
+            $("#selectBox option:eq(0)").attr('selected', 'selected');
+        }else if (result === 'searchNickname'){
+            $("#selectBox option:eq(1)").attr('selected', 'selected');
+        }
+
+
+        if (result1 === 'null'){
+            $("#selectBox1 option:eq(0)").attr('selected', 'selected');
+        }else if(result1 === 'sortPrice'){
+            $("#selectBox1 option:eq(1)").attr('selected', 'selected');
+        }else if(result1 === 'sortLike'){
+            $("#selectBox1 option:eq(2)").attr('selected', 'selected');
+        }else if(result1 === 'sortQuantity'){
+            $("#selectBox1 option:eq(3)").attr('selected', 'selected');
+        }
+
+    })
 
     function selectOption1(){
         const text = $("#selectBox1 option:selected").text();
@@ -137,10 +162,10 @@
         console.log(text);
         if (text === '제목검색'){
             const input = document.getElementById("searchType");
-            input.value = "SearchTitle";
+            input.value = "searchTitle";
         } else if(text === '글작성자'){
             const input = document.getElementById("searchType");
-            input.value = "SearchNickname";
+            input.value = "searchNickname";
         }
     }
 </script>

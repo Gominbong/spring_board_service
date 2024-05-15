@@ -20,9 +20,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <body>
 <div class="container">
-  <form class="row g-2" style="margin-top: 20px">
+  <form class="row g-2" style="margin-top: 20px" method="get" action="/searchSort">
     <div class="col-auto">
-      <select class="form-select">
+      <select id="selectBox1" class="form-select" onchange="selectOption1()">
         <option selected>정렬선택</option>
         <option>가격순</option>
         <option>추천순</option>
@@ -30,6 +30,9 @@
       </select>
     </div>
     <div class="col-auto">
+      <input id="sortType" type="hidden" name="sortType" th:value="${searchDto.sortType}">
+      <input type="hidden" name="searchType" th:value="${searchDto.searchType}">
+      <input type="hidden" name="search" th:value="${searchDto.search}">
       <button type="submit" class="btn btn-primary mb-3">확인</button>
     </div>
   </form>
@@ -102,8 +105,8 @@
       </select>
     </div>
     <div class="col-3">
-      <input id="searchType" type="hidden" name="searchType" value="SearchTitle">
-      <input type="search" name="search" class="form-control" placeholder="악보를 검색하세요" aria-label="Search">
+      <input id="searchType" type="hidden" name="searchType" th:value="${searchDto.searchType}">
+      <input th:field="${searchDto.search}" type="search" name="search" class="form-control" placeholder="악보를 검색하세요" aria-label="Search">
     </div>
 
     <div class="col-auto">
@@ -115,16 +118,50 @@
 <div th:replace="~{fragments/footer :: footer}"/>
 <script type="text/javascript">
 
+  $(function (){
+
+    const result = $("#searchType").val();
+    console.log(result);
+    if (result === 'searchTitle'){
+      $("#selectBox option:eq(0)").attr('selected', 'selected');
+    }else if (result === 'searchNickname'){
+      $("#selectBox option:eq(1)").attr('selected', 'selected');
+    }
+
+
+
+  })
+
+  function selectOption1(){
+    const text = $("#selectBox1 option:selected").text();
+    console.log(text);
+    if (text === '정렬선택'){
+      const input = document.getElementById("sortType");
+      input.value = "null";
+    } else if(text === '가격순'){
+      const input = document.getElementById("sortType");
+      input.value = "sortPrice";
+    } else if(text === '추천순'){
+      const input = document.getElementById("sortType");
+      input.value = "sortLike";
+    } else if(text === '판매량'){
+      const input = document.getElementById("sortType");
+      input.value = "sortQuantity";
+    }
+
+  }
+
   function selectOption(){
     const text = $("#selectBox option:selected").text();
     console.log(text);
     if (text === '제목검색'){
       const input = document.getElementById("searchType");
-      input.value = "SearchTitle";
+      input.value = "searchTitle";
     } else if(text === '글작성자'){
       const input = document.getElementById("searchType");
-      input.value = "SearchNickname";
+      input.value = "searchNickname";
     }
+
   }
 </script>
 </html>

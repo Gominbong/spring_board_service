@@ -17,7 +17,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <body>
 <div class="container">
-    <form class="row g-2" style="margin-top: 20px" method="get" action="/homeSort">
+    <form class="row g-2" style="margin-top: 20px" method="get" action="/searchSort">
         <div class="col-auto">
             <select id="selectBox1" class="form-select" onchange="selectOption1()">
                 <option>정렬선택</option>
@@ -27,7 +27,9 @@
             </select>
         </div>
         <div class="col-auto">
-            <input id="sortType" type="hidden" name="sortType" value="null">
+            <input id="sortType" type="hidden" name="sortType" th:value="${searchDto.sortType}">
+            <input type="hidden" name="searchType" th:value="${searchDto.searchType}">
+            <input id="search" type="hidden" name="search" th:value="${searchDto.search}">
             <button type="submit" class="btn btn-primary mb-3">확인</button>
         </div>
     </form>
@@ -66,24 +68,24 @@
     <ul class="pagination justify-content-center" style="margin-top: 20px">
 
         <li class="page-item" th:classappend="${start==0} ? 'disabled'">
-            <a class="page-link" th:href="@{|?page=${start -1}|}"> << </a>
+            <a class="page-link" th:href="@{|searchSort?sortType=${searchDto.sortType}&searchType=${searchDto.searchType}&search=${searchDto.search}&page=${start -1}|}"> << </a>
         </li>
 
         <li class="page-item" th:classappend="${!paging.hasPrevious} ? 'disabled'">
-            <a class="page-link" th:href="@{|?page=${paging.number -1}|}"> < </a>
+            <a class="page-link" th:href="@{|searchSort?sortType=${searchDto.sortType}&searchType=${searchDto.searchType}&search=${searchDto.search}&page=${paging.number -1}|}"> < </a>
         </li>
 
         <li class="page-item" th:classappend="${page == paging.number} ? 'active'"
             th:each="page : ${#numbers.sequence(start, end)}">
-            <a class="page-link" th:text="${page+1}" th:href="@{|?page=${page}|}"></a>
+            <a class="page-link" th:text="${page+1}" th:href="@{|searchSort?sortType=${searchDto.sortType}&searchType=${searchDto.searchType}&search=${searchDto.search}&page=${page}|}"></a>
         </li>
 
         <li class="page-item" th:classappend="${!paging.hasNext} ? 'disabled'">
-            <a class="page-link" th:href="@{|?page=${paging.number+1}|}"> > </a>
+            <a class="page-link" th:href="@{|searchSort?sortType=${searchDto.sortType}&searchType=${searchDto.searchType}&search=${searchDto.search}&page=${paging.number+1}|}"> > </a>
         </li>
 
         <li class="page-item" th:classappend="${paging.getTotalPages()-start<=7} ? 'disabled'">
-            <a class="page-link" th:href="@{|?page=${start+7}|}"> >> </a>
+            <a class="page-link" th:href="@{|searchSort?sortType=${searchDto.sortType}&searchType=${searchDto.searchType}&search=${searchDto.search}&page=${start+7}|}"> >> </a>
         </li>
 
     </ul>
@@ -99,8 +101,8 @@
             </select>
         </div>
         <div class="col-3">
-            <input id="searchType" type="hidden" name="searchType" value="SearchTitle">
-            <input type="search" name="search" class="form-control" placeholder="악보를 검색하세요" aria-label="Search">
+            <input id="searchType" type="hidden" name="searchType" th:value="${searchDto.searchType}">
+            <input th:field="${searchDto.search}" type="search" name="search" class="form-control" placeholder="악보를 검색하세요" aria-label="Search">
         </div>
 
         <div class="col-auto">
@@ -112,6 +114,28 @@
 <div th:replace="~{fragments/footer :: footer}"/>
 <script type="text/javascript">
 
+    $(function (){
+        const result = $("#searchType").val();
+        const result1 = $("#sortType").val();
+        console.log(result);
+        console.log(result1);
+        if (result === 'searchTitle'){
+            $("#selectBox option:eq(0)").attr('selected', 'selected');
+        }else if (result === 'searchNickname'){
+            $("#selectBox option:eq(1)").attr('selected', 'selected');
+        }
+
+        if (result1 === 'null'){
+            $("#selectBox1 option:eq(0)").attr('selected', 'selected');
+        }else if(result1 === 'sortPrice'){
+            $("#selectBox1 option:eq(1)").attr('selected', 'selected');
+        }else if(result1 === 'sortLike'){
+            $("#selectBox1 option:eq(2)").attr('selected', 'selected');
+        }else if(result1 === 'sortQuantity'){
+            $("#selectBox1 option:eq(3)").attr('selected', 'selected');
+        }
+
+    })
 
     function selectOption1(){
         const text = $("#selectBox1 option:selected").text();
@@ -137,10 +161,10 @@
         console.log(text);
         if (text === '제목검색'){
             const input = document.getElementById("searchType");
-            input.value = "SearchTitle";
+            input.value = "searchTitle";
         } else if(text === '글작성자'){
             const input = document.getElementById("searchType");
-            input.value = "SearchNickname";
+            input.value = "searchNickname";
         }
     }
 </script>

@@ -3,10 +3,7 @@ package com.example.myproject.service;
 import com.example.myproject.domain.FileList;
 import com.example.myproject.domain.Member;
 import com.example.myproject.domain.MusicList;
-import com.example.myproject.dto.HomeSortDto;
-import com.example.myproject.dto.MusicListFormDto;
-import com.example.myproject.dto.MusicListUpdateDto;
-import com.example.myproject.dto.SearchDto;
+import com.example.myproject.dto.*;
 import com.example.myproject.repository.MusicListRepository;
 import com.example.myproject.repository.FileListRepository;
 import com.example.myproject.repository.MemberRepository;
@@ -21,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -36,25 +34,25 @@ public class MusicListService {
     private final MusicListRepository musicListRepository;
     private final MemberRepository memberRepository;
     private final FileListRepository fileRepository;
-    
+
     public Map<String, String> createAddItem(HttpServletRequest request, MusicListFormDto musicListFormDto,
                                              String loginId) {
 
         Map<String, String> errors = new HashMap<>();
 
-        if (!StringUtils.hasText(musicListFormDto.getTitle())){
+        if (!StringUtils.hasText(musicListFormDto.getTitle())) {
             errors.put("title", "제목 입력 필수입니다");
         }
-        if (!StringUtils.hasText(musicListFormDto.getType())){
+        if (!StringUtils.hasText(musicListFormDto.getType())) {
             errors.put("type", "악기타입 입력 필수입니다");
         }
-        if (!StringUtils.hasText(musicListFormDto.getLevel())){
+        if (!StringUtils.hasText(musicListFormDto.getLevel())) {
             errors.put("level", "난이도 입력 필수입니다 ");
         }
-        if (musicListFormDto.getPrice()==null){
+        if (musicListFormDto.getPrice() == null) {
             errors.put("price", "가격 입력 필수입니다 ");
         }
-        if (!errors.isEmpty()){
+        if (!errors.isEmpty()) {
             return errors;
         }
 
@@ -77,20 +75,20 @@ public class MusicListService {
 
         List<MultipartFile> pdfFiles = musicListFormDto.getPdfFiles();
 
-        if(!pdfFiles.get(0).isEmpty()){
-            for(MultipartFile multipartFile : pdfFiles ){
+        if (!pdfFiles.get(0).isEmpty()) {
+            for (MultipartFile multipartFile : pdfFiles) {
                 String originalFilename = multipartFile.getOriginalFilename();
                 String encode = originalFilename.replaceAll("[^ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9]", "_");
                 String storedFileName = System.currentTimeMillis() + "_" + encode;
 
                 String os = System.getProperty("os.name").toLowerCase();
-                if (os.contains("win")){
+                if (os.contains("win")) {
                     try {
-                        multipartFile.transferTo(new File("C:/Users/asd/Desktop/study/pdf/"+storedFileName));
+                        multipartFile.transferTo(new File("C:/Users/asd/Desktop/study/pdf/" + storedFileName));
                     } catch (IOException e) {
                         e.getStackTrace();
                     }
-                } else{
+                } else {
                     try {
                         multipartFile.transferTo(new File(storedFileName));
                     } catch (IOException e) {
@@ -130,19 +128,19 @@ public class MusicListService {
 
         Map<String, String> errors = new HashMap<>();
 
-        if (!StringUtils.hasText(musicListUpdateDto.getType())){
+        if (!StringUtils.hasText(musicListUpdateDto.getType())) {
             errors.put("type", "악기타입 입력 필수입니다");
         }
-        if (!StringUtils.hasText(musicListUpdateDto.getTitle())){
+        if (!StringUtils.hasText(musicListUpdateDto.getTitle())) {
             errors.put("title", "제목 입력 필수입니다");
         }
-        if (!StringUtils.hasText(musicListUpdateDto.getLevel())){
+        if (!StringUtils.hasText(musicListUpdateDto.getLevel())) {
             errors.put("level", "난이도 입력 필수입니다 ");
         }
-        if (musicListUpdateDto.getPrice()==null){
+        if (musicListUpdateDto.getPrice() == null) {
             errors.put("price", "가격 입력 필수입니다 ");
         }
-        if (!errors.isEmpty()){
+        if (!errors.isEmpty()) {
             return errors;
         }
 
@@ -155,18 +153,18 @@ public class MusicListService {
 
         List<String> filename = musicListUpdateDto.getFilename();
         log.info("업데이트디티오 = {}", musicListUpdateDto.toString());
-        if (filename != null){
+        if (filename != null) {
             for (String file : filename) {
                 log.info("수정페이지에서 삭제버튼누른 파일이름 = '{}'", file);
                 FileList fileList = fileRepository.findByStoredFilename(file);
                 fileRepository.delete(fileList);
 
                 String os = System.getProperty("os.name").toLowerCase();
-                if (os.contains("win")){
-                    File file1 = new File("C:/Users/asd/Desktop/study/pdf/"+file);
+                if (os.contains("win")) {
+                    File file1 = new File("C:/Users/asd/Desktop/study/pdf/" + file);
                     file1.delete();
-                } else{
-                    File file1 = new File("/upload/"+file);
+                } else {
+                    File file1 = new File("/upload/" + file);
                     file1.delete();
                 }
 
@@ -174,8 +172,8 @@ public class MusicListService {
         }
 
         List<MultipartFile> pdfFiles = musicListUpdateDto.getPdfFiles();
-        if(!pdfFiles.get(0).isEmpty()){
-            for(MultipartFile multipartFile : pdfFiles ){
+        if (!pdfFiles.get(0).isEmpty()) {
+            for (MultipartFile multipartFile : pdfFiles) {
 
                 String originalFilename = multipartFile.getOriginalFilename();
                 String encode = originalFilename.replaceAll("[^ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9]", "_");
@@ -209,13 +207,67 @@ public class MusicListService {
 
     }
 
+    public Page<MusicList> musicListSearchSort(int page, SearchSortDto searchSortDto) {
+
+        if (searchSortDto.getSearchType().equals("searchTitle")
+                && searchSortDto.getSortType().equals("null")) {
+            log.info("여기1111");
+            Pageable pageable = PageRequest.of(page, 15);
+            return musicListRepository.findMusicListByTitleContains(pageable, searchSortDto.getSearch());
+        } else if (searchSortDto.getSearchType().equals("searchTitle")
+                && searchSortDto.getSortType().equals("sortPrice")) {
+            log.info("여기2222");
+            log.info("dto확인 = {}", searchSortDto.getSearch());
+            Pageable pageable = PageRequest.of(page, 15, Sort.by(Sort.Direction.DESC, "price"));
+            return musicListRepository.findMusicListByTitleContains(pageable,
+                    searchSortDto.getSearch());
+        } else if (searchSortDto.getSearchType().equals("searchTitle")
+                && searchSortDto.getSortType().equals("sortLike")) {
+            log.info("여기3333");
+            Pageable pageable = PageRequest.of(page, 15, Sort.by(Sort.Direction.DESC, "likeCount"));
+            return musicListRepository.findMusicListByTitleContains(pageable, searchSortDto.getSearch());
+        } else if (searchSortDto.getSearchType().equals("searchTitle")
+                && searchSortDto.getSortType().equals("sortQuantity")) {
+            log.info("여기4444");
+            Pageable pageable = PageRequest.of(page, 15, Sort.by(Sort.Direction.DESC, "salesQuantity"));
+            return musicListRepository.findMusicListByTitleContains(pageable, searchSortDto.getSearch());
+        }
+
+
+        if (searchSortDto.getSearchType().equals("searchNickname")
+                && searchSortDto.getSortType().equals("null")) {
+            log.info("여기1111");
+            Pageable pageable = PageRequest.of(page, 15);
+            return musicListRepository.findMusicListByNicknameContains(pageable, searchSortDto.getSearch());
+        } else if (searchSortDto.getSearchType().equals("searchNickname")
+                && searchSortDto.getSortType().equals("sortPrice")) {
+            log.info("여기2222");
+            log.info("dto확인 = {}", searchSortDto.getSearch());
+            Pageable pageable = PageRequest.of(page, 15, Sort.by(Sort.Direction.DESC, "price"));
+            return musicListRepository.findMusicListByNicknameContains(pageable,
+                    searchSortDto.getSearch());
+        } else if (searchSortDto.getSearchType().equals("searchNickname")
+                && searchSortDto.getSortType().equals("sortLike")) {
+            log.info("여기3333");
+            Pageable pageable = PageRequest.of(page, 15, Sort.by(Sort.Direction.DESC, "likeCount"));
+            return musicListRepository.findMusicListByNicknameContains(pageable, searchSortDto.getSearch());
+        } else if (searchSortDto.getSearchType().equals("searchNickname")
+                && searchSortDto.getSortType().equals("sortQuantity")) {
+            log.info("여기4444");
+            Pageable pageable = PageRequest.of(page, 15, Sort.by(Sort.Direction.DESC, "salesQuantity"));
+            return musicListRepository.findMusicListByNicknameContains(pageable, searchSortDto.getSearch());
+        }
+
+        return null;
+    }
+
     public Page<MusicList> musicListSearch(int page, SearchDto searchDto) {
         Pageable pageable = PageRequest.of(page, 15);
-        if (searchDto.getSearchType().equals("SearchTitle")){
+        if (searchDto.getSearchType().equals("searchTitle")) {
             return musicListRepository.findMusicListByTitleContains(pageable, searchDto.getSearch());
         }
-        if (searchDto.getSearchType().equals("SearchNickname")){
-            return musicListRepository.findMusicListByNickname(pageable, searchDto.getSearch());
+        if (searchDto.getSearchType().equals("searchNickname")) {
+            return musicListRepository.findMusicListByNicknameContains(pageable, searchDto.getSearch());
         }
         log.info("ㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹ");
         return null;
@@ -223,19 +275,19 @@ public class MusicListService {
 
     public Page<MusicList> homeSort(int page, HomeSortDto homeSortDto) {
 
-        if (homeSortDto.getSortType().equals("null")){
+        if (homeSortDto.getSortType().equals("null")) {
             Pageable pageable = PageRequest.of(page, 15, Sort.by(Sort.Direction.DESC, "id"));
             return musicListRepository.findBySoftDeleteIsNull(pageable);
         }
-        if (homeSortDto.getSortType().equals("sortPrice")){
+        if (homeSortDto.getSortType().equals("sortPrice")) {
             Pageable pageable = PageRequest.of(page, 15, Sort.by(Sort.Direction.DESC, "price"));
             return musicListRepository.findBySoftDeleteIsNull(pageable);
         }
-        if (homeSortDto.getSortType().equals("sortLike")){
+        if (homeSortDto.getSortType().equals("sortLike")) {
             Pageable pageable = PageRequest.of(page, 15, Sort.by(Sort.Direction.DESC, "likeCount"));
             return musicListRepository.findBySoftDeleteIsNull(pageable);
         }
-        if (homeSortDto.getSortType().equals("sortQuantity")){
+        if (homeSortDto.getSortType().equals("sortQuantity")) {
             Pageable pageable = PageRequest.of(page, 15, Sort.by(Sort.Direction.DESC, "salesQuantity"));
             return musicListRepository.findBySoftDeleteIsNull(pageable);
         }

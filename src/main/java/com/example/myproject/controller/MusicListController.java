@@ -56,30 +56,68 @@ public class MusicListController {
                 .body(urlResource);
     }
 
-    @GetMapping("/selectSort")
-    public String selectSort(HttpServletRequest request, Model model){
+    @GetMapping("/searchSort")
+    public String selectSort(SearchSortDto searchSortDto,
+                             HttpServletRequest request, Model model,
+                             @RequestParam(value = "page", defaultValue = "0") int page){
+        log.info(" 디티오 확인1 = {}", searchSortDto.getSortType());
+        log.info(" 디티오 확인2 = {}", searchSortDto.getSearchType());
+        log.info(" 디티오 확인3 = {}", searchSortDto.getSearch());
+
         model.addAttribute("menu", "home");
+        model.addAttribute("searchDto", searchSortDto);
+        log.info("셀릭트창 확인 = {} " , searchSortDto.getSearchType());
         HttpSession session = request.getSession();
         String loginId = (String) session.getAttribute("loginId");
         model.addAttribute("loginId", loginId);
 
+        if (searchSortDto.getSearchType().equals("searchNickname")){
+            model.addAttribute("searchDto", searchSortDto);
+        } else if (searchSortDto.getSearchType().equals("searchTitle")){
+            model.addAttribute("searchDto", searchSortDto);
+
+        }
+
+        Page<MusicList> paging = musicListService.musicListSearchSort(page, searchSortDto);
 
 
+        model.addAttribute("page", page);
+        model.addAttribute("paging", paging);
+        log.info("전체 페이지수 확인 = '{}'", paging.getTotalPages());
+        int temp = page / 7;
+        int start = temp * 7;
+        log.info("스타트 페이지 확인 = '{}'", start);
+
+        if (paging.getTotalPages() ==0 || paging.getTotalPages()==1){
+            log.info("여기11111 = {}", paging.getTotalPages());
+            model.addAttribute("start", 0);
+            model.addAttribute("end", 0);
+        }else if (start ==0 && paging.getTotalPages() <=7){
+            log.info("여기33333 = {}", paging.getTotalPages());
+            model.addAttribute("start", 0);
+            model.addAttribute("end", paging.getTotalPages() -1);
+        }else if (start != 0 && paging.getTotalPages() - start <=7){
+            log.info("여기44444 = {}", paging.getTotalPages());
+            model.addAttribute("start", start);
+            model.addAttribute("end", paging.getTotalPages()-1);
+        } else {
+            log.info("여기2222 = {}", paging.getTotalPages());
+            model.addAttribute("start", start);
+            model.addAttribute("end", start +6);
+        }
 
 
-
-
-        return "homeSortForm";
+        return "musicListSearchSortForm";
     }
 
     @GetMapping("/homeSort")
     public String homeSort(HomeSortDto homeSortDto, HttpServletRequest request, Model model,
                        @RequestParam(value = "page", defaultValue = "0") int page){
+
         HttpSession session = request.getSession();
         String loginId = (String) session.getAttribute("loginId");
         model.addAttribute("loginId", loginId);
         model.addAttribute("menu", "home");
-
         model.addAttribute("homeSortDto", homeSortDto);
         Page<MusicList> paging = musicListService.homeSort(page, homeSortDto);
         model.addAttribute("page", page);
@@ -115,10 +153,21 @@ public class MusicListController {
                          HttpServletRequest request, Model model){
         model.addAttribute("menu", "home");
         model.addAttribute("searchDto", searchDto);
-        log.info("셀릭트창 확인 = {} " , searchDto.getSearchType());
+
+        log.info("서치 dto 확인1 = {} " , searchDto.getSearchType());
+        log.info("서치 dto 확인2 = {} " , searchDto.getSortType());
+        log.info("서치 dto 확인3 = {} " , searchDto.getSearch());
         HttpSession session = request.getSession();
         String loginId = (String) session.getAttribute("loginId");
         model.addAttribute("loginId", loginId);
+        if (searchDto.getSearchType().equals("searchNickname")){
+            model.addAttribute("searchDto", searchDto);
+        } else if (searchDto.getSearchType().equals("searchTitle")){
+            model.addAttribute("searchDto", searchDto);
+
+        }
+
+
         Page<MusicList> paging = musicListService.musicListSearch(page, searchDto);
 
 

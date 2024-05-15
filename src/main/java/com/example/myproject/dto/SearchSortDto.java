@@ -3,10 +3,8 @@ package com.example.myproject.dto;
 import lombok.Data;
 
 @Data
-public class SearchDto {
+public class SearchSortDto {
+    private String sortType;
     private String searchType;
     private String search;
-    private String sortType;
-
-
 }
