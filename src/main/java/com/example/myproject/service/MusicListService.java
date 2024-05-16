@@ -210,9 +210,9 @@ public class MusicListService {
     public Page<MusicList> musicListSearchSort(int page, SearchSortDto searchSortDto) {
 
         if (searchSortDto.getSearchType().equals("searchTitle")
-                && searchSortDto.getSortType().equals("null")) {
+                && searchSortDto.getSortType().equals("sortSelect")) {
             log.info("여기1111");
-            Pageable pageable = PageRequest.of(page, 15);
+            Pageable pageable = PageRequest.of(page, 15, Sort.by(Sort.Direction.DESC, "id"));
             return musicListRepository.findMusicListByTitleContains(pageable, searchSortDto.getSearch());
         } else if (searchSortDto.getSearchType().equals("searchTitle")
                 && searchSortDto.getSortType().equals("sortPrice")) {
@@ -235,9 +235,9 @@ public class MusicListService {
 
 
         if (searchSortDto.getSearchType().equals("searchNickname")
-                && searchSortDto.getSortType().equals("null")) {
+                && searchSortDto.getSortType().equals("sortSelect")) {
             log.info("여기1111");
-            Pageable pageable = PageRequest.of(page, 15);
+            Pageable pageable = PageRequest.of(page, 15, Sort.by(Sort.Direction.DESC, "id"));
             return musicListRepository.findMusicListByNicknameContains(pageable, searchSortDto.getSearch());
         } else if (searchSortDto.getSearchType().equals("searchNickname")
                 && searchSortDto.getSortType().equals("sortPrice")) {
@@ -262,7 +262,7 @@ public class MusicListService {
     }
 
     public Page<MusicList> musicListSearch(int page, SearchDto searchDto) {
-        Pageable pageable = PageRequest.of(page, 15);
+        Pageable pageable = PageRequest.of(page, 15, Sort.by(Sort.Direction.DESC, "id"));
         if (searchDto.getSearchType().equals("searchTitle")) {
             return musicListRepository.findMusicListByTitleContains(pageable, searchDto.getSearch());
         }
@@ -275,7 +275,7 @@ public class MusicListService {
 
     public Page<MusicList> homeSort(int page, HomeSortDto homeSortDto) {
 
-        if (homeSortDto.getSortType().equals("null")) {
+        if (homeSortDto.getSortType().equals("sortSelect")) {
             Pageable pageable = PageRequest.of(page, 15, Sort.by(Sort.Direction.DESC, "id"));
             return musicListRepository.findBySoftDeleteIsNull(pageable);
         }

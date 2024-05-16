@@ -106,6 +106,8 @@
     </div>
     <div class="col-3">
       <input id="searchType" type="hidden" name="searchType" th:value="${searchDto.searchType}">
+      <input type="hidden" name="sortType" value="sortSelect">
+
       <input th:field="${searchDto.search}" type="search" name="search" class="form-control" placeholder="악보를 검색하세요" aria-label="Search">
     </div>
 
@@ -137,7 +139,7 @@
     console.log(text);
     if (text === '정렬선택'){
       const input = document.getElementById("sortType");
-      input.value = "null";
+      input.value = "sortSelect";
     } else if(text === '가격순'){
       const input = document.getElementById("sortType");
       input.value = "sortPrice";

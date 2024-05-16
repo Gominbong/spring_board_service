@@ -27,7 +27,7 @@
             </select>
         </div>
         <div class="col-auto">
-            <input id="sortType" type="hidden" name="sortType" value="null">
+            <input id="sortType" type="hidden" name="sortType" value="sortSelect">
             <button type="submit" class="btn btn-primary mb-3">확인</button>
         </div>
     </form>
@@ -100,6 +100,7 @@
         </div>
         <div class="col-3">
             <input id="searchType" type="hidden" name="searchType" value="searchTitle">
+            <input type="hidden" name="sortType" value="sortSelect">
             <input type="search" name="search" class="form-control" placeholder="악보를 검색하세요" aria-label="Search">
         </div>
 
@@ -117,7 +118,7 @@
         console.log(text);
         if (text === '정렬선택'){
             const input = document.getElementById("sortType");
-            input.value = "null";
+            input.value = "sortSelect";
         } else if(text === '가격순'){
             const input = document.getElementById("sortType");
             input.value = "sortPrice";
