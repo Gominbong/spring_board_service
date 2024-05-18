@@ -24,23 +24,7 @@ public class SignupService {
 
         Member loginId = memberRepository.findByLoginId(signupFormDto.getId());
         Member nickname = memberRepository.findByNickname(signupFormDto.getNick());
-
-        Member member = new Member();
         Map<String, String> errors = new HashMap<>();
-        member.setLoginId(signupFormDto.getId());
-        if (signupFormDto.getPw().equals(signupFormDto.getPwCheck())){
-            member.setPassword(passwordEncoder.encode(signupFormDto.getPw()));
-        }else{
-            errors.put("pwCheck","패스워드불일치");
-        }
-        member.setNickname(signupFormDto.getNick());
-        member.setCash(10000);
-        member.setRevenue(0);
-        LocalDateTime localDateTime = LocalDateTime.now().withNano(0);
-        String temp = String.valueOf(localDateTime);
-        String createTime = temp.replace("T", " ");
-        member.setCreateTime(createTime);
-        member.setId(member.getId());
         if (!StringUtils.hasText(signupFormDto.getId())) {
             errors.put("id", "아이디필수입니다");
         }
@@ -63,6 +47,23 @@ public class SignupService {
             log.info("errors = '{}'", errors);
             return errors;
         }
+
+        Member member = new Member();
+        if (signupFormDto.getPw().equals(signupFormDto.getPwCheck())){
+            member.setPassword(passwordEncoder.encode(signupFormDto.getPw()));
+        }else{
+            errors.put("pwCheck","패스워드불일치");
+        }
+        member.setLoginId(signupFormDto.getId());
+        member.setNickname(signupFormDto.getNick());
+        member.setCash(10000);
+        member.setRevenue(0);
+        LocalDateTime localDateTime = LocalDateTime.now().withNano(0);
+        String temp = String.valueOf(localDateTime);
+        String createTime = temp.replace("T", " ");
+        member.setCreateTime(createTime);
+        member.setId(member.getId());
+
 
         memberRepository.save(member);
         return null;
