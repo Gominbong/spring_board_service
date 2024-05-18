@@ -75,7 +75,6 @@ public class CommentService {
         return commentRepository.findFirstCommentList(pageable, id);
     }
 
-
     public void replyAdd(CommentReplyFormDto commentReplyFormDto, String loginId) {
         Member member = memberRepository.findByLoginId(loginId);
         // divWidthSize 0이면 댓글이고 1,2,3,4면 대댓글 이다
@@ -105,9 +104,6 @@ public class CommentService {
         switch (comment.getDivWidthSize()) {
             case 0 -> {
                 List<Comment> parent = commentRepository.findParent(musicListId, parentId);
-                for (Comment list : parent) {
-                    log.info("부모확인 = {}", list.getChild1());
-                }
                 reply.setDivWidthSize(1);
                 reply.setParent(comment.getParent());
                 reply.setChild1(parent.get(0).getChild1() +1);
@@ -117,9 +113,6 @@ public class CommentService {
             }
             case 1 -> {
                 List<Comment> parent = commentRepository.findParentChild1(musicListId, parentId, child1);
-                for (Comment list : parent) {
-                    log.info("부모확인 = {}", list.getChild2());
-                }
                 reply.setDivWidthSize(2);
                 reply.setParent(comment.getParent());
                 reply.setChild1(comment.getChild1());
@@ -130,9 +123,6 @@ public class CommentService {
             case 2 -> {
                 List<Comment> parent = commentRepository.
                         findParentChild1Child2(musicListId, parentId, child1, child2);
-                for (Comment list : parent) {
-                    log.info("부모확인 = {}", list.getChild2());
-                }
                 reply.setDivWidthSize(3);
                 reply.setParent(comment.getParent());
                 reply.setChild1(comment.getChild1());
@@ -143,9 +133,6 @@ public class CommentService {
             case 3, 4 -> {
                 List<Comment> parent = commentRepository.
                         findParentChild1Child2Child3(musicListId, parentId, child1, child2, child3);
-                for (Comment list : parent) {
-                    log.info("부모확인 = {}", list.getChild3());
-                }
                 reply.setDivWidthSize(4);
                 reply.setParent(comment.getParent());
                 reply.setChild1(comment.getChild1());
