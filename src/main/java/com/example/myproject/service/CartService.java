@@ -2,13 +2,11 @@ package com.example.myproject.service;
 
 import com.example.myproject.domain.Cart;
 import com.example.myproject.domain.MusicList;
-import com.example.myproject.dto.CartDeleteDto;
 import com.example.myproject.repository.CartRepository;
 import com.example.myproject.repository.MusicListRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 

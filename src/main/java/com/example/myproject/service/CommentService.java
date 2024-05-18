@@ -29,8 +29,6 @@ public class CommentService {
     private final MusicListRepository musicListRepository;
     private final MemberRepository memberRepository;
 
-
-
     @Transactional
     public void commentDelete(CommentDeleteDto commentId) {
         Comment comment = commentRepository.findById(commentId.getCommentId()).orElseThrow();

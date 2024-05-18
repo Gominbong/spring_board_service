@@ -16,7 +16,6 @@ public class LoginService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
-
     public Member login(LoginFormDto loginFormDto) {
 
         Member result = memberRepository.findEncodePassword(loginFormDto.getId());
