@@ -89,7 +89,6 @@ public class CommentService {
         int child1 = comment.getChild1();
         int child2 = comment.getChild2();
         int child3 = comment.getChild3();
-        int child4 = comment.getChild4();
 
         Comment reply = new Comment();
         LocalDateTime localDateTime = LocalDateTime.now().withNano(0);
