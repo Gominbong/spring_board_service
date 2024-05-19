@@ -100,8 +100,8 @@
         style="margin-bottom: 154px" method="get" action="/search">
     <div class="col-auto">
       <select id="selectBox" onchange="selectOption()" class="form-select">
-        <option>제목검색</option>
-        <option>글작성자</option>
+        <option th:selected="${searchDto.searchType.equals('searchTitle')}">제목검색</option>
+        <option th:selected="${searchDto.searchType.equals('searchNickname')}">글작성자</option>
       </select>
     </div>
     <div class="col-3">
@@ -119,20 +119,6 @@
 </body>
 <div th:replace="~{fragments/footer :: footer}"/>
 <script type="text/javascript">
-
-  $(function (){
-
-    const result = $("#searchType").val();
-    console.log(result);
-    if (result === 'searchTitle'){
-      $("#selectBox option:eq(0)").attr('selected', 'selected');
-    }else if (result === 'searchNickname'){
-      $("#selectBox option:eq(1)").attr('selected', 'selected');
-    }
-
-
-
-  })
 
   function selectOption1(){
     const text = $("#selectBox1 option:selected").text();

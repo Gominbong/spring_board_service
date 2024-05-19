@@ -20,10 +20,10 @@
     <form class="row g-2" style="margin-top: 20px" method="get" action="/homeSort">
         <div class="col-auto">
             <select id="selectBox1" class="form-select" onchange="selectOption1()">
-                <option>정렬선택</option>
-                <option>가격순</option>
-                <option>추천순</option>
-                <option>판매량</option>
+                <option th:selected="${homeSortDto.sortType.equals('sortSelect')}">정렬선택</option>
+                <option th:selected="${homeSortDto.sortType.equals('sortPrice')}">가격순</option>
+                <option th:selected="${homeSortDto.sortType.equals('sortLike')}">추천순</option>
+                <option th:selected="${homeSortDto.sortType.equals('sortQuantity')}">판매량</option>
             </select>
         </div>
         <div class="col-auto">
@@ -111,23 +111,6 @@
 </body>
 <div th:replace="~{fragments/footer :: footer}"/>
 <script type="text/javascript">
-
-    $(function (){
-
-        const result1 = $("#sortType").val();
-        console.log(result1);
-
-        if (result1 === 'null'){
-            $("#selectBox1 option:eq(0)").attr('selected', 'selected');
-        }else if(result1 === 'sortPrice'){
-            $("#selectBox1 option:eq(1)").attr('selected', 'selected');
-        }else if(result1 === 'sortLike'){
-            $("#selectBox1 option:eq(2)").attr('selected', 'selected');
-        }else if(result1 === 'sortQuantity'){
-            $("#selectBox1 option:eq(3)").attr('selected', 'selected');
-        }
-
-    })
 
     function selectOption1(){
         const text = $("#selectBox1 option:selected").text();

@@ -64,7 +64,6 @@ public class SignupService {
         member.setCreateTime(createTime);
         member.setId(member.getId());
 
-
         memberRepository.save(member);
         return null;
     }
