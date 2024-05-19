@@ -25,6 +25,12 @@ public class SignupService {
         Member loginId = memberRepository.findByLoginId(signupFormDto.getId());
         Member nickname = memberRepository.findByNickname(signupFormDto.getNick());
         Map<String, String> errors = new HashMap<>();
+        Member member = new Member();
+        if (signupFormDto.getPw().equals(signupFormDto.getPwCheck())){
+            member.setPassword(passwordEncoder.encode(signupFormDto.getPw()));
+        }else{
+            errors.put("pwCheck","패스워드불일치");
+        }
         if (!StringUtils.hasText(signupFormDto.getId())) {
             errors.put("id", "아이디필수입니다");
         }
@@ -48,12 +54,6 @@ public class SignupService {
             return errors;
         }
 
-        Member member = new Member();
-        if (signupFormDto.getPw().equals(signupFormDto.getPwCheck())){
-            member.setPassword(passwordEncoder.encode(signupFormDto.getPw()));
-        }else{
-            errors.put("pwCheck","패스워드불일치");
-        }
         member.setLoginId(signupFormDto.getId());
         member.setNickname(signupFormDto.getNick());
         member.setCash(10000);
