@@ -79,32 +79,11 @@ public class MusicListController {
         }
 
         Page<MusicList> paging = musicListService.musicListSearchSort(page, searchSortDto);
-
+        musicListService.pageStartEndNumber(page, paging, model);
 
         model.addAttribute("page", page);
         model.addAttribute("paging", paging);
         log.info("전체 페이지수 확인 = '{}'", paging.getTotalPages());
-        int temp = page / 7;
-        int start = temp * 7;
-        log.info("스타트 페이지 확인 = '{}'", start);
-
-        if (paging.getTotalPages() ==0 || paging.getTotalPages()==1){
-            log.info("여기11111 = {}", paging.getTotalPages());
-            model.addAttribute("start", 0);
-            model.addAttribute("end", 0);
-        }else if (start ==0 && paging.getTotalPages() <=7){
-            log.info("여기33333 = {}", paging.getTotalPages());
-            model.addAttribute("start", 0);
-            model.addAttribute("end", paging.getTotalPages() -1);
-        }else if (start != 0 && paging.getTotalPages() - start <=7){
-            log.info("여기44444 = {}", paging.getTotalPages());
-            model.addAttribute("start", start);
-            model.addAttribute("end", paging.getTotalPages()-1);
-        } else {
-            log.info("여기2222 = {}", paging.getTotalPages());
-            model.addAttribute("start", start);
-            model.addAttribute("end", start +6);
-        }
 
 
         return "musicListSearchSortForm";
@@ -113,7 +92,6 @@ public class MusicListController {
     @GetMapping("/homeSort")
     public String homeSort(HomeSortDto homeSortDto, HttpServletRequest request, Model model,
                        @RequestParam(value = "page", defaultValue = "0") int page){
-
         HttpSession session = request.getSession();
         String loginId = (String) session.getAttribute("loginId");
         model.addAttribute("loginId", loginId);
@@ -124,27 +102,7 @@ public class MusicListController {
         model.addAttribute("page", page);
         model.addAttribute("paging", paging);
         log.info("전체 페이지수 확인 = '{}'", paging.getTotalPages());
-        int temp = page / 7;
-        int start = temp * 7;
-        log.info("스타트 페이지 확인 = '{}'", start);
-
-        if (paging.getTotalPages() ==0 || paging.getTotalPages()==1){
-            log.info("여기11111 = {}", paging.getTotalPages());
-            model.addAttribute("start", 0);
-            model.addAttribute("end", 0);
-        }else if (start ==0 && paging.getTotalPages() <=7){
-            log.info("여기33333 = {}", paging.getTotalPages());
-            model.addAttribute("start", 0);
-            model.addAttribute("end", paging.getTotalPages() -1);
-        }else if (start != 0 && paging.getTotalPages() - start <=7){
-            log.info("여기44444 = {}", paging.getTotalPages());
-            model.addAttribute("start", start);
-            model.addAttribute("end", paging.getTotalPages()-1);
-        } else {
-            log.info("여기2222 = {}", paging.getTotalPages());
-            model.addAttribute("start", start);
-            model.addAttribute("end", start +6);
-        }
+        musicListService.pageStartEndNumber(page, paging, model);
 
         return "homeSortForm";
     }
@@ -175,27 +133,7 @@ public class MusicListController {
         model.addAttribute("page", page);
         model.addAttribute("paging", paging);
         log.info("전체 페이지수 확인 = '{}'", paging.getTotalPages());
-        int temp = page / 7;
-        int start = temp * 7;
-        log.info("스타트 페이지 확인 = '{}'", start);
-
-        if (paging.getTotalPages() ==0 || paging.getTotalPages()==1){
-            log.info("여기11111 = {}", paging.getTotalPages());
-            model.addAttribute("start", 0);
-            model.addAttribute("end", 0);
-        }else if (start ==0 && paging.getTotalPages() <=7){
-            log.info("여기33333 = {}", paging.getTotalPages());
-            model.addAttribute("start", 0);
-            model.addAttribute("end", paging.getTotalPages() -1);
-        }else if (start != 0 && paging.getTotalPages() - start <=7){
-            log.info("여기44444 = {}", paging.getTotalPages());
-            model.addAttribute("start", start);
-            model.addAttribute("end", paging.getTotalPages()-1);
-        } else {
-            log.info("여기2222 = {}", paging.getTotalPages());
-            model.addAttribute("start", start);
-            model.addAttribute("end", start +6);
-        }
+        musicListService.pageStartEndNumber(page, paging, model);
 
         return "musicListSearchForm";
     }

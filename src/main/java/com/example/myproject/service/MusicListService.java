@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
@@ -292,5 +293,28 @@ public class MusicListService {
         }
 
         return null;
+    }
+
+    public void pageStartEndNumber(int page, Page<MusicList> paging, Model model) {
+        int temp = page / 7;
+        int start = temp * 7;
+        if (paging.getTotalPages() ==0 || paging.getTotalPages()==1){
+            log.info("여기11111 = {}", paging.getTotalPages());
+            model.addAttribute("start", 0);
+            model.addAttribute("end", 0);
+        }else if (start ==0 && paging.getTotalPages() <=7){
+            log.info("여기33333 = {}", paging.getTotalPages());
+            model.addAttribute("start", 0);
+            model.addAttribute("end", paging.getTotalPages() -1);
+        }else if (start != 0 && paging.getTotalPages() - start <=7){
+            log.info("여기44444 = {}", paging.getTotalPages());
+            model.addAttribute("start", start);
+            model.addAttribute("end", paging.getTotalPages()-1);
+        } else {
+            log.info("여기2222 = {}", paging.getTotalPages());
+            model.addAttribute("start", start);
+            model.addAttribute("end", start +6);
+        }
+
     }
 }
