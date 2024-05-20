@@ -71,13 +71,6 @@ public class MusicListController {
         String loginId = (String) session.getAttribute("loginId");
         model.addAttribute("loginId", loginId);
 
-        if (searchSortDto.getSearchType().equals("searchNickname")){
-            model.addAttribute("searchDto", searchSortDto);
-        } else if (searchSortDto.getSearchType().equals("searchTitle")){
-            model.addAttribute("searchDto", searchSortDto);
-
-        }
-
         Page<MusicList> paging = musicListService.musicListSearchSort(page, searchSortDto);
         musicListService.pageStartEndNumber(page, paging, model);
 
@@ -119,13 +112,7 @@ public class MusicListController {
         HttpSession session = request.getSession();
         String loginId = (String) session.getAttribute("loginId");
         model.addAttribute("loginId", loginId);
-        if (searchDto.getSearchType().equals("searchNickname")){
-            model.addAttribute("searchDto", searchDto);
-        } else if (searchDto.getSearchType().equals("searchTitle")){
-            model.addAttribute("searchDto", searchDto);
-
-        }
-
+        model.addAttribute("searchDto", searchDto);
 
         Page<MusicList> paging = musicListService.musicListSearch(page, searchDto);
 
