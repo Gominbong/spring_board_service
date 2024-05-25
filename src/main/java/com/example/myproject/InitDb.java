@@ -1,6 +1,5 @@
 package com.example.myproject;
 
-
 import com.example.myproject.domain.Member;
 import com.example.myproject.domain.MusicList;
 import com.example.myproject.service.MemberService;
@@ -8,6 +7,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,13 +19,15 @@ import java.time.LocalDateTime;
 public class InitDb {
 
     private final InitService initService;
-    static int a = 0;
 
     @PostConstruct
     public void init() {
-
-     /*   for(int i=0; i<200; i++){
+/*
+        initService.createMember("3", "3", "Rhalsqhd123");
+        initService.createMember("2", "2", "Rhalsqhd456");
+        for(int i=0; i<170; i++){
             initService.dbInit1();
+            initService.dbInit2();
         }*/
     }
 
@@ -37,8 +39,7 @@ public class InitDb {
 
         private final EntityManager em;
         private final MemberService memberService;
-
-
+        private final PasswordEncoder passwordEncoder;
 
         public void dbInit1(){
             Member member = memberService.findByLoginId("3");
@@ -57,38 +58,41 @@ public class InitDb {
                     .likeCount(0)
                     .salesQuantity(0)
                     .build();
+            em.persist(musicList);
+        }
 
-            MusicList musicList1 = MusicList.builder()
+        public void dbInit2(){
+            Member member = memberService.findByLoginId("2");
+            LocalDateTime localDateTime = LocalDateTime.now().withNano(0);
+            String temp = String.valueOf(localDateTime);
+            String createTime = temp.replace("T", " ");
+            MusicList musicList = MusicList.builder()
                     .title("페이징 확인용 테스트 글")
                     .member(member)
                     .createTime(createTime)
-                    .content("체르니 100정도면 칠수있어요 ")
+                    .content("체르니 40정도면 칠수 있어요")
                     .type("피아노")
-                    .level("보통")
+                    .level("어려움")
                     .salesQuantity(0)
-                    .likeCount(0)
                     .price(3000)
+                    .likeCount(0)
                     .salesQuantity(0)
                     .build();
             em.persist(musicList);
-            em.persist(musicList1);
         }
 
-        private Member createMember(String loginId, String password, String nickname) {
+        public void createMember(String loginId, String password, String nickname) {
             Member member = new Member();
             LocalDateTime localDateTime = LocalDateTime.now().withNano(0);
             String temp = String.valueOf(localDateTime);
             String createTime = temp.replace("T", " ");
-            a=a+1;
-            String b = String.valueOf(a);
-            member.setLoginId(loginId+b);
-            member.setPassword(password);
-            member.setNickname(nickname+b);
+            member.setLoginId(loginId);
+            member.setPassword(passwordEncoder.encode(password));
+            member.setNickname(nickname);
             member.setCash(20000);
             member.setRevenue(0);
             member.setCreateTime(createTime);
-
-            return member;
+            em.persist(member);
         }
     }
 

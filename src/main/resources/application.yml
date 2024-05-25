@@ -33,6 +33,7 @@ spring:
     open-in-view: false
     database: mysql
     database-platform: org.hibernate.dialect.MySQLDialect
+  rsocket:
 
 logging:
   level:

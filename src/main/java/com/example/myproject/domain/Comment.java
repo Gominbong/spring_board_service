@@ -29,6 +29,9 @@ public class Comment {
     private String createTime;
     private int divWidthSize;
     private String softDelete;
+    private String parentMemberNickname;
+    private String parentMemberLoginId;
+
 
 
 

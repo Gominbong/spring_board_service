@@ -233,7 +233,6 @@ public class MusicListService {
             return musicListRepository.findMusicListByTitleContains(pageable, searchSortDto.getSearch());
         }
 
-
         if (searchSortDto.getSearchType().equals("searchNickname")
                 && searchSortDto.getSortType().equals("sortSelect")) {
             log.info("여기1111");

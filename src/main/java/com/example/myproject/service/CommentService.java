@@ -18,7 +18,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
+import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @Slf4j
@@ -33,7 +36,6 @@ public class CommentService {
     public void commentDelete(CommentDeleteDto commentId) {
         Comment comment = commentRepository.findById(commentId.getCommentId()).orElseThrow();
         comment.setSoftDelete("yes");
-        comment.setContent(null);
     }
 
     @Transactional
@@ -60,7 +62,6 @@ public class CommentService {
     }
 
     public List<Comment> findCommentList(Long id) {
-        Pageable pageable = PageRequest.of(0, 1000);
         return commentRepository.findCommentList(id);
     }
 
@@ -75,6 +76,7 @@ public class CommentService {
 
     public void replyAdd(CommentReplyFormDto commentReplyFormDto, String loginId) {
         Member member = memberRepository.findByLoginId(loginId);
+
         // divWidthSize 0이면 댓글이고 1,2,3,4면 대댓글 이다
         // 댓글 추가시 parent 0부터 시작 해 +1 씩 증가
         // parent 0에 대댓글 추가시 부모 parent 0을 넣고 child1에 +1로 순서를 셋팅한다
@@ -82,6 +84,7 @@ public class CommentService {
         // divWidthSize 2이면 parent child1 child2 넣는식으로 셋팅한다.
         // 대댓글 깊이 5단계인데 원하는 깊이만큼 추가로 만들 수 있다.
         Comment comment = commentRepository.findCommentId(commentReplyFormDto.getCommentId());
+        Member parentCommentMember = memberRepository.findByLoginId(comment.getMember().getLoginId());
         Long musicListId = comment.getMusicList().getId();
         int parentId = comment.getParent();
         int child1 = comment.getChild1();
@@ -89,6 +92,8 @@ public class CommentService {
         int child3 = comment.getChild3();
 
         Comment reply = new Comment();
+        reply.setParentMemberNickname(parentCommentMember.getNickname());
+        reply.setParentMemberLoginId(parentCommentMember.getLoginId());
         LocalDateTime localDateTime = LocalDateTime.now().withNano(0);
         String temp = String.valueOf(localDateTime);
         String createTime = temp.replace("T", " ");
@@ -97,6 +102,7 @@ public class CommentService {
         reply.setMusicList(comment.getMusicList());
         reply.setMember(member);
         reply.setMusicList(comment.getMusicList());
+
 
         switch (comment.getDivWidthSize()) {
             case 0 -> {

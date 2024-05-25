@@ -11,14 +11,14 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <div class="container" th:object="${musicList}" style="margin-top: 20px">
 
-    <div style="width: 800px">
+    <div style="max-width: 800px">
         <ul style="font-size: large">
             <li>제목 <p th:text="*{title}"></p></li>
             <li>글쓴이 <p th:text="*{member.nickname}"></p></li>
             <li>가격 <p th:text="*{price}"></p></li>
             <li>판매량 <p th:text="*{salesQuantity}"></p></li>
             <li>등록일 <p th:text="*{createTime}"></p></li>
-            <li>내용 <p style="white-space: pre-line" th:text="*{content}"></p></li>
+            <li>내용 <p style="white-space: pre-line; word-break:break-word;" th:text="*{content}"></p></li>
             <li th:if="${sellBuyList!=null}">구매일<p th:text="${sellBuyList.createTime}"></p></li>
             <li th:if="${fileList.isEmpty()}">첨부파일 미등록</li>
             <li th:if="${!fileList.isEmpty()}">첨부파일
@@ -160,8 +160,7 @@
             <div th:if="${list.divWidthSize == 0}"
                  style="border-width: 1px 1px 1px 1px; border-style: solid; border-color: brown">
                 <div style="display: inline-block; margin-top: 10px; margin-left: 10px;">
-                    <p class="fw-bold" th:if="${list.softDelete!=null}">삭제된 댓글 입니다</p>
-                    <p class="fw-bold" th:if="${list.softDelete==null}" th:text="${list.member.nickname} + ' 님'"></p>
+                    <p class="fw-bold" th:text="${list.member.nickname} + ' 님'"></p>
                 </div>
 
                 <div th:if="${list.softDelete==null}" style="display: inline-block; margin-left: 10px;">
@@ -185,17 +184,17 @@
                     </form>
                 </div>
 
-
-                <div style="width: 780px; margin-left: 15px;">
-                    <p style="white-space: pre-line" th:text="${list.content}"></p>
+                <div style="max-width: 780px; margin-left: 15px;">
+                    <p class="fw-bold" th:if="${list.softDelete!=null}">삭제된 댓글 입니다</p>
+                    <p th:if="${list.softDelete==null}" style="white-space: pre-line;
+                     word-break:break-word;" th:text="${list.content}"></p>
                 </div>
             </div>
 
             <div th:if="${list.divWidthSize == 1}" style="margin-left: 3%;
           border-width: 1px 1px 1px 1px; border-style: solid; border-color: brown">
                 <div style="display: inline-block; margin-top: 10px; margin-left: 10px;">
-                    <p class="fw-bold" th:if="${list.softDelete!=null}">삭제된 댓글 입니다</p>
-                    <p class="fw-bold" th:if="${list.softDelete==null}" th:text="${list.member.nickname} + ' 님'"></p>
+                    <p class="fw-bold" th:text="${list.member.nickname} + ' 님'"></p>
                 </div>
 
                 <div th:if="${list.softDelete==null}" style="display: inline-block; margin-left: 10px;">
@@ -219,17 +218,19 @@
                     </form>
                 </div>
 
-
-                <div style="width: 780px; margin-left: 15px;">
-                    <p style="white-space: pre-line" th:text="${list.content}"></p>
+                <div style="max-width: 780px; margin-left: 15px;">
+                    <p class="fw-bold" th:if="${list.softDelete!=null}">삭제된 댓글 입니다</p>
+                    <p style="color: blueviolet; max-height: 10px" th:if="${list.softDelete==null}"
+                       class="fw-bold" th:text="'@'+${list.getParentMemberNickname()}"></p>
+                    <p th:if="${list.softDelete==null}" style="white-space: pre-line;
+                     word-break:break-word;" th:text="${list.content}"></p>
                 </div>
             </div>
 
             <div th:if="${list.divWidthSize == 2}" style="margin-left: 6%;
          border-width: 1px 1px 1px 1px; border-style: solid; border-color: brown">
                 <div style="display: inline-block; margin-top: 10px; margin-left: 10px;">
-                    <p class="fw-bold" th:if="${list.softDelete!=null}">삭제된 댓글 입니다</p>
-                    <p class="fw-bold" th:if="${list.softDelete==null}" th:text="${list.member.nickname} + ' 님'"></p>
+                    <p class="fw-bold" th:text="${list.member.nickname} + ' 님'"></p>
                 </div>
 
                 <div th:if="${list.softDelete==null}" style="display: inline-block; margin-left: 10px;">
@@ -254,17 +255,19 @@
                     </form>
                 </div>
 
-
-                <div style="width: 780px; margin-left: 15px;">
-                    <p style="white-space: pre-line" th:text="${list.content}"></p>
+                <div style="max-width: 780px; margin-left: 15px;">
+                    <p class="fw-bold" th:if="${list.softDelete!=null}">삭제된 댓글 입니다</p>
+                    <p style="color: blueviolet; max-height: 10px" th:if="${list.softDelete==null}"
+                       class="fw-bold" th:text="'@'+${list.getParentMemberNickname()}"></p>
+                    <p th:if="${list.softDelete==null}" style="white-space: pre-line;
+                     word-break:break-word;" th:text="${list.content}"></p>
                 </div>
             </div>
 
             <div th:if="${list.divWidthSize == 3}" style="margin-left: 9%;
         border-width: 1px 1px 1px 1px; border-style: solid; border-color: brown">
                 <div style="display: inline-block; margin-top: 10px; margin-left: 10px;">
-                    <p class="fw-bold" th:if="${list.softDelete!=null}">삭제된 댓글 입니다</p>
-                    <p class="fw-bold" th:if="${list.softDelete==null}" th:text="${list.member.nickname} + ' 님'"></p>
+                    <p class="fw-bold" th:text="${list.member.nickname} + ' 님'"></p>
                 </div>
 
                 <div th:if="${list.softDelete==null}" style="display: inline-block; margin-left: 10px;">
@@ -287,18 +290,19 @@
                         <button type="button" style="display: none" th:text="${list.id}"></button>
                     </form>
                 </div>
-
-
-                <div style="width: 780px; margin-left: 15px;">
-                    <p style="white-space: pre-line" th:text="${list.content}"></p>
+                <div style="max-width: 780px; margin-left: 15px;">
+                    <p class="fw-bold" th:if="${list.softDelete!=null}">삭제된 댓글 입니다</p>
+                    <p style="color: blueviolet; max-height: 10px" th:if="${list.softDelete==null}"
+                       class="fw-bold" th:text="'@'+${list.getParentMemberNickname()}"></p>
+                    <p th:if="${list.softDelete==null}" style="white-space: pre-line;
+                     word-break:break-word;" th:text="${list.content}"></p>
                 </div>
             </div>
 
             <div th:if="${list.divWidthSize == 4}" style="margin-left: 12%;
          border-width: 1px 1px 1px 1px; border-style: solid; border-color: brown">
                 <div style="display: inline-block; margin-top: 10px; margin-left: 10px;">
-                    <p class="fw-bold" th:if="${list.softDelete!=null}">삭제된 댓글 입니다</p>
-                    <p class="fw-bold" th:if="${list.softDelete==null}" th:text="${list.member.nickname} + ' 님'"></p>
+                    <p class="fw-bold" th:text="${list.member.nickname} + ' 님'"></p>
                 </div>
 
                 <div th:if="${list.softDelete==null}" style="display: inline-block; margin-left: 10px;">
@@ -323,10 +327,12 @@
                     </form>
                 </div>
 
-
-
-                <div style="width: 780px; margin-left: 15px;">
-                    <p style="white-space: pre-line" th:text="${list.content}"></p>
+                <div style="max-width: 780px; margin-left: 15px;">
+                    <p class="fw-bold" th:if="${list.softDelete!=null}">삭제된 댓글 입니다</p>
+                    <p style="color: blueviolet; max-height: 10px" th:if="${list.softDelete==null}"
+                       class="fw-bold" th:text="'@'+${list.getParentMemberNickname()}"></p>
+                    <p th:if="${list.softDelete==null}" style="white-space: pre-line;
+                     word-break:break-word;" th:text="${list.content}"></p>
                 </div>
             </div>
         </div>
@@ -399,7 +405,6 @@
     <div style="margin-bottom: 130px"></div>
 
     <script type="text/javascript">
-
         function commentDelete(obj) {
             const commentId = $(obj).next().text();
             console.log("코멘트아이디 = " + commentId);
@@ -431,9 +436,9 @@
             const commentEditDiv = document.getElementById('commentEdit');
             commentEditDiv.style.display = 'none';
 
-            console.log("pppp"+$(obj).parent().parent().next().next().next().text());
+            console.log("pppp" + $(obj).parent().parent().next().next().next().text());
             const length = $(obj).parent().parent().next().next().next().text().length;
-            console.log("iiiii"+length);
+            console.log("iiiii" + length);
 
             console.log(divSize);
             const memberCash = [[${memberCash}]];
@@ -470,7 +475,7 @@
                 replyDiv.style.display = 'none';
             }
 
-            console.log("pppp"+$(obj).parent().parent().next().next().next().text());
+            console.log("pppp" + $(obj).parent().parent().next().next().next().text());
 
 
             const commentId = $(obj).next().text();
@@ -489,7 +494,7 @@
             replyDiv.style.display = 'none';
 
             const length = $(obj).parent().parent().next().next().text().length;
-            console.log("iiiii"+length);
+            console.log("iiiii" + length);
             console.log(divSize);
 
             const commentEditDiv = document.getElementById('commentEdit');
@@ -510,7 +515,7 @@
                 commentEditDiv.style.display = 'none';
             }
 
-            console.log("pppp"+$(obj).parent().parent().next().next().text());
+            console.log("pppp" + $(obj).parent().parent().next().next().text());
             const commentId = $(obj).next().next().text();
             console.log("xx" + commentId);
 
