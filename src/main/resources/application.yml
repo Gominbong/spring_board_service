@@ -11,7 +11,7 @@ spring:
    #password:
    #driver-class-name: org.h2.Driver
   datasource:
-    url: jdbc:mysql://172.18.0.2/shop
+    url: jdbc:mysql://172.17.0.2/shop
     username: root
     password: Rhalsqhd#123
     driver-class-name: com.mysql.cj.jdbc.Driver
