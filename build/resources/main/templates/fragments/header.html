@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head" >
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.88.1">
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/headers/">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<div th:fragment="header (htmlName)">
+    <header class="p-3 bg-dark text-white">
+        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+
+            <form class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                <li><a th:if="${htmlName == 'home'}" href="/" class="nav-link px-5 text-info">악보목록</a>
+                <li><a th:if="${htmlName != 'home'}" href="/" class="nav-link px-5 text-white">악보목록</a>
+
+                <li><a th:if="${htmlName == 'addItem'}" href="/addMusicList" class="nav-link px-5 text-info">악보등록</a>
+                <li><a th:if="${htmlName != 'addItem'}" href="/addMusicList" class="nav-link px-5 text-white">악보등록</a>
+
+                <li><a th:if="${htmlName == 'buyList'}" href="/buyList" class="nav-link px-5 text-info">구매목록</a>
+                <li><a th:if="${htmlName != 'buyList'}" href="/buyList" class="nav-link px-5 text-white">구매목록</a>
+
+                <li><a th:if="${htmlName == 'sellList'}" href="/sellList" class="nav-link px-5 text-info">판매목록</a>
+                <li><a th:if="${htmlName != 'sellList'}" href="/sellList" class="nav-link px-5 text-white">판매목록</a>
+
+                <li><a th:if="${htmlName == 'cart'}" href="/cart" class="nav-link px-5 text-info">장바구니</a>
+                <li><a th:if="${htmlName != 'cart'}" href="/cart" class="nav-link px-5 text-white">장바구니</a>
+
+                <li><a th:if="${htmlName == 'myInfo'}" href="/myInfo" class="nav-link px-5 text-info">내정보</a>
+                <li><a th:if="${htmlName != 'myInfo'}" href="/myInfo" class="nav-link px-5 text-white">내정보</a>
+            </form>
+
+            <div class="text-end">
+                <a class="btn btn-outline-light me-2" href="/login" th:if="!${loginId}">로그인</a>
+                <a class="btn btn-outline-info" href="/signup"th:if="!${loginId}" >회원가입</a>
+
+                <form method="post" th:action="@{/logout}">
+                    <a class="btn btn-warning me-2 fw-bold" th:if="${loginId}"th:text="${loginId} + ' 님'">이름</a>
+                    <button class="btn btn-outline-info fw-bold" th:if="${loginId}">로그아웃</button>
+                </form>
+
+            </div>
+
+        </div>
+    </header>
+
+</div>
+
+</html>

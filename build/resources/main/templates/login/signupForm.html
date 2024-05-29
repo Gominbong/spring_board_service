@@ -1,0 +1,135 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head}"/>
+<div th:replace="~{fragments/header :: header ('signup')}"/>
+<style>
+    html,
+    head {
+        height: 100%;
+    }
+
+    .form-signin {
+        width: 100%;
+        max-width: 330px;
+        padding: 15px;
+        margin: auto;
+    }
+
+    .form-signin .checkbox {
+        font-weight: 400;
+    }
+
+    .form-signin .form-floating:focus-within {
+        z-index: 2;
+    }
+
+    .form-signin input[type="email"] {
+        margin-bottom: -1px;
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+
+    .form-signin input[type="password"] {
+        margin-bottom: 10px;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+
+    .field-error{
+        border-color: #dc3545;
+        color: #dc3545;
+    }
+
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<div style="height: 830px">
+    <body class="text-center">
+    <main class="form-signin" style="margin-top: 210px">
+        <form method="post" action="/signup" th:object="${signupFormDto}">
+            <img class="mb-4" src="/icon/bootstrap-logo.svg" alt="" width="72" height="57">
+            <h1 class="h3 mb-3 fw-normal">회원가입 페이지</h1>
+
+            <div class="form-floating" style="margin-bottom: 30px">
+                <input type="text" class="form-control" id="id" name="id" th:field="*{id}">
+                <label for="id">아이디입력하세요</label>
+                <label class="field-error" for="id" style="margin-left: 130px"
+                       th:if="${errors?.containsKey('id')}" th:text="${errors['id']}"></label>
+                <label class="field-error" for="id" style="margin-left: 130px"
+                       th:if="${errors?.containsKey('exist')}" th:text="${errors['exist']}"></label>
+            </div>
+
+            <div class="form-floating" style="margin-bottom: 30px">
+                <input type="password" class="form-control" id="pw" name="pw">
+                <label for="pw">비밀번호입력하세요</label>
+                <label class="field-error" for="id" style="margin-left: 130px"
+                       th:if="${errors?.containsKey('pw')}" th:text="${errors['pw']}"></label>
+            </div>
+
+
+            <div class="form-floating" style="margin-bottom: 30px">
+                <input type="password" class="form-control" id="pwCheck" name="pwCheck">
+                <label for="pwCheck">비밀번호확인하기</label>
+                <label class="field-error" for="id" style="margin-left: 130px"
+                       th:if="${errors?.containsKey('pwCheck')}" th:text="${errors['pwCheck']}"></label>
+            </div>
+
+            <div class="form-floating" style="margin-bottom: 30px">
+                <input type="text" class="form-control" id="nickname" name="nickname"  th:field="*{nick}">
+                <label for="nickname">닉네임입력하세요</label>
+                <label class="field-error" for="id" style="margin-left: 130px"
+                       th:if="${errors?.containsKey('nick')}" th:text="${errors['nick']}"></label>
+            </div>
+
+            <div>
+                <button style="width: 100px" class="btn btn-lg btn-primary" type="submit">확인</button>
+                <a href="/" style="width: 100px" class="btn btn-lg btn-primary" type="submit">취소</a>
+            </div>
+
+        </form>
+    </main>
+    </body>
+
+</div>
+<script>
+
+    $(function(){
+        $('#pw').keyup(function(){
+            const pw = document.getElementById('pw');
+            const pwCheck = document.getElementById('pwCheck');
+            if($('#pwCheck').val()){
+                console.log("여기다1");
+                if($('#pw').val() === ($('#pwCheck').val())){
+                    console.log("여기다2");
+                    pw.style.cssText = "border-color: limegreen; border-width: 2px; outline: none;"
+                    pwCheck.style.cssText = "border-color: limegreen; border-width: 2px; outline: none;"
+                }else{
+                    console.log("여기다3");
+                    pw.style.cssText = "border-color: orangered; border-width: 2px; outline: none;"
+                    pwCheck.style.cssText = "border-color: orangered; border-width: 2px; outline: none;"
+                }
+               console.log("여기다4");
+            }
+        });
+
+        $('#pwCheck').keyup(function(){
+            const pw = document.getElementById('pw');
+            const pwCheck = document.getElementById('pwCheck');
+            if($('#pw').val()){
+                console.log("여기다6");
+                if($('#pw').val() === ($('#pwCheck').val())){
+                    console.log("여기다7");
+                    pw.style.cssText = "border-color: limegreen; border-width: 2px; outline: none;"
+                    pwCheck.style.cssText = "border-color: limegreen; border-width: 2px; outline: none;"
+                }else{
+                    console.log("여기다8");
+                    pw.style.cssText = "border-color: orangered; border-width: 2px; outline: none;"
+                    pwCheck.style.cssText = "border-color: orangered; border-width: 2px; outline: none;"
+                }
+                console.log("여기다9");
+            }
+        });
+
+    });
+</script>
+<div th:replace="~{fragments/footer :: footer}"/>
+</html>

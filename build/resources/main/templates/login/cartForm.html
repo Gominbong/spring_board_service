@@ -1,0 +1,268 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head}"/>
+<div th:replace="~{fragments/header :: header ('cart')}"/>
+<style>
+    .table_row_color:hover {
+        background-color: lightgray;
+    }
+
+    .table_title_fontcolor:hover {
+        background-color: lightgray;
+        color: darkviolet !important;
+        cursor: pointer;
+    }
+
+    .table_title_deleteBtn:hover {
+        background-color: limegreen;
+    }
+
+    .table_title_buyBtn:hover {
+        background-color: deepskyblue;
+    }
+
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<body>
+<div class="container">
+    <form class="row g-2" style="margin-top: 20px">
+        <div class="col-auto">
+            <select class="form-select">
+                <option selected>정렬선택</option>
+                <option>가격순</option>
+                <option>추천순</option>
+                <option>판매량</option>
+            </select>
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary mb-3">확인</button>
+        </div>
+    </form>
+</div>
+<div class="container" style="max-height: 700px; min-height: 700px; overflow: scroll;">
+    <table class="table table-striped table-bordered">
+        <thead>
+        <tr>
+            <th style="width: 3%">
+                <input class="form-check-input" type="checkBox" name="check" onclick="checkAll(this)">
+            </th>
+            <th style="width: 5%">삭제</th>
+            <th style="width: 5%">구매</th>
+            <th style="width: 8%">추가일</th>
+            <th style="width: 22%">곡제목</th>
+            <th style="width: 13%">만든이</th>
+            <th style="width: 6%">악기</th>
+            <th style="width: 6%">난이도</th>
+            <th style="width: 6%">가격</th>
+            <th style="width: 6%">판매량</th>
+            <th style="width: 6%">추천수</th>
+            <th style="display: none">musicListId</th>
+            <th style="display: none">cartListId</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="table_row_color" th:each="list : ${cartList}">
+            <td>
+                <input class="form-check-input" type="checkbox" name="check"
+                       onclick="checkOne(this)">
+            </td>
+            <td>
+                <form method="post" th:action="@{/cartDelete}" onsubmit="return deleteSubmit()">
+                     <button class="table_title_deleteBtn" type="submit" style="border-width: thin"
+                            th:name="cartId" th:value="${list.id}">삭제
+                    </button>
+                </form>
+            </td>
+            <td id="btnBuy">
+                <button class="table_title_buyBtn" style="border-width: thin"
+                        th:onclick="buySubmit([[${list.musicList.id}]], [[${list.musicList.price}]],
+                                 [[${memberCash}]], [[${list.id}]])" )>구매
+                </button>
+            </td>
+            <td th:text="${list.createTime.substring(0, 10)}"></td>
+            <td th:text="${list.musicList.title}" class="table_title_fontcolor"
+                th:onclick="|location.href='@{/content (musicListId=${list.musicList.id}) }'|"></td>
+            <td th:text="${list.musicList.member.nickname}"></td>
+            <td th:text="${list.musicList.type}"></td>
+            <td th:text="${list.musicList.level}"></td>
+            <td th:text="${list.musicList.price}"></td>
+            <td th:text="${list.musicList.salesQuantity}"></td>
+            <td th:text="${list.musicList.likeCount}"></td>
+            <td style="display: none" th:text="${list.musicList.id}"></td>
+            <td style="display: none" th:text="${list.id}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div class="container">
+    <form class="row g-2 justify-content-center" style="margin-top: 20px">
+        <div class="col-7">
+            <button type="button" class="btn btn-lg btn-primary mb-3" id="btnTotal">합계 : 0원</button>
+        </div>
+        <div class="col-auto">
+            <button type="button" class="btn btn-lg btn-primary mb-3" onclick="btnCheckedDelete()">삭제하기</button>
+        </div>
+        <div class="col-auto">
+            <button type="button" class="btn btn-lg btn-primary mb-3" onclick="btnCheckedBuy()">구매하기</button>
+        </div>
+    </form>
+</div>
+<div style="margin-top: 190px"></div>
+</body>
+<div th:replace="~{fragments/footer :: footer}"/>
+<script type="text/javascript">
+    let total = 0;
+
+    function btnCheckedBuy() {
+        if (confirm('체크된목록구매하시겠습니까')) {
+            const memberCash = [[${memberCash}]];
+            const check = document.getElementsByName('check');
+            const form = document.createElement('form');
+            const btnTotal = document.getElementById('btnTotal');
+            form.method = 'post';
+            form.action = '/cartBuyMulti';
+            check.forEach((check, i) => {
+                if (i > 0) {
+                    if (check.checked) {
+                        const row = $(check).parent().parent().get(0);
+                        const innerText = row.cells[8].innerText;
+                        const price = parseInt(innerText);
+                        total = total + price;
+                        console.log(typeof (innerText), innerText);
+                        console.log(total);
+                        btnTotal.innerText = "합계 = " + total + "원";
+
+                        const musicListId = row.cells[11].innerText;
+                        const cartListId = row.cells[12].innerText;
+                        const input = document.createElement('input');
+                        const input1 = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = 'musicListId'
+                        input.value = musicListId
+                        input1.type = 'hidden';
+                        input1.name = 'cartListId'
+                        input1.value = cartListId
+                        form.appendChild(input);
+                        form.appendChild(input1);
+                    }
+                }
+            })
+            if (total >= memberCash) {
+                alert('잔액이부족합니다');
+                return false;
+            } else {
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+    }
+
+    function btnCheckedDelete() {
+
+        if (confirm('체크된목록삭제하시겠습니까')) {
+            const check = document.getElementsByName('check');
+            const form = document.createElement('form');
+            form.method = 'post';
+            form.action = '/cartDeleteMulti';
+            check.forEach((check, i) => {
+                if (i > 0) {
+                    if (check.checked) {
+                        const row = $(check).parent().parent().get(0);
+                        const cartListId = row.cells[12].innerText;
+                        const input = document.createElement('input');
+                        const input1 = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = 'cartListId'
+                        input.value = cartListId
+                        form.appendChild(input);
+                    }
+                }
+            })
+            document.body.appendChild(form);
+            form.submit();
+        }
+
+    }
+
+    function checkOne(obj) {
+        const btnTotal = document.getElementById('btnTotal');
+        const checked = obj.checked;
+        const row = $(obj).parent().parent().get(0);
+        const innerText = row.cells[8].innerText;
+        const price = parseInt(innerText);
+        console.log(checked);
+
+        if (checked) {
+            console.log(checked);
+            total = total + price;
+            btnTotal.innerText = "합계 = " + total + "원";
+        } else {
+            console.log(checked);
+            total = total - price;
+            btnTotal.innerText = "합계 = " + total + "원";
+        }
+
+    }
+
+    function deleteSubmit() {
+        if (confirm("삭제하시겠습니까")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function buySubmit(musicListId, musicListPrice, memberCash, cartListId) {
+        if (confirm("구매하시겠습니까")) {
+            if (memberCash >= musicListPrice) {
+                const form = document.createElement('form');
+                form.method = 'post';
+                form.action = '/cartBuy';
+                const input = document.createElement('input');
+                const input1 = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'musicListId'
+                input.value = musicListId;
+                input1.type = 'hidden';
+                input1.name = 'cartListId'
+                input1.value = cartListId;
+                form.appendChild(input);
+                form.appendChild(input1)
+                document.body.appendChild(form);
+                form.submit();
+            } else {
+                if (confirm('잔액이부족합니다충전하시겠습니까')) {
+                    document.location.href = "/myInfo";
+                }
+            }
+
+        } else {
+            return false;
+        }
+    }
+
+    function checkAll(selectAll) {
+        const check = document.getElementsByName('check');
+        const btnTotal = document.getElementById('btnTotal');
+        total = 0;
+        check.forEach((check, i) => {
+            check.checked = selectAll.checked;
+
+            if (i > 0) {
+                if (check.checked) {
+                    const row = $(check).parent().parent().get(0);
+                    const innerText = row.cells[8].innerText;
+                    const price = parseInt(innerText);
+                    total = total + price;
+                    console.log(typeof (innerText), innerText);
+                    console.log(total);
+                    btnTotal.innerText = "합계 = " + total + "원";
+                } else {
+                    total = 0;
+                    btnTotal.innerText = "합계 = " + total + "원";
+                }
+            }
+        })
+    }
+</script>
+</html>
