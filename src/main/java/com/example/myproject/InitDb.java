@@ -22,8 +22,7 @@ public class InitDb {
 
     @PostConstruct
     public void init() {
-/*
-        initService.createMember("3", "3", "Rhalsqhd123");
+/*        initService.createMember("3", "3", "Rhalsqhd123");
         initService.createMember("2", "2", "Rhalsqhd456");
         for(int i=0; i<170; i++){
             initService.dbInit1();
