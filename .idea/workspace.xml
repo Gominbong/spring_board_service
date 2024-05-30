@@ -324,14 +324,7 @@
       <workItem from="1716647173561" duration="2926000" />
       <workItem from="1716894954253" duration="182000" />
       <workItem from="1716989589799" duration="11066000" />
-      <workItem from="1717061372143" duration="1492000" />
-    </task>
-    <task id="LOCAL-00039" summary="댓글 수정 삭제 구현">
-      <created>1715280053260</created>
-      <option name="number" value="00039" />
-      <option name="presentableId" value="LOCAL-00039" />
-      <option name="project" value="LOCAL" />
-      <updated>1715280053260</updated>
+      <workItem from="1717061372143" duration="2455000" />
     </task>
     <task id="LOCAL-00040" summary="닉네임 변경 구현">
       <created>1715350350882</created>
@@ -669,7 +662,14 @@
       <option name="project" value="LOCAL" />
       <updated>1717061568681</updated>
     </task>
-    <option name="localTasksCounter" value="88" />
+    <task id="LOCAL-00088" summary="docker 연습중d4">
+      <created>1717068106278</created>
+      <option name="number" value="00088" />
+      <option name="presentableId" value="LOCAL-00088" />
+      <option name="project" value="LOCAL" />
+      <updated>1717068106278</updated>
+    </task>
+    <option name="localTasksCounter" value="89" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
