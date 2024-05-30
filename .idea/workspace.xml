@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="70303e95-c14f-4407-8464-16edbdd9de64" name="Changes" comment="docker 연습중d" />
+    <list default="true" id="70303e95-c14f-4407-8464-16edbdd9de64" name="Changes" comment="docker 연습중d">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -321,14 +323,7 @@
       <workItem from="1716619624933" duration="14981000" />
       <workItem from="1716647173561" duration="2926000" />
       <workItem from="1716894954253" duration="182000" />
-      <workItem from="1716989589799" duration="10528000" />
-    </task>
-    <task id="LOCAL-00035" summary="대댓글 구현">
-      <created>1715200586361</created>
-      <option name="number" value="00035" />
-      <option name="presentableId" value="LOCAL-00035" />
-      <option name="project" value="LOCAL" />
-      <updated>1715200586361</updated>
+      <workItem from="1716989589799" duration="11066000" />
     </task>
     <task id="LOCAL-00036" summary="대댓글 구현">
       <created>1715202110361</created>
@@ -666,7 +661,14 @@
       <option name="project" value="LOCAL" />
       <updated>1717029612743</updated>
     </task>
-    <option name="localTasksCounter" value="84" />
+    <task id="LOCAL-00084" summary="docker 연습중d">
+      <created>1717029787641</created>
+      <option name="number" value="00084" />
+      <option name="presentableId" value="LOCAL-00084" />
+      <option name="project" value="LOCAL" />
+      <updated>1717029787641</updated>
+    </task>
+    <option name="localTasksCounter" value="85" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
