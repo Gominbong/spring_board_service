@@ -5,7 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="70303e95-c14f-4407-8464-16edbdd9de64" name="Changes" comment="docker 연습중d4">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -324,14 +324,7 @@
       <workItem from="1716647173561" duration="2926000" />
       <workItem from="1716894954253" duration="182000" />
       <workItem from="1716989589799" duration="11066000" />
-      <workItem from="1717061372143" duration="2455000" />
-    </task>
-    <task id="LOCAL-00040" summary="닉네임 변경 구현">
-      <created>1715350350882</created>
-      <option name="number" value="00040" />
-      <option name="presentableId" value="LOCAL-00040" />
-      <option name="project" value="LOCAL" />
-      <updated>1715350350882</updated>
+      <workItem from="1717061372143" duration="2567000" />
     </task>
     <task id="LOCAL-00041" summary="H2 에서 mysql로 바꿈">
       <created>1715365530302</created>
@@ -669,7 +662,14 @@
       <option name="project" value="LOCAL" />
       <updated>1717068106278</updated>
     </task>
-    <option name="localTasksCounter" value="89" />
+    <task id="LOCAL-00089" summary="docker 연습중d4">
+      <created>1717069144472</created>
+      <option name="number" value="00089" />
+      <option name="presentableId" value="LOCAL-00089" />
+      <option name="project" value="LOCAL" />
+      <updated>1717069144472</updated>
+    </task>
+    <option name="localTasksCounter" value="90" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
