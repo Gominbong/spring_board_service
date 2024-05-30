@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="70303e95-c14f-4407-8464-16edbdd9de64" name="Changes" comment="docker 연습중d">
+    <list default="true" id="70303e95-c14f-4407-8464-16edbdd9de64" name="Changes" comment="docker 연습중d4">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -324,14 +324,7 @@
       <workItem from="1716647173561" duration="2926000" />
       <workItem from="1716894954253" duration="182000" />
       <workItem from="1716989589799" duration="11066000" />
-      <workItem from="1717061372143" duration="185000" />
-    </task>
-    <task id="LOCAL-00038" summary="대댓글 구현">
-      <created>1715279352584</created>
-      <option name="number" value="00038" />
-      <option name="presentableId" value="LOCAL-00038" />
-      <option name="project" value="LOCAL" />
-      <updated>1715279352584</updated>
+      <workItem from="1717061372143" duration="1492000" />
     </task>
     <task id="LOCAL-00039" summary="댓글 수정 삭제 구현">
       <created>1715280053260</created>
@@ -669,7 +662,14 @@
       <option name="project" value="LOCAL" />
       <updated>1717061434718</updated>
     </task>
-    <option name="localTasksCounter" value="87" />
+    <task id="LOCAL-00087" summary="docker 연습중d4">
+      <created>1717061568681</created>
+      <option name="number" value="00087" />
+      <option name="presentableId" value="LOCAL-00087" />
+      <option name="project" value="LOCAL" />
+      <updated>1717061568681</updated>
+    </task>
+    <option name="localTasksCounter" value="88" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -718,7 +718,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="다중파일 등록 구현" />
     <MESSAGE value="파일 다운로드 구현중" />
     <MESSAGE value="구매기능 구현중" />
     <MESSAGE value="삭제 기능 구현" />
@@ -743,7 +742,8 @@
     <MESSAGE value="docker 연습중" />
     <MESSAGE value="docker 연습중ㅇ" />
     <MESSAGE value="docker 연습중d" />
-    <option name="LAST_COMMIT_MESSAGE" value="docker 연습중d" />
+    <MESSAGE value="docker 연습중d4" />
+    <option name="LAST_COMMIT_MESSAGE" value="docker 연습중d4" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
