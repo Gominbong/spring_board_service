@@ -5,7 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="70303e95-c14f-4407-8464-16edbdd9de64" name="Changes" comment="docker 연습중d">
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -323,14 +324,7 @@
       <workItem from="1716619624933" duration="14981000" />
       <workItem from="1716647173561" duration="2926000" />
       <workItem from="1716894954253" duration="182000" />
-      <workItem from="1716989589799" duration="7561000" />
-    </task>
-    <task id="LOCAL-00032" summary="장바구니 구현">
-      <created>1714486183044</created>
-      <option name="number" value="00032" />
-      <option name="presentableId" value="LOCAL-00032" />
-      <option name="project" value="LOCAL" />
-      <updated>1714486183044</updated>
+      <workItem from="1716989589799" duration="10119000" />
     </task>
     <task id="LOCAL-00033" summary="댓글 구현중">
       <created>1714853902497</created>
@@ -668,7 +662,14 @@
       <option name="project" value="LOCAL" />
       <updated>1717016753398</updated>
     </task>
-    <option name="localTasksCounter" value="81" />
+    <task id="LOCAL-00081" summary="docker 연습중d">
+      <created>1717017395236</created>
+      <option name="number" value="00081" />
+      <option name="presentableId" value="LOCAL-00081" />
+      <option name="project" value="LOCAL" />
+      <updated>1717017395236</updated>
+    </task>
+    <option name="localTasksCounter" value="82" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
