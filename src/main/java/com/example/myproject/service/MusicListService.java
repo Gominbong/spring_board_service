@@ -80,7 +80,6 @@ public class MusicListService {
                 String originalFilename = multipartFile.getOriginalFilename();
                 String encode = originalFilename.replaceAll("[^ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9]", "_");
                 String storedFileName = System.currentTimeMillis() + "_" + encode;
-                storedFileName = new String(storedFileName.getBytes(StandardCharsets.UTF_8));
 
                 String os = System.getProperty("os.name").toLowerCase();
                 if (os.contains("win")) {
