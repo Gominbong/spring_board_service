@@ -73,9 +73,8 @@ public class MusicListService {
         String createTime = temp.replace("T", " ");
         musicList.setCreateTime(createTime);
         musicListRepository.save(musicList);
-        int a=10;
         List<MultipartFile> pdfFiles = musicListFormDto.getPdfFiles();
-        //asdasdasdasdasd
+
         if (!pdfFiles.get(0).isEmpty()) {
             for (MultipartFile multipartFile : pdfFiles) {
                 String originalFilename = multipartFile.getOriginalFilename();
