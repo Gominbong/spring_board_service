@@ -21,6 +21,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -80,7 +81,7 @@ public class MusicListService {
                 String originalFilename = multipartFile.getOriginalFilename();
                 String encode = originalFilename.replaceAll("[^ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9]", "_");
                 String storedFileName = System.currentTimeMillis() + "_" + encode;
-
+                storedFileName = new String(storedFileName.getBytes(StandardCharsets.UTF_8));
                 String os = System.getProperty("os.name").toLowerCase();
                 if (os.contains("win")) {
                     try {
