@@ -1,37 +1,22 @@
 version: '3.9'
 
-services:
-  mysql:
-    image: mysql:8.3
-    volumes:
-      - mysqlVolume:/var/lib/mysql
-    restart : unless-stopped
-    ports:
-      - "3306:3306"
-    networks:
-      - myNetwork
-
+services:    
   nginx:
     image: nginx:0.0
     volumes:
       - nginxVolume:/etc/nginx
     restart: unless-stopped
-    depends_on:
-      - ubuntu
     ports:
       - "80:80"
     networks:
       - myNetwork
 
-  ubuntu:
+  spring:
     image: dockerfile:0.0
     volumes:
       - ubuntuVolume:/upload
+    tty: true
     restart: unless-stopped
-    environment:
-      - LANG=C.UTF-8
-    depends_on:
-      - mysql
     ports:
       - "8080:8080"
     networks:
@@ -41,3 +26,8 @@ volumes:
   ubuntuVolume:
     external: true
   nginxVolume:
+    external: true
+
+networks:
+  myNetwork:
+    external: true  
