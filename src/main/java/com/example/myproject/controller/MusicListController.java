@@ -292,7 +292,7 @@ public class MusicListController {
         log.info("세션 로그인한 아이디 = '{}' ", loginId);
 
 
-        Map<String, String> errors = musicListService.createAddItem(request, musicListFormDto, loginId);
+        Map<String, String> errors = musicListService.createAddItem(musicListFormDto, loginId);
         if (errors != null) {
             model.addAttribute("errors", errors);
             return "musicList/addMusicListForm";

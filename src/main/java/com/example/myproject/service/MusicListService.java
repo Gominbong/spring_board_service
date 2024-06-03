@@ -21,7 +21,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -36,8 +35,7 @@ public class MusicListService {
     private final MemberRepository memberRepository;
     private final FileListRepository fileRepository;
 
-    public Map<String, String> createAddItem(HttpServletRequest request, MusicListFormDto musicListFormDto,
-                                             String loginId) {
+    public Map<String, String> createAddItem(MusicListFormDto musicListFormDto, String loginId) {
 
         Map<String, String> errors = new HashMap<>();
 
