@@ -11,6 +11,7 @@ spring:
    #password:
    #driver-class-name: org.h2.Driver
   datasource:
+    #url: jdbc:mysql://172.18.0.2/shop
     url: jdbc:mysql://localhost/shop
     username: root
     password: Rhalsqhd#123
@@ -51,6 +52,7 @@ server:
     include-stacktrace: always
     include-binding-errors: always
     include-exception: true
+  port: 8081
 #    org.hibernate.type: trace
 
 
