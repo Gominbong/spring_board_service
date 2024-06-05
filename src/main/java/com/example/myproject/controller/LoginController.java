@@ -58,8 +58,6 @@ public class LoginController {
     public String loginInterceptor(@CookieValue("url") String url, @Valid LoginFormDto loginFormDto,
                                BindingResult bindingResult, HttpServletRequest request) {
         Member result = loginService.login(loginFormDto);
-        log.info("로그인후 돌아갈 경로 확인 = '{}'", url);
-        log.info("암호화된비밀번호가져오기= '{}'", result);
         if (bindingResult.hasErrors()) {
             return "login/loginForm";
         }
@@ -71,9 +69,6 @@ public class LoginController {
 
         HttpSession session = request.getSession();
         session.setAttribute("loginId", loginFormDto.getId());
-
-        log.info("세션 로그인 아이디 = '{}'", loginFormDto.getId());
-
 
         boolean signup = url.contains("signup");
         if (signup){
@@ -97,8 +92,6 @@ public class LoginController {
     public String login(@CookieValue("url") String url, @Valid LoginFormDto loginFormDto,
                                BindingResult bindingResult, HttpServletRequest request) {
         Member result = loginService.login(loginFormDto);
-        log.info("로그인후 돌아갈 경로 확인 = '{}'", url);
-        log.info("암호화된비밀번호가져오기= '{}'", result);
         if (bindingResult.hasErrors()) {
             return "login/loginForm";
         }
@@ -110,8 +103,6 @@ public class LoginController {
 
         HttpSession session = request.getSession();
         session.setAttribute("loginId", loginFormDto.getId());
-
-        log.info("세션 로그인 아이디 = '{}'", loginFormDto.getId());
 
         if (url.contains("signup")){
             return "redirect:/";
