@@ -2,7 +2,7 @@ version: '3.9'
 
 services:    
   nginx:
-    image: nginx:0.0
+    image: nginx:1.24.0
     volumes:
       - nginxVolume:/etc/nginx
     restart: unless-stopped
@@ -12,7 +12,7 @@ services:
       - myNetwork
 
   spring:
-    image: dockerfile:0.0
+    image: ubuntu:24.04.8081
     volumes:
       - ubuntuVolume:/upload
     tty: true
