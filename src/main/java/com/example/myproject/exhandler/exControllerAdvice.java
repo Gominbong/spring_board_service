@@ -1,6 +1,6 @@
 package com.example.myproject.exhandler;
 
-import com.example.myproject.exception.UserException;
+import jdk.jshell.spi.ExecutionControl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +21,7 @@ public class exControllerAdvice {
     }
 
     @ExceptionHandler
-    public ResponseEntity<ErrorResult> userExHandler(UserException e) {
+    public ResponseEntity<ErrorResult> userExHandler(ExecutionControl.UserException e) {
         log.error("[exceptionHandler] ex", e);
         ErrorResult errorResult = new ErrorResult("USER-EX", e.getMessage());
         return new ResponseEntity(errorResult, HttpStatus.BAD_REQUEST);

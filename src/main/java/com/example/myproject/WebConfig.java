@@ -2,6 +2,8 @@ package com.example.myproject;
 
 import com.example.myproject.interceptor.LogInterceptor;
 import com.example.myproject.interceptor.LoginCheckInterceptor;
+import com.example.myproject.logtrage.LogTrace;
+import com.example.myproject.logtrage.ThreadLocalLogTrace;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -20,6 +22,10 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class WebConfig implements WebMvcConfigurer {
 
+    @Bean
+    public LogTrace logTrace() {
+        return new ThreadLocalLogTrace();
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
