@@ -1,10 +1,14 @@
 package com.example.myproject.logtrage;
 
+import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.util.Arrays;
 
+@Slf4j
 public class LogTraceAdvice implements MethodInterceptor {
 
     private final LogTrace logTrace;
@@ -18,8 +22,9 @@ public class LogTraceAdvice implements MethodInterceptor {
         TraceStatus status = null;
         try {
             Method method = invocation.getMethod();
+            Parameter[] parameters = method.getParameters();
             String message = method.getDeclaringClass().getSimpleName() + "." +
-                    method.getName() + "()";
+                    method.getName() + "(" + Arrays.stream(parameters).toList() + ")";
             status = logTrace.begin(message);
 
             //로직 호출
