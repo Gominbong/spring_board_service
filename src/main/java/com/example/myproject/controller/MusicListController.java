@@ -60,24 +60,16 @@ public class MusicListController {
     public String selectSort(SearchSortDto searchSortDto,
                              HttpServletRequest request, Model model,
                              @RequestParam(value = "page", defaultValue = "0") int page){
-        log.info(" 디티오 확인1 = {}", searchSortDto.getSortType());
-        log.info(" 디티오 확인2 = {}", searchSortDto.getSearchType());
-        log.info(" 디티오 확인3 = {}", searchSortDto.getSearch());
 
         model.addAttribute("menu", "home");
         model.addAttribute("searchDto", searchSortDto);
-        log.info("셀릭트창 확인 = {} " , searchSortDto.getSearchType());
         HttpSession session = request.getSession();
         String loginId = (String) session.getAttribute("loginId");
         model.addAttribute("loginId", loginId);
-
         Page<MusicList> paging = musicListService.musicListSearchSort(page, searchSortDto);
         musicListService.pageStartEndNumber(page, paging, model);
-
         model.addAttribute("page", page);
         model.addAttribute("paging", paging);
-        log.info("전체 페이지수 확인 = '{}'", paging.getTotalPages());
-
 
         return "musicListSearchSortForm";
     }
@@ -89,12 +81,10 @@ public class MusicListController {
         String loginId = (String) session.getAttribute("loginId");
         model.addAttribute("loginId", loginId);
         model.addAttribute("menu", "home");
-        log.info("홈 정렬 디티오 확인 = {}", homeSortDto.getSortType());
         model.addAttribute("homeSortDto", homeSortDto);
         Page<MusicList> paging = musicListService.homeSort(page, homeSortDto);
         model.addAttribute("page", page);
         model.addAttribute("paging", paging);
-        log.info("전체 페이지수 확인 = '{}'", paging.getTotalPages());
         musicListService.pageStartEndNumber(page, paging, model);
 
         return "homeSortForm";
@@ -105,21 +95,13 @@ public class MusicListController {
                          HttpServletRequest request, Model model){
         model.addAttribute("menu", "home");
         model.addAttribute("searchDto", searchDto);
-
-        log.info("서치 dto 확인1 = {} " , searchDto.getSearchType());
-        log.info("서치 dto 확인2 = {} " , searchDto.getSortType());
-        log.info("서치 dto 확인3 = {} " , searchDto.getSearch());
         HttpSession session = request.getSession();
         String loginId = (String) session.getAttribute("loginId");
         model.addAttribute("loginId", loginId);
         model.addAttribute("searchDto", searchDto);
-
         Page<MusicList> paging = musicListService.musicListSearch(page, searchDto);
-
-
         model.addAttribute("page", page);
         model.addAttribute("paging", paging);
-        log.info("전체 페이지수 확인 = '{}'", paging.getTotalPages());
         musicListService.pageStartEndNumber(page, paging, model);
 
         return "musicListSearchForm";
@@ -128,7 +110,6 @@ public class MusicListController {
     @PostMapping("/commentEdit")
     public String commentEdit(CommentUpdateDto commentUpdateDto, HttpServletRequest request) {
         String referer = request.getHeader("Referer");
-        log.info("여기기기기기이 = {}", referer);
         commentService.commentEdit(commentUpdateDto);
 
         return "redirect:" + referer;
@@ -147,10 +128,6 @@ public class MusicListController {
         String referer = request.getHeader("Referer");
         HttpSession session = request.getSession();
         String loginId = (String) session.getAttribute("loginId");
-
-        log.info("대댓글 comment id 값 = {}", commentReplyFormDto.getCommentId());
-        log.info("대댓글 내용 = {}", commentReplyFormDto.getReplyContent());
-
         commentService.replyAdd(commentReplyFormDto, loginId);
 
         return "redirect:" + referer;
@@ -190,7 +167,6 @@ public class MusicListController {
         Member member = memberService.findByLoginId(loginId);
         List<Comment> commentList = commentService.findCommentList(id);
         model.addAttribute("commentList", commentList);
-        log.info("댓글 개수 확인해보기 = {}", commentList.size());
 
         if (likeCount != null){
             log.info("아이디1개당1개추천만가능합니다.");
@@ -225,8 +201,6 @@ public class MusicListController {
     @PostMapping("/deleteMusicList")
     public String deleteMusicList(MusicListDeleteDto musicListDeleteDto) {
         musicListService.deleteMusicList(musicListDeleteDto.getMusicListId());
-        log.info("삭제할 아이디값 확인 = {} ", musicListDeleteDto.getMusicListId());
-        log.info("논리적 삭제 완료 내용 필드값 null 업데이트해서 삭제 구분");
         return "redirect:/";
     }
 
@@ -235,7 +209,6 @@ public class MusicListController {
                                           MusicListUpdateDto musicListUpdateDto,
                                           HttpServletRequest request, Model model) {
 
-        log.info("업데이트 뮤직리스트 아이디 = {}", id);
         HttpSession session = request.getSession();
         String loginId = (String) session.getAttribute("loginId");
         model.addAttribute("loginId", loginId);
@@ -271,11 +244,9 @@ public class MusicListController {
     @GetMapping("/addMusicList")
     public String addMusicList(HttpServletRequest request, Model model) {
 
-        log.info("등록 페이지 입니다.");
         HttpSession session = request.getSession();
         String loginId = (String) session.getAttribute("loginId");
         model.addAttribute("loginId", loginId);
-        log.info("세션 로그인한 아이디 = '{}' ", loginId);
         model.addAttribute("musicListFormDto", new MusicListFormDto());
 
         return "musicList/addMusicListForm";
@@ -287,8 +258,6 @@ public class MusicListController {
         HttpSession session = request.getSession();
         String loginId = (String) session.getAttribute("loginId");
         model.addAttribute("loginId", loginId);
-        log.info("세션 로그인한 아이디 = '{}' ", loginId);
-
 
         Map<String, String> errors = musicListService.createAddItem(musicListFormDto, loginId);
         if (errors != null) {

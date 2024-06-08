@@ -9,12 +9,15 @@ import com.example.myproject.repository.MemberRepository;
 import com.example.myproject.repository.MusicListRepository;
 import com.example.myproject.repository.SellBuyListRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
+
 import java.time.LocalDateTime;
 
 @Service
@@ -72,4 +75,21 @@ public class SellBuyListService {
         return sellBuyListRepository.findMySellList(pageable, loginId);
     }
 
+    public void pageStartEndNumber(int page, Page<SellBuyList> paging, Model model) {
+        int temp = page / 7;
+        int start = temp * 7;
+        if (paging.getTotalPages() ==0 || paging.getTotalPages()==1){
+            model.addAttribute("start", 0);
+            model.addAttribute("end", 0);
+        }else if (start ==0 && paging.getTotalPages() <=7){
+            model.addAttribute("start", 0);
+            model.addAttribute("end", paging.getTotalPages() -1);
+        }else if (start != 0 && paging.getTotalPages() - start <=7){
+            model.addAttribute("start", start);
+            model.addAttribute("end", paging.getTotalPages()-1);
+        } else {
+            model.addAttribute("start", start);
+            model.addAttribute("end", start +6);
+        }
+    }
 }

@@ -31,7 +31,6 @@ public class LoginController {
                        HttpServletRequest request, Model model) {
         model.addAttribute("menu", "home");
         HttpSession session = request.getSession(false);
-        log.info("페이지 정보 확인 = '{}' ", page);
 
         if (session != null) {
             String loginId = (String) session.getAttribute("loginId");
@@ -42,7 +41,6 @@ public class LoginController {
         model.addAttribute("page", page);
         model.addAttribute("paging", paging);
         musicListService.pageStartEndNumber(page, paging, model);
-        log.info("전체 페이지수 확인 = '{}'", paging.getTotalPages());
 
         return "home";
     }

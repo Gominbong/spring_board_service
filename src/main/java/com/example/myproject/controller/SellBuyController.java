@@ -4,6 +4,7 @@ import com.example.myproject.domain.Member;
 import com.example.myproject.domain.SellBuyList;
 import com.example.myproject.dto.BuyMusicListDto;
 import com.example.myproject.service.MemberService;
+import com.example.myproject.service.MusicListService;
 import com.example.myproject.service.SellBuyListService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,6 +26,7 @@ public class SellBuyController {
 
     private final SellBuyListService sellBuyListService;
     private final MemberService memberService;
+    private final MusicListService musicListService;
 
     @PostMapping("/buyMusicList")
     public String buyComplete(BuyMusicListDto buyMusicListDto, HttpServletRequest request,
@@ -59,32 +61,9 @@ public class SellBuyController {
         Member member = memberService.findByLoginId(loginId);
         model.addAttribute("member", member);
         Page<SellBuyList> paging = sellBuyListService.findSellList(page, loginId);
+        sellBuyListService.pageStartEndNumber(page, paging, model);
         model.addAttribute("page", page);
         model.addAttribute("paging", paging);
-        log.info("전체 페이지수 확인 = '{}'", paging.getTotalPages());
-        int temp = page / 7;
-        int start = temp * 7;
-
-        if (paging.getTotalPages() == 0) {
-            log.info("여기11111 = {}", paging.getTotalPages());
-            model.addAttribute("start", start);
-            model.addAttribute("end", paging.getTotalPages());
-        } else if (paging.getTotalPages() - start > 7) {
-            log.info("여기22222 = {}", paging.getTotalPages());
-            model.addAttribute("start", start);
-            model.addAttribute("end", start + 6);
-        } else if (paging.getTotalPages() < 6){
-            log.info("여기33333 = {}", paging.getTotalPages());
-            model.addAttribute("start", start);
-            model.addAttribute("end", paging.getTotalPages()-1);
-        }
-
-
-
-        log.info("스타트 페이지 확인 해보기 = '{}' ", start);
-
-        log.info("스타트 페이지 확인 해보기 = '{}' ", start);
-
 
         return "musicList/sellMusicListForm";
     }
@@ -96,44 +75,10 @@ public class SellBuyController {
         HttpSession session = request.getSession();
         String loginId = (String) session.getAttribute("loginId");
         model.addAttribute("loginId", loginId);
-
-        log.info("페이지 정보 확인 = '{}' ", page);
-
         Page<SellBuyList> paging = sellBuyListService.findBuyList(page, loginId);
-
-        for (SellBuyList sellBuyList : paging) {
-            log.info("SellBuyList 테이블 기본키Id = {}", sellBuyList.getId());
-            log.info("SellBuyList 테이블 구매자아이디 = {}", sellBuyList.getBuyMember().getLoginId());
-            log.info("SellBuyList 테이블 판매자아이디 = {}", sellBuyList.getSellMember().getLoginId());
-            log.info("SellBuyList 테이블 구매판매시간 = {}", sellBuyList.getCreateTime());
-            log.info("SellBuyList 테이블 구매판매시간 = {}", sellBuyList.getMusicList());
-
-            log.info("MusicList 테이블 기본키Id = {}", sellBuyList.getMusicList().getId());
-            log.info("MusicList 테이블 제목 = {}", sellBuyList.getMusicList().getTitle());
-            log.info("MusicList 테이블 글쓴이닉네임 = {}", sellBuyList.getMusicList().getMember().getNickname());
-        }
-
+        sellBuyListService.pageStartEndNumber(page, paging, model);
         model.addAttribute("page", page);
         model.addAttribute("paging", paging);
-        log.info("전체 페이지수 확인 = '{}'", paging.getTotalPages());
-        int temp = page / 7;
-        int start = temp * 7;
-
-        if (paging.getTotalPages() == 0) {
-            log.info("여기11111 = {}", paging.getTotalPages());
-            model.addAttribute("start", start);
-            model.addAttribute("end", paging.getTotalPages());
-        } else if (paging.getTotalPages() - start > 7) {
-            log.info("여기22222 = {}", paging.getTotalPages());
-            model.addAttribute("start", start);
-            model.addAttribute("end", start + 6);
-        } else if (paging.getTotalPages() < 6){
-            log.info("여기33333 = {}", paging.getTotalPages());
-            model.addAttribute("start", start);
-            model.addAttribute("end", paging.getTotalPages()-1);
-        }
-
-        log.info("스타트 페이지 확인 해보기 = '{}' ", start);
 
 
         return "musicList/buyMusicListForm";

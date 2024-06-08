@@ -36,14 +36,11 @@ public class MyInfoController {
 
         HttpSession session = request.getSession();
         String loginId = (String)session.getAttribute("loginId");
-
-        log.info("장바구니체크 = {}", cartDto.toString());
         Member result = sellBuyListService.buyMusicList(cartDto.getMusicListId(), loginId);
         if (result != null){
             cartService.deleteCartList(cartDto.getCartListId());
         }
 
-        log.info("여여여여기기기");
         return "redirect:cart";
     }
 
@@ -68,7 +65,6 @@ public class MyInfoController {
 
     @PostMapping("/cartDeleteMulti")
     public String cartDeleteMulti(CartDeleteMultiDto cartDeleteMultiDto){
-        log.info("아아아아아아");
         log.info(cartDeleteMultiDto.toString());
         List<Long> cartListId = cartDeleteMultiDto.getCartListId();
         for (Long id : cartListId) {
@@ -109,9 +105,6 @@ public class MyInfoController {
             model.addAttribute("memberCash", memberCash);
         }
 
-        for (Cart cart : cartList) {
-            log.info("여기다 ={}", cart.getMusicList().getTitle());
-        }
         model.addAttribute("cartList", cartList);
 
         return "login/cartForm";
@@ -168,7 +161,6 @@ public class MyInfoController {
             model.addAttribute("member", member);
             return "login/myInfoForm";
         }
-
 
         return "redirect:myInfo";
     }
