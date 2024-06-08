@@ -2,6 +2,9 @@ package com.example.myproject;
 
 import com.example.myproject.interceptor.LogInterceptor;
 import com.example.myproject.interceptor.LoginCheckInterceptor;
+import com.example.myproject.logtrage.LogTrace;
+import com.example.myproject.logtrage.ThreadLocalLogTrace;
+import com.example.myproject.proxy.v6_aop.LogAspect;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;

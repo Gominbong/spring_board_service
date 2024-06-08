@@ -52,7 +52,7 @@ server:
     include-stacktrace: always
     include-binding-errors: always
     include-exception: true
-  port: 8082
+  port: 8081
 #    org.hibernate.type: trace
 
 
