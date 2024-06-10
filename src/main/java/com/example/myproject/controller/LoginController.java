@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import static com.example.myproject.controller.LoginMember.loginMember;
 
 @Controller
 @RequiredArgsConstructor
@@ -27,7 +28,7 @@ public class LoginController {
     private final MusicListService musicListService;
 
     @GetMapping("/")
-    public String home(@RequestParam(value = "page", defaultValue = "0") int page,
+    public String home(@CookieValue(value = "loginId",required = false) String url, @RequestParam(value = "page", defaultValue = "0") int page,
                        HttpServletRequest request, Model model) {
         model.addAttribute("menu", "home");
         HttpSession session = request.getSession(false);
@@ -37,6 +38,9 @@ public class LoginController {
             model.addAttribute("loginId", loginId);
         }
 
+        for (String s : loginMember.keySet()) {
+            log.info("해시맵 확인 = {}", s);
+        }
         Page<MusicList> paging = musicListService.findMusicList(page);
         model.addAttribute("page", page);
         model.addAttribute("paging", paging);
@@ -46,7 +50,7 @@ public class LoginController {
     }
 
     @GetMapping("/loginInterceptor")
-    public String loginInterceptor(Model model, HttpServletRequest request, HttpServletResponse response) {
+    public String loginInterceptor(Model model) {
 
         model.addAttribute("loginFormDto", new LoginFormDto());
         return "login/loginForm";
@@ -88,7 +92,7 @@ public class LoginController {
 
     @PostMapping("/login")
     public String login(@CookieValue("url") String url, @Valid LoginFormDto loginFormDto,
-                               BindingResult bindingResult, HttpServletRequest request) {
+                               BindingResult bindingResult, HttpServletRequest request, HttpServletResponse response) {
         Member result = loginService.login(loginFormDto);
         if (bindingResult.hasErrors()) {
             return "login/loginForm";
@@ -99,8 +103,11 @@ public class LoginController {
             return "login/loginForm";
         }
 
+        loginMember.put(loginFormDto.getId(), loginFormDto.getId());
         HttpSession session = request.getSession();
         session.setAttribute("loginId", loginFormDto.getId());
+        Cookie cookie = new Cookie("loginId", loginFormDto.getId());
+        response.addCookie(cookie);
 
         if (url.contains("signup")){
             return "redirect:/";
@@ -117,10 +124,16 @@ public class LoginController {
         String referer = request.getHeader("Referer");
         HttpSession session = request.getSession(false);
         if (session != null) {
+            String loginId = (String)session.getAttribute("loginId");
             session.invalidate();
+            loginMember.remove(loginId);
+            Cookie cookie = new Cookie("loginId", null);
+            cookie.setMaxAge(0);
+            response.addCookie(cookie);
             log.info("세션 로그아웃 되었습니다");
         }
 
         return "redirect:" + referer ;
     }
+
 }

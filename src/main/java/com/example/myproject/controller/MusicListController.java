@@ -4,6 +4,7 @@ import com.example.myproject.domain.*;
 import com.example.myproject.dto.*;
 import com.example.myproject.service.*;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -154,9 +155,8 @@ public class MusicListController {
 
     @GetMapping("/content")
     public String content(@RequestParam("musicListId") Long id, Model model,
-                              HttpServletRequest request)
+                          HttpServletRequest request, HttpServletResponse response)
             throws MalformedURLException {
-
         HttpSession session = request.getSession();
         String loginId = (String) session.getAttribute("loginId");
         model.addAttribute("loginId", loginId);

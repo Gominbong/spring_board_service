@@ -2,9 +2,6 @@ package com.example.myproject;
 
 import com.example.myproject.interceptor.LogInterceptor;
 import com.example.myproject.interceptor.LoginCheckInterceptor;
-import com.example.myproject.logtrage.LogTrace;
-import com.example.myproject.logtrage.ThreadLocalLogTrace;
-import com.example.myproject.proxy.v6_aop.LogAspect;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -15,7 +12,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
