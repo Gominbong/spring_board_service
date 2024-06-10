@@ -5,9 +5,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.util.WebUtils;
+
+import java.util.Objects;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -17,10 +22,14 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
         String requestURI = request.getRequestURI();
-        log.info("로그인 체크 인터셉터 실행 '{}'", requestURI);
-        HttpSession session = request.getSession();
-        if (session.getAttribute("loginId") == null) {
-            log.info("세션에 loginId 값이 없음 로그인하세요");
+
+        HttpSession session = request.getSession(false);
+        Cookie jwtCookie = WebUtils.getCookie(request, "jwtToken");
+
+        if (session == null && jwtCookie == null) {
+            log.info("세션 쿠키 값이 없음 로그인하세요");
+            log.info("jwt 쿠키 값이 없음 로그인하세요");
+
             Cookie cookie = new Cookie("url", requestURI);
             response.addCookie(cookie);
             response.sendRedirect("/loginInterceptor");
@@ -34,4 +43,5 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
 
     }
+
 }

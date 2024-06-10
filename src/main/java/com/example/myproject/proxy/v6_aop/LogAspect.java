@@ -7,16 +7,14 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
+
 @Aspect
 @Slf4j
 @Component
 public class LogAspect {
 
-    @Pointcut("execution(* com.example.myproject..*(..))")
-    public void allOrder(){}
     @Pointcut("execution(* *..*Repository.*(..))")
     private void allService(){}
-
 
     @Around("allService()")
     public Object doTransaction(ProceedingJoinPoint joinPoint) throws Throwable {

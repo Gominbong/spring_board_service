@@ -3,9 +3,13 @@ package com.example.myproject.controller;
 import com.example.myproject.domain.*;
 import com.example.myproject.dto.*;
 import com.example.myproject.service.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
@@ -16,6 +20,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.WebUtils;
+import javax.crypto.SecretKey;
 import java.net.MalformedURLException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -33,6 +39,7 @@ public class MusicListController {
     private final MemberService memberService;
     private final LikeCountService likeCountService;
     private final CommentService commentService;
+    private final LoginService loginService;
 
     @PostMapping("/download")
     public ResponseEntity<Resource> downloadAttach(DownloadDto downloadDto) throws MalformedURLException {
@@ -62,11 +69,13 @@ public class MusicListController {
                              HttpServletRequest request, Model model,
                              @RequestParam(value = "page", defaultValue = "0") int page){
 
-        model.addAttribute("menu", "home");
+        String loginId = loginService.loginIdCheck(request);
+        log.info("로그인아이디static 확인 = {}", loginId);
+        if (loginId != null){
+            model.addAttribute("loginId", loginId);
+        }
+
         model.addAttribute("searchDto", searchSortDto);
-        HttpSession session = request.getSession();
-        String loginId = (String) session.getAttribute("loginId");
-        model.addAttribute("loginId", loginId);
         Page<MusicList> paging = musicListService.musicListSearchSort(page, searchSortDto);
         musicListService.pageStartEndNumber(page, paging, model);
         model.addAttribute("page", page);
@@ -78,10 +87,13 @@ public class MusicListController {
     @GetMapping("/homeSort")
     public String homeSort(HomeSortDto homeSortDto, HttpServletRequest request, Model model,
                        @RequestParam(value = "page", defaultValue = "0") int page){
-        HttpSession session = request.getSession();
-        String loginId = (String) session.getAttribute("loginId");
-        model.addAttribute("loginId", loginId);
-        model.addAttribute("menu", "home");
+
+        String loginId = loginService.loginIdCheck(request);
+        log.info("로그인아이디static 확인 = {}", loginId);
+        if (loginId != null){
+            model.addAttribute("loginId", loginId);
+        }
+
         model.addAttribute("homeSortDto", homeSortDto);
         Page<MusicList> paging = musicListService.homeSort(page, homeSortDto);
         model.addAttribute("page", page);
@@ -94,11 +106,14 @@ public class MusicListController {
     @GetMapping("/search")
     public String search(SearchDto searchDto, @RequestParam(value = "page", defaultValue = "0") int page,
                          HttpServletRequest request, Model model){
-        model.addAttribute("menu", "home");
+
+        String loginId = loginService.loginIdCheck(request);
+        log.info("로그인아이디static 확인 = {}", loginId);
+        if (loginId != null){
+            model.addAttribute("loginId", loginId);
+        }
+
         model.addAttribute("searchDto", searchDto);
-        HttpSession session = request.getSession();
-        String loginId = (String) session.getAttribute("loginId");
-        model.addAttribute("loginId", loginId);
         model.addAttribute("searchDto", searchDto);
         Page<MusicList> paging = musicListService.musicListSearch(page, searchDto);
         model.addAttribute("page", page);
@@ -127,8 +142,9 @@ public class MusicListController {
     @PostMapping("replyAdd")
     public String replyAdd(CommentReplyFormDto commentReplyFormDto, HttpServletRequest request){
         String referer = request.getHeader("Referer");
-        HttpSession session = request.getSession();
-        String loginId = (String) session.getAttribute("loginId");
+
+        String loginId = loginService.loginIdCheck(request);
+        log.info("로그인아이디static 확인 = {}", loginId);
         commentService.replyAdd(commentReplyFormDto, loginId);
 
         return "redirect:" + referer;
@@ -137,8 +153,10 @@ public class MusicListController {
     @PostMapping("/comment")
     public String commentAdd(CommentFormDto commentFormDto, HttpServletRequest request){
         String referer = request.getHeader("Referer");
-        HttpSession session = request.getSession();
-        String loginId = (String) session.getAttribute("loginId");
+
+        String loginId = loginService.loginIdCheck(request);
+        log.info("로그인아이디static 확인 = {}", loginId);
+
         List<Comment> commentList = commentService.findCommentList(commentFormDto.getMusicListId());
         if (commentList.isEmpty()){
             int parent = 0;
@@ -157,9 +175,19 @@ public class MusicListController {
     public String content(@RequestParam("musicListId") Long id, Model model,
                           HttpServletRequest request, HttpServletResponse response)
             throws MalformedURLException {
-        HttpSession session = request.getSession();
-        String loginId = (String) session.getAttribute("loginId");
-        model.addAttribute("loginId", loginId);
+
+        String loginId = loginService.loginIdCheck(request);
+        log.info("로그인아이디2확인해보자 = {}", loginId);
+        if (loginId != null){
+            model.addAttribute("loginId", loginId);
+        }
+        Cookie jwtCookie = WebUtils.getCookie(request, "jwtToken");
+        if (jwtCookie != null){
+            SecretKey key = Keys.hmacShaKeyFor("c3ByaW5nYm9vdC1qd3QtdHV0b3JpYWwtc3ByaW5nYm9vdC1qd3QtdHV0b3JpYWwtc3ByaW5nYm9vdC1qd3QtdHV0b3JpYWwK".getBytes(StandardCharsets.UTF_8));
+            Jws<Claims> claimsJws = Jwts.parser().verifyWith(key).build().parseSignedClaims(jwtCookie.getValue());
+            model.addAttribute("loginId",claimsJws.getPayload().getSubject());
+        }
+
         LikeCount likeCount = likeCountService.findMyLike(id, loginId);
         MusicList musicList = musicListService.findById(id);
         List<FileList> fileList = fileListService.findByFiles(id);
@@ -204,13 +232,15 @@ public class MusicListController {
     }
 
     @PostMapping("/EditMusicList")
-    public String updateMusicListComplete(@RequestParam("musicListId") Long id,
-                                          MusicListUpdateDto musicListUpdateDto,
-                                          HttpServletRequest request, Model model) {
+    public String updateMusicListComplete(@RequestParam("musicListId") Long id, HttpServletRequest request,
+                                          MusicListUpdateDto musicListUpdateDto, Model model) {
 
-        HttpSession session = request.getSession();
-        String loginId = (String) session.getAttribute("loginId");
-        model.addAttribute("loginId", loginId);
+        String loginId = loginService.loginIdCheck(request);
+        log.info("로그인아이디static 확인 = {}", loginId);
+        if (loginId != null){
+            model.addAttribute("loginId", loginId);
+        }
+
         model.addAttribute("musicListId", id);
         List<FileList> fileList = fileListService.findByFiles(id);
         Map<String, String> errors = musicListService.updateMusicList(id, musicListUpdateDto);
@@ -227,9 +257,12 @@ public class MusicListController {
     public String updateMusicList(@RequestParam("musicListId") Long id, HttpServletRequest request,
                                   Model model) {
 
-        HttpSession session = request.getSession();
-        String loginId = (String) session.getAttribute("loginId");
-        model.addAttribute("loginId", loginId);
+        String loginId = loginService.loginIdCheck(request);
+        log.info("로그인아이디static 확인 = {}", loginId);
+        if (loginId != null){
+            model.addAttribute("loginId", loginId);
+        }
+
         MusicListUpdateDto musicListUpdateDto = musicListService.setMusicListUpdateDto(id);
         List<FileList> fileList = fileListService.findByFiles(id);
 
@@ -243,9 +276,12 @@ public class MusicListController {
     @GetMapping("/addMusicList")
     public String addMusicList(HttpServletRequest request, Model model) {
 
-        HttpSession session = request.getSession();
-        String loginId = (String) session.getAttribute("loginId");
-        model.addAttribute("loginId", loginId);
+        String loginId = loginService.loginIdCheck(request);
+        log.info("로그인아이디static 확인 = {}", loginId);
+        if (loginId != null){
+            model.addAttribute("loginId", loginId);
+        }
+
         model.addAttribute("musicListFormDto", new MusicListFormDto());
 
         return "musicList/addMusicListForm";
@@ -254,9 +290,11 @@ public class MusicListController {
     @PostMapping("/addMusicList")
     public String addMusicList(MusicListFormDto musicListFormDto, HttpServletRequest request, Model model) {
 
-        HttpSession session = request.getSession();
-        String loginId = (String) session.getAttribute("loginId");
-        model.addAttribute("loginId", loginId);
+        String loginId = loginService.loginIdCheck(request);
+        log.info("로그인아이디static 확인 = {}", loginId);
+        if (loginId != null){
+            model.addAttribute("loginId", loginId);
+        }
 
         Map<String, String> errors = musicListService.createAddItem(musicListFormDto, loginId);
         if (errors != null) {
@@ -267,12 +305,13 @@ public class MusicListController {
         return "redirect:/";
     }
 
-
     @PostMapping("/likeCount")
     public String likeCount(LikeCountDto likeCountDto, HttpServletRequest request){
         String referer = request.getHeader("Referer");
-        HttpSession session = request.getSession();
-        String loginId = (String)session.getAttribute("loginId");
+
+        String loginId = loginService.loginIdCheck(request);
+        log.info("로그인아이디static 확인 = {}", loginId);
+
         LikeCount like = likeCountService.like(likeCountDto.getMusicListId(), loginId);
         if (like != null){
             log.info("추천 성공");

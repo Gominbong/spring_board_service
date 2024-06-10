@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.WebUtils;
 import static com.example.myproject.controller.LoginMember.loginMember;
 
 @Controller
@@ -30,17 +31,17 @@ public class LoginController {
     @GetMapping("/")
     public String home(@RequestParam(value = "page", defaultValue = "0") int page,
                        HttpServletRequest request, Model model) {
-        model.addAttribute("menu", "home");
-        HttpSession session = request.getSession(false);
 
-        if (session != null) {
-            String loginId = (String) session.getAttribute("loginId");
+        String loginId = loginService.loginIdCheck(request);
+        log.info("로그인아이디static 확인 = {}", loginId);
+        if (loginId != null){
             model.addAttribute("loginId", loginId);
         }
 
         for (String s : loginMember.keySet()) {
-            log.info("해시맵 확인 = {}", s);
+            log.info("로그인 중인 멤버 = {}", s);
         }
+
         Page<MusicList> paging = musicListService.findMusicList(page);
         model.addAttribute("page", page);
         model.addAttribute("paging", paging);
@@ -58,7 +59,8 @@ public class LoginController {
 
     @PostMapping("/loginInterceptor")
     public String loginInterceptor(@CookieValue("url") String url, @Valid LoginFormDto loginFormDto,
-                               BindingResult bindingResult, HttpServletRequest request) {
+                               BindingResult bindingResult, HttpServletRequest request,
+                                   HttpServletResponse response) {
         Member result = loginService.login(loginFormDto);
         if (bindingResult.hasErrors()) {
             return "login/loginForm";
@@ -69,8 +71,13 @@ public class LoginController {
             return "login/loginForm";
         }
 
+        loginService.createJwt(loginFormDto, request, response);
+        loginMember.put(loginFormDto.getId(), loginFormDto.getId());
+
         HttpSession session = request.getSession();
         session.setAttribute("loginId", loginFormDto.getId());
+
+
 
         boolean signup = url.contains("signup");
         if (signup){
@@ -93,6 +100,7 @@ public class LoginController {
     @PostMapping("/login")
     public String login(@CookieValue("url") String url, @Valid LoginFormDto loginFormDto,
                                BindingResult bindingResult, HttpServletRequest request, HttpServletResponse response) {
+
         Member result = loginService.login(loginFormDto);
         if (bindingResult.hasErrors()) {
             return "login/loginForm";
@@ -103,13 +111,11 @@ public class LoginController {
             return "login/loginForm";
         }
 
+        loginService.createJwt(loginFormDto, request, response);
         loginMember.put(loginFormDto.getId(), loginFormDto.getId());
-
 
         HttpSession session = request.getSession();
         session.setAttribute("loginId", loginFormDto.getId());
-
-        String jwt = loginService.createJwt(loginFormDto, request, response);
 
         if (url.contains("signup")){
             return "redirect:/";
@@ -123,8 +129,15 @@ public class LoginController {
 
     @PostMapping("/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) {
-
         String referer = request.getHeader("Referer");
+
+        Cookie jwtCookie = WebUtils.getCookie(request, "jwtToken");
+        if (jwtCookie != null){
+            jwtCookie.setMaxAge(0);
+            response.addCookie(jwtCookie);
+            log.info("jwt 로그아웃 되었습니다");
+        }
+
         HttpSession session = request.getSession(false);
         if (session != null) {
             String loginId = (String)session.getAttribute("loginId");
@@ -132,6 +145,7 @@ public class LoginController {
             loginMember.remove(loginId);
             log.info("세션 로그아웃 되었습니다");
         }
+        loginService.logout();
 
         return "redirect:" + referer ;
     }

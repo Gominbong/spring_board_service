@@ -19,7 +19,7 @@ public class MyInfoService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public Map<String, String> myInfoEdit(MyInfoEditDto myInfoEditDto, String loginId) {
+    public Map<String, String> myInfoNicknameEdit(MyInfoEditDto myInfoEditDto, String loginId) {
 
         Map<String, String> errors = new HashMap<>();
         if (!StringUtils.hasText(myInfoEditDto.getNickname())){

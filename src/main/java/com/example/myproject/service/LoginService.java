@@ -1,5 +1,6 @@
 package com.example.myproject.service;
 
+import com.example.myproject.controller.LoginController;
 import com.example.myproject.domain.Member;
 import com.example.myproject.dto.LoginFormDto;
 import com.example.myproject.repository.MemberRepository;
@@ -10,10 +11,12 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.WebUtils;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
@@ -26,6 +29,15 @@ public class LoginService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+    private static String loginId = null;
+
+    public static void setLoginId(String loginId) {
+        LoginService.loginId = loginId;
+    }
+
+    public static String getLoginId() {
+        return loginId;
+    }
 
     public Member login(LoginFormDto loginFormDto) {
 
@@ -45,24 +57,23 @@ public class LoginService {
 
     public String createJwt(LoginFormDto loginFormDto, HttpServletRequest request, HttpServletResponse response) {
 
-        String signatureSecretKey = "c3ByaW5nYm9vdC1qd3QtdHV0b3JpYWwtc3ByaW5nYm9vdC1qd3QtdHV0b3JpYWwtc3ByaW5nYm9vdC1qd3QtdHV0b3JpYWwK";
-        SecretKey key = Keys.hmacShaKeyFor(signatureSecretKey.getBytes(StandardCharsets.UTF_8));
+        SecretKey key = Keys.hmacShaKeyFor("c3ByaW5nYm9vdC1qd3QtdHV0b3JpYWwtc3ByaW5nYm9vdC1qd3QtdHV0b3JpYWwtc3ByaW5nYm9vdC1qd3QtdHV0b3JpYWwK".getBytes(StandardCharsets.UTF_8));
         long expiredTime = 1000 * 60L * 30L; // 토큰 유효 시간 (30분)
         Date ext = new Date();
-        ext.setTime(ext.getTime() + expiredTime );
+        ext.setTime(ext.getTime() + expiredTime);
 
         String jwt = Jwts.builder()
                 .header()
                 .keyId("jwt")
                 .and()
                 .subject(loginFormDto.getId())
-                .signWith(key,Jwts.SIG.HS512)
+                .signWith(key, Jwts.SIG.HS512)
                 .expiration(ext)
                 .compact();
         log.info("jwt 생성 = {}", jwt);
-        Cookie cookie = new Cookie("jwt",jwt);
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
+        Cookie cookie = new Cookie("jwtToken", jwt);
+        cookie.setHttpOnly(false);
+        cookie.setSecure(false);
         response.addCookie(cookie);
 
         Jws<Claims> claimsJws = Jwts.parser().verifyWith(key).build().parseSignedClaims(jwt);
@@ -74,11 +85,30 @@ public class LoginService {
         return jwt;
 
     }
+
+    public String loginIdCheck(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            LoginService.loginId = (String) session.getAttribute("loginId");
+            log.info("세션 로그인 id = {}", loginId);
+        }
+
+        Cookie jwtCookie = WebUtils.getCookie(request, "jwtToken");
+        if (jwtCookie != null) {
+            SecretKey key = Keys.hmacShaKeyFor("c3ByaW5nYm9vdC1qd3QtdHV0b3JpYWwtc3ByaW5nYm9vdC1qd3QtdHV0b3JpYWwtc3ByaW5nYm9vdC1qd3QtdHV0b3JpYWwK".getBytes(StandardCharsets.UTF_8));
+            Jws<Claims> claimsJws = Jwts.parser().verifyWith(key).build().parseSignedClaims(jwtCookie.getValue());
+            LoginService.loginId = claimsJws.getPayload().getSubject();
+            log.info("jwt 로그인 아이디 = {}", loginId);
+        }
+        return LoginService.loginId;
+    }
+
+    public void logout(){
+        loginId = null;
+        log.info("로그아웃 완료 = {}", loginId);
+    }
+
 }
-
-
-
-
 
 
 
