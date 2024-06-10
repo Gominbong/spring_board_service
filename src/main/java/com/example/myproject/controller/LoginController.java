@@ -28,7 +28,7 @@ public class LoginController {
     private final MusicListService musicListService;
 
     @GetMapping("/")
-    public String home(@CookieValue(value = "loginId",required = false) String url, @RequestParam(value = "page", defaultValue = "0") int page,
+    public String home(@RequestParam(value = "page", defaultValue = "0") int page,
                        HttpServletRequest request, Model model) {
         model.addAttribute("menu", "home");
         HttpSession session = request.getSession(false);
@@ -104,13 +104,12 @@ public class LoginController {
         }
 
         loginMember.put(loginFormDto.getId(), loginFormDto.getId());
+
+
         HttpSession session = request.getSession();
         session.setAttribute("loginId", loginFormDto.getId());
-        Cookie cookie = new Cookie("loginId", loginFormDto.getId());
-        cookie.setHttpOnly(true);
-            cookie.setSecure(true);
-        response.addCookie(cookie);
 
+        String jwt = loginService.createJwt(loginFormDto, request, response);
 
         if (url.contains("signup")){
             return "redirect:/";
@@ -118,6 +117,7 @@ public class LoginController {
         if (url.contains("login")){
             return "redirect:/";
         }
+
         return "redirect:" + url;
     }
 
@@ -130,9 +130,6 @@ public class LoginController {
             String loginId = (String)session.getAttribute("loginId");
             session.invalidate();
             loginMember.remove(loginId);
-            Cookie cookie = new Cookie("loginId", null);
-            cookie.setMaxAge(0);
-            response.addCookie(cookie);
             log.info("세션 로그아웃 되었습니다");
         }
 
