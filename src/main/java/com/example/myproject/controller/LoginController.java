@@ -107,7 +107,10 @@ public class LoginController {
         HttpSession session = request.getSession();
         session.setAttribute("loginId", loginFormDto.getId());
         Cookie cookie = new Cookie("loginId", loginFormDto.getId());
+        cookie.setHttpOnly(true);
+            cookie.setSecure(true);
         response.addCookie(cookie);
+
 
         if (url.contains("signup")){
             return "redirect:/";

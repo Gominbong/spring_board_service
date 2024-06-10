@@ -169,7 +169,6 @@ public class MusicListController {
         model.addAttribute("commentList", commentList);
 
         if (likeCount != null){
-            log.info("아이디1개당1개추천만가능합니다.");
             model.addAttribute("likeCount", 1);
         }else{
             model.addAttribute("likeCount", 0);
