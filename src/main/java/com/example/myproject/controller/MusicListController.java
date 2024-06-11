@@ -65,11 +65,11 @@ public class MusicListController {
     }
 
     @GetMapping("/searchSort")
-    public String selectSort(SearchSortDto searchSortDto,
+    public String selectSort(SearchSortDto searchSortDto, HttpServletResponse response,
                              HttpServletRequest request, Model model,
                              @RequestParam(value = "page", defaultValue = "0") int page){
 
-        String loginId = loginService.loginIdCheck(request);
+        String loginId = loginService.loginIdCheck(request, response);
         log.info("로그인아이디static 확인 = {}", loginId);
         if (loginId != null){
             model.addAttribute("loginId", loginId);
@@ -86,9 +86,10 @@ public class MusicListController {
 
     @GetMapping("/homeSort")
     public String homeSort(HomeSortDto homeSortDto, HttpServletRequest request, Model model,
+                           HttpServletResponse response,
                        @RequestParam(value = "page", defaultValue = "0") int page){
 
-        String loginId = loginService.loginIdCheck(request);
+        String loginId = loginService.loginIdCheck(request, response);
         log.info("로그인아이디static 확인 = {}", loginId);
         if (loginId != null){
             model.addAttribute("loginId", loginId);
@@ -105,9 +106,10 @@ public class MusicListController {
 
     @GetMapping("/search")
     public String search(SearchDto searchDto, @RequestParam(value = "page", defaultValue = "0") int page,
+                         HttpServletResponse response,
                          HttpServletRequest request, Model model){
 
-        String loginId = loginService.loginIdCheck(request);
+        String loginId = loginService.loginIdCheck(request, response);
         log.info("로그인아이디static 확인 = {}", loginId);
         if (loginId != null){
             model.addAttribute("loginId", loginId);
@@ -140,10 +142,11 @@ public class MusicListController {
     }
 
     @PostMapping("replyAdd")
-    public String replyAdd(CommentReplyFormDto commentReplyFormDto, HttpServletRequest request){
+    public String replyAdd(CommentReplyFormDto commentReplyFormDto, HttpServletRequest request,
+                           HttpServletResponse response){
         String referer = request.getHeader("Referer");
 
-        String loginId = loginService.loginIdCheck(request);
+        String loginId = loginService.loginIdCheck(request, response);
         log.info("로그인아이디static 확인 = {}", loginId);
         commentService.replyAdd(commentReplyFormDto, loginId);
 
@@ -151,10 +154,10 @@ public class MusicListController {
     }
 
     @PostMapping("/comment")
-    public String commentAdd(CommentFormDto commentFormDto, HttpServletRequest request){
+    public String commentAdd(CommentFormDto commentFormDto, HttpServletRequest request, HttpServletResponse response){
         String referer = request.getHeader("Referer");
 
-        String loginId = loginService.loginIdCheck(request);
+        String loginId = loginService.loginIdCheck(request, response);
         log.info("로그인아이디static 확인 = {}", loginId);
 
         List<Comment> commentList = commentService.findCommentList(commentFormDto.getMusicListId());
@@ -176,7 +179,7 @@ public class MusicListController {
                           HttpServletRequest request, HttpServletResponse response)
             throws MalformedURLException {
 
-        String loginId = loginService.loginIdCheck(request);
+        String loginId = loginService.loginIdCheck(request, response);
         log.info("로그인아이디2확인해보자 = {}", loginId);
         if (loginId != null){
             model.addAttribute("loginId", loginId);
@@ -233,9 +236,9 @@ public class MusicListController {
 
     @PostMapping("/EditMusicList")
     public String updateMusicListComplete(@RequestParam("musicListId") Long id, HttpServletRequest request,
-                                          MusicListUpdateDto musicListUpdateDto, Model model) {
+                                          MusicListUpdateDto musicListUpdateDto, Model model, HttpServletResponse response) {
 
-        String loginId = loginService.loginIdCheck(request);
+        String loginId = loginService.loginIdCheck(request, response);
         log.info("로그인아이디static 확인 = {}", loginId);
         if (loginId != null){
             model.addAttribute("loginId", loginId);
@@ -255,9 +258,9 @@ public class MusicListController {
 
     @PostMapping("/editMusicList")
     public String updateMusicList(@RequestParam("musicListId") Long id, HttpServletRequest request,
-                                  Model model) {
+                                  HttpServletResponse response, Model model) {
 
-        String loginId = loginService.loginIdCheck(request);
+        String loginId = loginService.loginIdCheck(request, response);
         log.info("로그인아이디static 확인 = {}", loginId);
         if (loginId != null){
             model.addAttribute("loginId", loginId);
@@ -274,9 +277,9 @@ public class MusicListController {
     }
 
     @GetMapping("/addMusicList")
-    public String addMusicList(HttpServletRequest request, Model model) {
+    public String addMusicList(HttpServletRequest request, Model model, HttpServletResponse response) {
 
-        String loginId = loginService.loginIdCheck(request);
+        String loginId = loginService.loginIdCheck(request, response);
         log.info("로그인아이디static 확인 = {}", loginId);
         if (loginId != null){
             model.addAttribute("loginId", loginId);
@@ -288,13 +291,17 @@ public class MusicListController {
     }
 
     @PostMapping("/addMusicList")
-    public String addMusicList(MusicListFormDto musicListFormDto, HttpServletRequest request, Model model) {
+    public String addMusicList(MusicListFormDto musicListFormDto, HttpServletRequest request, Model model,
+                               HttpServletResponse response) {
 
-        String loginId = loginService.loginIdCheck(request);
+        String loginId = loginService.loginIdCheck(request, response);
         log.info("로그인아이디static 확인 = {}", loginId);
         if (loginId != null){
             model.addAttribute("loginId", loginId);
+            
         }
+
+
 
         Map<String, String> errors = musicListService.createAddItem(musicListFormDto, loginId);
         if (errors != null) {
@@ -306,10 +313,10 @@ public class MusicListController {
     }
 
     @PostMapping("/likeCount")
-    public String likeCount(LikeCountDto likeCountDto, HttpServletRequest request){
+    public String likeCount(LikeCountDto likeCountDto, HttpServletRequest request, HttpServletResponse response){
         String referer = request.getHeader("Referer");
 
-        String loginId = loginService.loginIdCheck(request);
+        String loginId = loginService.loginIdCheck(request, response);
         log.info("로그인아이디static 확인 = {}", loginId);
 
         LikeCount like = likeCountService.like(likeCountDto.getMusicListId(), loginId);

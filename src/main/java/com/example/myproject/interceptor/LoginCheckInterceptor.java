@@ -1,5 +1,9 @@
 package com.example.myproject.interceptor;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -12,6 +16,8 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.WebUtils;
 
+import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 @Slf4j
@@ -25,7 +31,6 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
 
         HttpSession session = request.getSession(false);
         Cookie jwtCookie = WebUtils.getCookie(request, "jwtToken");
-
         if (session == null && jwtCookie == null) {
             log.info("세션 쿠키 값이 없음 로그인하세요");
             log.info("jwt 쿠키 값이 없음 로그인하세요");

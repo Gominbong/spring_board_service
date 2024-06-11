@@ -5,6 +5,7 @@ import com.example.myproject.domain.Member;
 import com.example.myproject.dto.*;
 import com.example.myproject.service.*;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -28,9 +29,9 @@ public class MyInfoController {
     private final LoginService loginService;
 
     @PostMapping("/cartBuy")
-    public String cartBuy(CartDto cartDto, HttpServletRequest request){
+    public String cartBuy(CartDto cartDto, HttpServletRequest request, HttpServletResponse response){
 
-        String loginId = loginService.loginIdCheck(request);
+        String loginId = loginService.loginIdCheck(request, response);
         log.info("로그인아이디static 확인 = {}", loginId);
 
         Member result = sellBuyListService.buyMusicList(cartDto.getMusicListId(), loginId);
@@ -42,9 +43,10 @@ public class MyInfoController {
     }
 
     @PostMapping("/cartBuyMulti")
-    public String cartBuyMulti(CartBuyMultiDto cartBuyMultiDto, HttpServletRequest request){
+    public String cartBuyMulti(CartBuyMultiDto cartBuyMultiDto, HttpServletRequest request,
+                               HttpServletResponse response){
 
-        String loginId = loginService.loginIdCheck(request);
+        String loginId = loginService.loginIdCheck(request, response);
         log.info("로그인아이디static 확인 = {}", loginId);
 
         log.info(cartBuyMultiDto.toString());
@@ -80,9 +82,10 @@ public class MyInfoController {
     }
 
     @PostMapping("/cartAdd")
-    public String cartAdd(@RequestParam("musicListId") Long id, HttpServletRequest request){
+    public String cartAdd(@RequestParam("musicListId") Long id, HttpServletRequest request
+            , HttpServletResponse response){
 
-        String loginId = loginService.loginIdCheck(request);
+        String loginId = loginService.loginIdCheck(request, response);
         log.info("로그인아이디static 확인 = {}", loginId);
 
         cartService.createCart(id, loginId);
@@ -91,9 +94,9 @@ public class MyInfoController {
     }
 
     @GetMapping("/cart")
-    public String cart(HttpServletRequest request, Model model){
+    public String cart(HttpServletRequest request, Model model, HttpServletResponse response){
 
-        String loginId = loginService.loginIdCheck(request);
+        String loginId = loginService.loginIdCheck(request, response);
         log.info("로그인아이디static 확인 = {}", loginId);
         if (loginId != null){
             model.addAttribute("loginId", loginId);
@@ -114,20 +117,24 @@ public class MyInfoController {
     }
 
     @GetMapping("/myInfo")
-    public String myInfo(HttpServletRequest request, Model model) {
-        String loginId = loginService.loginIdCheck(request);
+    public String myInfo(HttpServletRequest request, Model model, HttpServletResponse response) {
+        String loginId = loginService.loginIdCheck(request, response);
         log.info("로그인아이디static 확인 = {}", loginId);
         if (loginId != null){
             model.addAttribute("loginId", loginId);
         }
+
+        Member member = memberService.findByLoginId(loginId);
+        model.addAttribute("member", member);
 
         return "login/myInfoForm";
     }
 
 
     @PostMapping("/myInfoEdit")
-    public String myInfoEdit(MyInfoEditDto myInfoEditDto, HttpServletRequest request, Model model){
-        String loginId = loginService.loginIdCheck(request);
+    public String myInfoEdit(MyInfoEditDto myInfoEditDto, HttpServletRequest request, Model model,
+                             HttpServletResponse response){
+        String loginId = loginService.loginIdCheck(request, response);
         log.info("로그인아이디static 확인 = {}", loginId);
         if (loginId != null){
             model.addAttribute("loginId", loginId);
@@ -149,9 +156,10 @@ public class MyInfoController {
 
 
     @PostMapping("/addCash")
-    public String addCash(AddCashDto addCashDto, HttpServletRequest request, Model model){
+    public String addCash(AddCashDto addCashDto, HttpServletRequest request, Model model,
+                          HttpServletResponse response){
 
-        String loginId = loginService.loginIdCheck(request);
+        String loginId = loginService.loginIdCheck(request, response);
         log.info("로그인아이디static 확인 = {}", loginId);
         if (loginId != null){
             model.addAttribute("loginId", loginId);

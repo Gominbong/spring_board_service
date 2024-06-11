@@ -86,21 +86,48 @@ public class LoginService {
 
     }
 
-    public String loginIdCheck(HttpServletRequest request) {
+    public String loginIdCheck(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession(false);
-        if (session != null) {
+        Cookie jwtCookie = WebUtils.getCookie(request, "jwtToken");
+
+        if (session != null && jwtCookie != null ) {
             LoginService.loginId = (String) session.getAttribute("loginId");
             log.info("세션 로그인 id = {}", loginId);
+
+            SecretKey key = Keys.hmacShaKeyFor("c3ByaW5nYm9vdC1qd3QtdHV0b3JpYWwtc3ByaW5nYm9vdC1qd3QtdHV0b3JpYWwtc3ByaW5nYm9vdC1qd3QtdHV0b3JpYWwK".getBytes(StandardCharsets.UTF_8));
+            try{
+                Jws<Claims> claimsJws = Jwts.parser().verifyWith(key).build().parseSignedClaims(jwtCookie.getValue());
+
+                log.info("jwt 만료 확인 = {}", claimsJws);
+            } catch (Exception e){
+                log.info("Jwt Exception 확인 = {}", e.toString());
+                log.info("Jwt 유효시간 초과 로그아웃 됨");
+                loginId = null;
+                return loginId;
+            }
+
+            long expiredTime = 1000 * 60L * 30L; // 토큰 유효 시간 (30분)
+            Date ext = new Date();
+            ext.setTime(ext.getTime() + expiredTime);
+
+            String jwt = Jwts.builder()
+                    .header()
+                    .keyId("jwt")
+                    .and()
+                    .subject(loginId)
+                    .signWith(key, Jwts.SIG.HS512)
+                    .expiration(ext)
+                    .compact();
+            log.info("jwt 생성 = {}", jwt);
+            Cookie cookie = new Cookie("jwtToken", jwt);
+            cookie.setHttpOnly(false);
+            cookie.setSecure(false);
+            response.addCookie(cookie);
+
         }
 
-        Cookie jwtCookie = WebUtils.getCookie(request, "jwtToken");
-        if (jwtCookie != null) {
-            SecretKey key = Keys.hmacShaKeyFor("c3ByaW5nYm9vdC1qd3QtdHV0b3JpYWwtc3ByaW5nYm9vdC1qd3QtdHV0b3JpYWwtc3ByaW5nYm9vdC1qd3QtdHV0b3JpYWwK".getBytes(StandardCharsets.UTF_8));
-            Jws<Claims> claimsJws = Jwts.parser().verifyWith(key).build().parseSignedClaims(jwtCookie.getValue());
-            LoginService.loginId = claimsJws.getPayload().getSubject();
-            log.info("jwt 로그인 아이디 = {}", loginId);
-        }
         return LoginService.loginId;
+
     }
 
     public void logout(){
