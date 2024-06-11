@@ -64,8 +64,8 @@ public class LoginService {
                 .compact();
         log.info("jwt 생성 = {}", jwt);
         Cookie cookie = new Cookie("jwtToken", jwt);
-        cookie.setHttpOnly(false);
-        cookie.setSecure(false);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
         response.addCookie(cookie);
 
         Jws<Claims> claimsJws = Jwts.parser().verifyWith(key).build().parseSignedClaims(jwt);

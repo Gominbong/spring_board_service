@@ -42,7 +42,7 @@ public class LoginController {
         model.addAttribute("page", page);
         model.addAttribute("paging", paging);
         musicListService.pageStartEndNumber(page, paging, model);
-        return "test";
+        return "home";
     }
 
     @GetMapping("/loginInterceptor")
