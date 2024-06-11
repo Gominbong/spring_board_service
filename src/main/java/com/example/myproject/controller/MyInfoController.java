@@ -160,6 +160,9 @@ public class MyInfoController {
                           HttpServletResponse response){
 
         String loginId = loginService.loginIdCheck(request, response);
+        if (loginId == null){
+            return "redirect:myInfo";
+        }
         log.info("로그인아이디static 확인 = {}", loginId);
         if (loginId != null){
             model.addAttribute("loginId", loginId);

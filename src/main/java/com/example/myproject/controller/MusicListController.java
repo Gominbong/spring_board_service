@@ -126,16 +126,26 @@ public class MusicListController {
     }
 
     @PostMapping("/commentEdit")
-    public String commentEdit(CommentUpdateDto commentUpdateDto, HttpServletRequest request) {
+    public String commentEdit(CommentUpdateDto commentUpdateDto, HttpServletRequest request,
+                              HttpServletResponse response) {
         String referer = request.getHeader("Referer");
+        String loginId = loginService.loginIdCheck(request, response);
+        if (loginId == null){
+            return "redirect:" + referer;
+        }
         commentService.commentEdit(commentUpdateDto);
 
         return "redirect:" + referer;
     }
 
     @PostMapping("/commentDelete")
-    public String commentDelete(CommentDeleteDto commentDeleteDto, HttpServletRequest request){
+    public String commentDelete(CommentDeleteDto commentDeleteDto, HttpServletRequest request,
+                                HttpServletResponse response){
         String referer = request.getHeader("Referer");
+        String loginId = loginService.loginIdCheck(request, response);
+        if (loginId == null){
+            return "redirect:" + referer;
+        }
         commentService.commentDelete(commentDeleteDto);
 
         return "redirect:" + referer;
@@ -147,6 +157,10 @@ public class MusicListController {
         String referer = request.getHeader("Referer");
 
         String loginId = loginService.loginIdCheck(request, response);
+        if (loginId == null){
+            return "redirect:" + referer;
+        }
+
         log.info("로그인아이디static 확인 = {}", loginId);
         commentService.replyAdd(commentReplyFormDto, loginId);
 
@@ -158,6 +172,9 @@ public class MusicListController {
         String referer = request.getHeader("Referer");
 
         String loginId = loginService.loginIdCheck(request, response);
+        if (loginId == null){
+            return "redirect:" + referer;
+        }
         log.info("로그인아이디static 확인 = {}", loginId);
 
         List<Comment> commentList = commentService.findCommentList(commentFormDto.getMusicListId());
