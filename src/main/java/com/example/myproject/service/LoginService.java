@@ -81,7 +81,7 @@ public class LoginService {
     public String loginIdCheck(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession(false);
         Cookie jwtCookie = WebUtils.getCookie(request, "jwtToken");
-        if (session != null && jwtCookie==null  ) {
+        if (session != null && jwtCookie!=null  ) {
             loginId = (String) session.getAttribute("loginId");
             log.info("세션 로그인 id = {}", loginId);
             try{
