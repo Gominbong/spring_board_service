@@ -37,7 +37,7 @@ public class LoginController {
         if (loginId != null){
             model.addAttribute("loginId", loginId);
         }
-
+        //dfdf
         for (String s : loginMember.keySet()) {
             log.info("로그인 중인 멤버 = {}", s);
         }
