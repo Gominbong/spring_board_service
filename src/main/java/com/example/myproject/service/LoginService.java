@@ -29,15 +29,7 @@ public class LoginService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
-    private static String loginId = null;
-
-    public static void setLoginId(String loginId) {
-        LoginService.loginId = loginId;
-    }
-
-    public static String getLoginId() {
-        return loginId;
-    }
+    private static String loginId;
 
     public Member login(LoginFormDto loginFormDto) {
 
@@ -87,7 +79,6 @@ public class LoginService {
     }
 
     public String loginIdCheck(HttpServletRequest request, HttpServletResponse response) {
-        loginId = null;
         HttpSession session = request.getSession(false);
         Cookie jwtCookie = WebUtils.getCookie(request, "jwtToken");
 
