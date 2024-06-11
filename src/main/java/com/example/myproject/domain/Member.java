@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -23,5 +24,7 @@ public class Member {
     private Integer cash;
     private Integer revenue;
     private String createTime;
+    private String refreshToken;
+
 
 }

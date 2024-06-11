@@ -5,6 +5,7 @@ import java.util.Map;
 
 public interface LoginMember {
 
-    Map<String, String> loginMember = new HashMap<>();
 
+
+    Map<String, String> loginMember = new HashMap<>();
 }
