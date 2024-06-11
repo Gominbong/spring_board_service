@@ -80,13 +80,12 @@ public class LoginService {
 
     public String loginIdCheck(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession(false);
-        Cookie jwtCookie = WebUtils.getCookie(request, "jwtToken");
-
-        if (session != null && jwtCookie != null ) {
+        //Cookie jwtCookie = WebUtils.getCookie(request, "jwtToken");
+        if (session != null  ) {
             LoginService.loginId = (String) session.getAttribute("loginId");
             log.info("세션 로그인 id = {}", loginId);
 
-            SecretKey key = Keys.hmacShaKeyFor("c3ByaW5nYm9vdC1qd3QtdHV0b3JpYWwtc3ByaW5nYm9vdC1qd3QtdHV0b3JpYWwtc3ByaW5nYm9vdC1qd3QtdHV0b3JpYWwK".getBytes(StandardCharsets.UTF_8));
+         /*   SecretKey key = Keys.hmacShaKeyFor("c3ByaW5nYm9vdC1qd3QtdHV0b3JpYWwtc3ByaW5nYm9vdC1qd3QtdHV0b3JpYWwtc3ByaW5nYm9vdC1qd3QtdHV0b3JpYWwK".getBytes(StandardCharsets.UTF_8));
             try{
                 Jws<Claims> claimsJws = Jwts.parser().verifyWith(key).build().parseSignedClaims(jwtCookie.getValue());
 
@@ -113,7 +112,7 @@ public class LoginService {
             Cookie cookie = new Cookie("jwtToken", jwt);
             cookie.setHttpOnly(false);
             cookie.setSecure(false);
-            response.addCookie(cookie);
+            response.addCookie(cookie);*/
 
         }
 

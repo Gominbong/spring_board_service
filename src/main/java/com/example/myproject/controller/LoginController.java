@@ -28,6 +28,7 @@ public class LoginController {
     private final LoginService loginService;
     private final MusicListService musicListService;
 
+
     @GetMapping("/")
     public String home(@RequestParam(value = "page", defaultValue = "0") int page,
                        HttpServletRequest request, Model model, HttpServletResponse response) {
@@ -104,7 +105,7 @@ public class LoginController {
             return "login/loginForm";
         }
 
-        loginService.createJwt(loginFormDto, request, response);
+        //loginService.createJwt(loginFormDto, request, response);
         loginMember.put(loginFormDto.getId(), loginFormDto.getId());
 
         HttpSession session = request.getSession();
@@ -125,6 +126,8 @@ public class LoginController {
         String referer = request.getHeader("Referer");
 
         Cookie jwtCookie = WebUtils.getCookie(request, "jwtToken");
+        jwtCookie.setMaxAge(0);
+        response.addCookie(jwtCookie);
         if (jwtCookie != null){
             jwtCookie.setMaxAge(0);
             response.addCookie(jwtCookie);
