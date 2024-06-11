@@ -18,7 +18,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.WebUtils;
-import static com.example.myproject.controller.LoginMember.loginMember;
 
 @Controller
 @RequiredArgsConstructor
@@ -33,21 +32,16 @@ public class LoginController {
     public String home(@RequestParam(value = "page", defaultValue = "0") int page,
                        HttpServletRequest request, Model model, HttpServletResponse response) {
 
-     /*   String loginId = loginService.loginIdCheck(request, response);
+        String loginId = loginService.loginIdCheck(request, response);
         log.info("로그인아이디static 확인 = {}", loginId);
         if (loginId != null){
             model.addAttribute("loginId", loginId);
-        }
-
-        for (String s : loginMember.keySet()) {
-            log.info("로그인 중인 멤버 = {}", s);
         }
 
         Page<MusicList> paging = musicListService.findMusicList(page);
         model.addAttribute("page", page);
         model.addAttribute("paging", paging);
         musicListService.pageStartEndNumber(page, paging, model);
-*/
         return "test";
     }
 
@@ -73,7 +67,6 @@ public class LoginController {
         }
 
         loginService.createJwt(loginFormDto, request, response);
-        loginMember.put(loginFormDto.getId(), loginFormDto.getId());
 
         HttpSession session = request.getSession();
         session.setAttribute("loginId", loginFormDto.getId());
@@ -106,7 +99,6 @@ public class LoginController {
         }
 
         loginService.createJwt(loginFormDto, request, response);
-        loginMember.put(loginFormDto.getId(), loginFormDto.getId());
 
         HttpSession session = request.getSession();
         session.setAttribute("loginId", loginFormDto.getId());
@@ -136,7 +128,6 @@ public class LoginController {
         if (session != null) {
             String loginId = (String)session.getAttribute("loginId");
             session.invalidate();
-            loginMember.remove(loginId);
             log.info("세션 로그아웃 되었습니다");
         }
         loginService.logout();
