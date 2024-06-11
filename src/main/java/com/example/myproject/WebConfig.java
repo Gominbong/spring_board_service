@@ -29,7 +29,6 @@ public class WebConfig implements WebMvcConfigurer {
         TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
     }
 
-
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
         CacheControl cacheControl = CacheControl

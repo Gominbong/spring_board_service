@@ -48,7 +48,7 @@ public class LoginService {
         return null;
     }
 
-    public String createJwt(LoginFormDto loginFormDto, HttpServletRequest request, HttpServletResponse response) {
+    public void createJwt(String loginId, HttpServletRequest request, HttpServletResponse response) {
 
         long expiredTime = 1000 * 60L * 30L; // 토큰 유효 시간 (30분)
         Date ext = new Date();
@@ -58,7 +58,7 @@ public class LoginService {
                 .header()
                 .keyId("jwt")
                 .and()
-                .subject(loginFormDto.getId())
+                .subject(loginId)
                 .signWith(key, Jwts.SIG.HS512)
                 .expiration(ext)
                 .compact();
@@ -67,26 +67,21 @@ public class LoginService {
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
         response.addCookie(cookie);
-
         Jws<Claims> claimsJws = Jwts.parser().verifyWith(key).build().parseSignedClaims(jwt);
         Object payload = claimsJws.getPayload();
         log.info("jwt 검증 = {}", claimsJws);
         log.info("jwt 검증 = {}", payload);
-
-
-        return jwt;
+        LoginService.loginId = loginId;
 
     }
 
     public String loginIdCheck(HttpServletRequest request, HttpServletResponse response) {
-        HttpSession session = request.getSession(false);
+
         Cookie jwtCookie = WebUtils.getCookie(request, "jwtToken");
-        if (session != null && jwtCookie!=null  ) {
-            loginId = (String) session.getAttribute("loginId");
-            log.info("세션 로그인 id = {}", loginId);
+        if (jwtCookie != null) {
+
             try{
                 Jws<Claims> claimsJws = Jwts.parser().verifyWith(key).build().parseSignedClaims(jwtCookie.getValue());
-
                 log.info("jwt 만료 확인 = {}", claimsJws);
             } catch (Exception e){
                 log.info("Jwt Exception 확인 = {}", e.toString());
@@ -94,8 +89,31 @@ public class LoginService {
                 loginId = null;
             }
         }
-        if (loginId != null){
 
+        if (loginId != null){
+            long expiredTime = 1000 * 60L * 30L; // 토큰 유효 시간 (30분)
+            Date ext = new Date();
+            ext.setTime(ext.getTime() + expiredTime);
+
+            String jwt = Jwts.builder()
+                    .header()
+                    .keyId("jwt")
+                    .and()
+                    .subject(loginId)
+                    .signWith(key, Jwts.SIG.HS512)
+                    .expiration(ext)
+                    .compact();
+            log.info("jwt 생성 = {}", jwt);
+            Cookie cookie = new Cookie("jwtToken", jwt);
+            cookie.setHttpOnly(true);
+            cookie.setSecure(true);
+            response.addCookie(cookie);
+
+            Jws<Claims> claimsJws = Jwts.parser().verifyWith(key).build().parseSignedClaims(jwt);
+            Object payload = claimsJws.getPayload();
+            log.info("jwt 검증 = {}", claimsJws);
+            log.info("jwt 검증 = {}", payload);
+            loginId = claimsJws.getPayload().getSubject();
         }
         return loginId;
 

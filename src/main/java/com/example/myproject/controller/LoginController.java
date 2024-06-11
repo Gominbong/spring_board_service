@@ -67,7 +67,7 @@ public class LoginController {
             return "login/loginForm";
         }
 
-        loginService.createJwt(loginFormDto, request, response);
+        loginService.createJwt(loginFormDto.getId(), request, response);
 
         HttpSession session = request.getSession();
         session.setAttribute("loginId", loginFormDto.getId());
@@ -99,10 +99,7 @@ public class LoginController {
             return "login/loginForm";
         }
 
-        loginService.createJwt(loginFormDto, request, response);
-
-        HttpSession session = request.getSession();
-        session.setAttribute("loginId", loginFormDto.getId());
+        loginService.createJwt(loginFormDto.getId(), request, response);
 
         if (url.contains("signup")){
             return "redirect:/";
@@ -123,14 +120,8 @@ public class LoginController {
             jwtCookie.setMaxAge(0);
             response.addCookie(jwtCookie);
             log.info("jwt 로그아웃 되었습니다");
+            loginService.logout();
         }
-
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            session.invalidate();
-            log.info("세션 로그아웃 되었습니다");
-        }
-        loginService.logout();
 
         return "redirect:" + referer ;
     }

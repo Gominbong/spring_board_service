@@ -29,9 +29,8 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
 
         String requestURI = request.getRequestURI();
 
-        HttpSession session = request.getSession(false);
         Cookie jwtCookie = WebUtils.getCookie(request, "jwtToken");
-        if (session == null && jwtCookie == null) {
+        if (jwtCookie == null) {
             log.info("세션 쿠키 값이 없음 로그인하세요");
             log.info("jwt 쿠키 값이 없음 로그인하세요");
 
