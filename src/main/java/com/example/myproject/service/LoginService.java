@@ -1,6 +1,5 @@
 package com.example.myproject.service;
 
-import com.example.myproject.controller.LoginController;
 import com.example.myproject.domain.Member;
 import com.example.myproject.dto.LoginFormDto;
 import com.example.myproject.repository.MemberRepository;
@@ -30,6 +29,7 @@ public class LoginService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private static String loginId = null;
+    SecretKey key = Keys.hmacShaKeyFor("c3ByaW5nYm9vdC1qd3QtdHV0b3JpYWwtc3ByaW5nYm9vdC1qd3QtdHV0b3JpYWwtc3ByaW5nYm9vdC1qd3QtdHV0b3JpYWwK".getBytes(StandardCharsets.UTF_8));
 
     public static void setLoginId(String loginId) {
         LoginService.loginId = loginId;
@@ -57,7 +57,6 @@ public class LoginService {
 
     public String createJwt(LoginFormDto loginFormDto, HttpServletRequest request, HttpServletResponse response) {
 
-        SecretKey key = Keys.hmacShaKeyFor("c3ByaW5nYm9vdC1qd3QtdHV0b3JpYWwtc3ByaW5nYm9vdC1qd3QtdHV0b3JpYWwtc3ByaW5nYm9vdC1qd3QtdHV0b3JpYWwK".getBytes(StandardCharsets.UTF_8));
         long expiredTime = 1000 * 60L * 30L; // 토큰 유효 시간 (30분)
         Date ext = new Date();
         ext.setTime(ext.getTime() + expiredTime);
@@ -95,7 +94,6 @@ public class LoginService {
             LoginService.loginId = (String) session.getAttribute("loginId");
             log.info("세션 로그인 id = {}", loginId);
 
-            SecretKey key = Keys.hmacShaKeyFor("c3ByaW5nYm9vdC1qd3QtdHV0b3JpYWwtc3ByaW5nYm9vdC1qd3QtdHV0b3JpYWwtc3ByaW5nYm9vdC1qd3QtdHV0b3JpYWwK".getBytes(StandardCharsets.UTF_8));
             try{
                 Jws<Claims> claimsJws = Jwts.parser().verifyWith(key).build().parseSignedClaims(jwtCookie.getValue());
 
