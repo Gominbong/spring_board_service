@@ -33,7 +33,7 @@ public class LoginController {
     public String home(@RequestParam(value = "page", defaultValue = "0") int page,
                        HttpServletRequest request, Model model, HttpServletResponse response) {
 
-        String loginId = loginService.loginIdCheck(request, response);
+     /*   String loginId = loginService.loginIdCheck(request, response);
         log.info("로그인아이디static 확인 = {}", loginId);
         if (loginId != null){
             model.addAttribute("loginId", loginId);
@@ -47,8 +47,8 @@ public class LoginController {
         model.addAttribute("page", page);
         model.addAttribute("paging", paging);
         musicListService.pageStartEndNumber(page, paging, model);
-
-        return "home";
+*/
+        return "test";
     }
 
     @GetMapping("/loginInterceptor")

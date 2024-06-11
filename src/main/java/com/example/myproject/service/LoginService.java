@@ -94,6 +94,7 @@ public class LoginService {
                 log.info("Jwt Exception 확인 = {}", e.toString());
                 log.info("Jwt 유효시간 초과 로그아웃 됨");
                 loginId = null;
+                throw e;
             }
 
             long expiredTime = 1000 * 60L * 30L; // 토큰 유효 시간 (30분)
