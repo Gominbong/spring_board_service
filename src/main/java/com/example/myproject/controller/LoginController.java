@@ -77,13 +77,6 @@ public class LoginController {
         HttpSession session = request.getSession();
         session.setAttribute("loginId", loginFormDto.getId());
 
-
-
-        boolean signup = url.contains("signup");
-        if (signup){
-            return "redirect:/";
-        }
-
         return "redirect:" + url;
     }
 
