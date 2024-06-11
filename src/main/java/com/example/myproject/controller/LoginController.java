@@ -38,7 +38,7 @@ public class LoginController {
         if (loginId != null){
             model.addAttribute("loginId", loginId);
         }
-        //dfdfasdasdzzz
+
         for (String s : loginMember.keySet()) {
             log.info("로그인 중인 멤버 = {}", s);
         }
@@ -105,7 +105,7 @@ public class LoginController {
             return "login/loginForm";
         }
 
-        //loginService.createJwt(loginFormDto, request, response);
+        loginService.createJwt(loginFormDto, request, response);
         loginMember.put(loginFormDto.getId(), loginFormDto.getId());
 
         HttpSession session = request.getSession();
@@ -126,8 +126,6 @@ public class LoginController {
         String referer = request.getHeader("Referer");
 
         Cookie jwtCookie = WebUtils.getCookie(request, "jwtToken");
-        jwtCookie.setMaxAge(0);
-        response.addCookie(jwtCookie);
         if (jwtCookie != null){
             jwtCookie.setMaxAge(0);
             response.addCookie(jwtCookie);
