@@ -81,10 +81,9 @@ public class LoginService {
     public String loginIdCheck(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession(false);
         Cookie jwtCookie = WebUtils.getCookie(request, "jwtToken");
-        if (session != null  ) {
+        if (session != null && jwtCookie==null  ) {
             loginId = (String) session.getAttribute("loginId");
             log.info("세션 로그인 id = {}", loginId);
-
             try{
                 Jws<Claims> claimsJws = Jwts.parser().verifyWith(key).build().parseSignedClaims(jwtCookie.getValue());
 
@@ -94,25 +93,10 @@ public class LoginService {
                 log.info("Jwt 유효시간 초과 로그아웃 됨");
                 loginId = null;
             }
+        }
+        if (loginId != null){
 
         }
-        long expiredTime = 1000 * 60L * 30L; // 토큰 유효 시간 (30분)
-        Date ext = new Date();
-        ext.setTime(ext.getTime() + expiredTime);
-
-        String jwt = Jwts.builder()
-                .header()
-                .keyId("jwt")
-                .and()
-                .subject(loginId)
-                .signWith(key, Jwts.SIG.HS512)
-                .expiration(ext)
-                .compact();
-        log.info("jwt 생성 = {}", jwt);
-        Cookie cookie = new Cookie("jwtToken", jwt);
-        cookie.setHttpOnly(false);
-        cookie.setSecure(false);
-        response.addCookie(cookie);
         return loginId;
 
     }

@@ -127,7 +127,6 @@ public class LoginController {
 
         HttpSession session = request.getSession(false);
         if (session != null) {
-            String loginId = (String)session.getAttribute("loginId");
             session.invalidate();
             log.info("세션 로그아웃 되었습니다");
         }
