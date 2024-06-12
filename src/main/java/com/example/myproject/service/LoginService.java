@@ -29,7 +29,6 @@ public class LoginService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
-    private static String loginId;
     SecretKey key = Keys.hmacShaKeyFor("c3ByaW5nYm9vdC1qd3QtdHV0b3JpYWwtc3ByaW5nYm9vdC1qd3QtdHV0b3JpYWwtc3ByaW5nYm9vdC1qd3QtdHV0b3JpYWwK".getBytes(StandardCharsets.UTF_8));
 
     public Member login(LoginFormDto loginFormDto) {
@@ -49,7 +48,6 @@ public class LoginService {
     }
 
     public void createJwt(String loginId, HttpServletRequest request, HttpServletResponse response) {
-
         long expiredTime = 1000 * 60L * 30L; // 토큰 유효 시간 (30분)
         Date ext = new Date();
         ext.setTime(ext.getTime() + expiredTime);
@@ -74,7 +72,7 @@ public class LoginService {
         log.info("jwt 검증 = {}", claimsJws);
         log.info("jwt 검증 = {}", payload);
         log.info("jwt 유효시간 = {}",claimsJws.getPayload().getExpiration());
-        LoginService.loginId = loginId;
+
 
     }
 
@@ -89,11 +87,9 @@ public class LoginService {
             } catch (Exception e){
                 log.info("Jwt Exception 확인 = {}", e.toString());
                 log.info("Jwt 유효시간 초과 로그아웃 됨");
-                loginId = null;
+                return null;
             }
-        }
-
-        if (loginId != null){
+            String loginId = Jwts.parser().verifyWith(key).build().parseSignedClaims(jwtCookie.getValue()).getPayload().getSubject();
             long expiredTime = 1000 * 60L * 30L; // 토큰 유효 시간 (30분)
             Date ext = new Date();
             ext.setTime(ext.getTime() + expiredTime);
@@ -106,29 +102,21 @@ public class LoginService {
                     .signWith(key, Jwts.SIG.HS512)
                     .expiration(ext)
                     .compact();
-            log.info("jwt 생성1 = {}", jwt);
-
+            log.info("jwt 생성 = {}", jwt);
             Cookie cookie = new Cookie("jwtToken", jwt);
             cookie.setPath("/");
             cookie.setMaxAge((int)expiredTime);
             cookie.setHttpOnly(true);
             cookie.setSecure(true);
             response.addCookie(cookie);
-
             Jws<Claims> claimsJws = Jwts.parser().verifyWith(key).build().parseSignedClaims(jwt);
             Object payload = claimsJws.getPayload();
-            log.info("jwt 검증1 = {}", claimsJws);
-            log.info("jwt 검증1 = {}", payload);
-            log.info("jwt 유효시간1 = {}",claimsJws.getPayload().getExpiration());
-            loginId = claimsJws.getPayload().getSubject();
+            log.info("jwt 검증 = {}", claimsJws);
+            log.info("jwt 검증 = {}", payload);
+            log.info("jwt 유효시간 = {}",claimsJws.getPayload().getExpiration());
+            return loginId;
         }
-        return loginId;
-
-    }
-
-    public void logout(){
-        loginId = null;
-        log.info("로그아웃 완료");
+        return null;
     }
 
 }

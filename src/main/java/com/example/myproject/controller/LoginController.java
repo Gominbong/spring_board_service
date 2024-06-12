@@ -69,9 +69,6 @@ public class LoginController {
 
         loginService.createJwt(loginFormDto.getId(), request, response);
 
-        HttpSession session = request.getSession();
-        session.setAttribute("loginId", loginFormDto.getId());
-
         return "redirect:" + url;
     }
 
@@ -120,7 +117,6 @@ public class LoginController {
             jwtCookie.setMaxAge(0);
             response.addCookie(jwtCookie);
             log.info("jwt 로그아웃 되었습니다");
-            loginService.logout();
         }
 
         return "redirect:" + referer ;
