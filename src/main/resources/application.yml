@@ -45,7 +45,6 @@ server:
     session:
       timeout: 3600
       tracking-modes: cookie
-    context-path: /
   error:
     whitelabel:
       enabled: false
@@ -53,7 +52,7 @@ server:
     include-stacktrace: always
     include-binding-errors: always
     include-exception: true
-  port: 8080
+  port: 8081
 #    org.hibernate.type: trace
 
 
