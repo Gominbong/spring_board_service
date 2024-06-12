@@ -37,7 +37,7 @@
     <div id='addCash'>
         <form style="margin-top: 20px;" method="post" action="/addCash" onsubmit="return addCashForm()">
             <lebel>충전금액</lebel>
-            <input type="number" min="0" name="cash"/>
+            <input type="number" min="0" max="10000000" name="cash"/>
             <button type="submit">충전하기</button>
             <label class="field-error" th:if="${errors?.containsKey('cash')}" th:text="${errors['cash']}"></label>
         </form>
