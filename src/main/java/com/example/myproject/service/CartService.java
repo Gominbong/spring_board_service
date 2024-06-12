@@ -47,6 +47,7 @@ public class CartService {
     }
 
     public void deleteCartList(Long cartListId) {
+        log.info("장바구니 삭제완료");
         cartRepository.deleteById(cartListId);
     }
 }

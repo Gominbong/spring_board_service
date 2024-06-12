@@ -22,6 +22,7 @@ import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class SellBuyListService {
     private final SellBuyListRepository sellBuyListRepository;
     private final MusicListRepository musicListRepository;
@@ -54,9 +55,10 @@ public class SellBuyListService {
             buyMember.setCash(buyMember.getCash() - musicList.getPrice());
             sellMember.setRevenue(sellMember.getRevenue() + musicList.getPrice());
         }else{
-           return null;
+            log.info("보유금액 초과 구매실패");
+            return null;
         }
-
+        log.info("구매성공");
         return  buyMember;
     }
 

@@ -1,26 +1,21 @@
 package com.example.myproject.service;
 
-import com.example.myproject.controller.LoginController;
 import com.example.myproject.domain.Member;
 import com.example.myproject.dto.LoginFormDto;
 import com.example.myproject.repository.MemberRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.WebUtils;
-
-import javax.crypto.SecretKey;
-import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import static com.example.myproject.service.jwtKey.key;
 
 @Slf4j
 @Service
@@ -29,8 +24,6 @@ public class LoginService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
-    SecretKey key = Keys.hmacShaKeyFor("c3ByaW5nYm9vdC1qd3QtdHV0b3JpYWwtc3ByaW5nYm9vdC1qd3QtdHV0b3JpYWwtc3ByaW5nYm9vdC1qd3QtdHV0b3JpYWwK".getBytes(StandardCharsets.UTF_8));
-
     public Member login(LoginFormDto loginFormDto) {
 
         Member result = memberRepository.findEncodePassword(loginFormDto.getId());
@@ -83,10 +76,10 @@ public class LoginService {
                 log.info("jwt 쿠키값확인 = {},", jwtCookie.getValue() );
             try{
                 Jws<Claims> claimsJws = Jwts.parser().verifyWith(key).build().parseSignedClaims(jwtCookie.getValue());
-                log.info("jwt 만료 확인 = {}", claimsJws);
+                log.info("jwt 쿠키만료 확인 = {}", claimsJws);
             } catch (Exception e){
-                log.info("Jwt Exception 확인 = {}", e.toString());
-                log.info("Jwt 유효시간 초과 로그아웃 됨");
+                log.info("jwt Exception 확인 = {}", e.toString());
+                log.info("jwt 유효시간 초과 로그아웃 됨");
                 return null;
             }
             String loginId = Jwts.parser().verifyWith(key).build().parseSignedClaims(jwtCookie.getValue()).getPayload().getSubject();

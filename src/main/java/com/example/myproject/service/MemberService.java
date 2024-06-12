@@ -27,6 +27,9 @@ public class MemberService {
         if (addCashDto.getCash() == null){
             errors.put("cash", "충전할금액입력하세요");
         }
+        if (addCashDto.getCash() > 1000000){
+            errors.put("cash", "충전금액초과");
+        }
 
         if (!errors.isEmpty()){
             return errors;

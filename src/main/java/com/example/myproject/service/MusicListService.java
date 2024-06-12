@@ -118,7 +118,7 @@ public class MusicListService {
     public void deleteMusicList(Long id) {
         MusicList musicList = musicListRepository.findById(id).orElseThrow();
         musicList.setSoftDelete("Yes");
-
+        log.info("뮤직리스트 논리적 삭제 성공");
     }
 
     @Transactional

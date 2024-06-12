@@ -32,24 +32,15 @@ public class SellBuyController {
     @PostMapping("/buyMusicList")
     public String buyComplete(BuyMusicListDto buyMusicListDto, HttpServletRequest request,
                               HttpServletResponse response){
-        String loginId = loginService.loginIdCheck(request, response);
-        log.info("로그인아이디static 확인 = {}", loginId);
-
         String referer = request.getHeader("Referer");
         log.info("이전 경로 확인 = {} ", referer);
-        if(loginId == null){
-            log.info("구매하시려면 로그인해주세요");
-            Cookie cookie = new Cookie("url",referer);
-            response.addCookie(cookie);
-            return "redirect:login";
-        }
-        Member result = sellBuyListService.buyMusicList(buyMusicListDto.getMusicListId(), loginId);
-
-        if (result == null){
-            log.info("잔액부족");
+        String loginId = loginService.loginIdCheck(request, response);
+        log.info("로그인 아이디 확인 = {}", loginId);
+        if (loginId == null){
+            log.info("구매실패 jwt 로그인 유지시간 초과");
+            return "redirect:" + referer;
         }else{
-            log.info("구매성공");
-
+            sellBuyListService.buyMusicList(buyMusicListDto.getMusicListId(), loginId);
         }
 
         return "redirect:" + referer;
@@ -59,17 +50,21 @@ public class SellBuyController {
                        HttpServletRequest request, Model model){
 
         String loginId = loginService.loginIdCheck(request, response);
-        log.info("로그인아이디static 확인 = {}", loginId);
-        if (loginId != null){
-            model.addAttribute("loginId", loginId);
+        log.info("로그인 아이디 확인 = {}", loginId);
+        model.addAttribute("loginId", loginId);
+        if (loginId == null){
+            log.info("jwt 로그인 유지시간 초과");
+            return "musicList/sellMusicListForm";
+        }else{
+            Member member = memberService.findByLoginId(loginId);
+            model.addAttribute("member", member);
+            Page<SellBuyList> paging = sellBuyListService.findSellList(page, loginId);
+            sellBuyListService.pageStartEndNumber(page, paging, model);
+            model.addAttribute("page", page);
+            model.addAttribute("paging", paging);
         }
 
-        Member member = memberService.findByLoginId(loginId);
-        model.addAttribute("member", member);
-        Page<SellBuyList> paging = sellBuyListService.findSellList(page, loginId);
-        sellBuyListService.pageStartEndNumber(page, paging, model);
-        model.addAttribute("page", page);
-        model.addAttribute("paging", paging);
+
 
         return "musicList/sellMusicListForm";
     }
@@ -79,16 +74,17 @@ public class SellBuyController {
                           HttpServletRequest request, Model model) {
 
         String loginId = loginService.loginIdCheck(request, response);
-        log.info("로그인아이디static 확인 = {}", loginId);
-        if (loginId != null){
-            model.addAttribute("loginId", loginId);
+        log.info("로그인 아이디 확인 = {}", loginId);
+        model.addAttribute("loginId", loginId);
+        if (loginId == null){
+            log.info("jwt 로그인 유지시간 초과");
+            return "musicList/buyMusicListForm";
+        }else{
+            Page<SellBuyList> paging = sellBuyListService.findBuyList(page, loginId);
+            sellBuyListService.pageStartEndNumber(page, paging, model);
+            model.addAttribute("page", page);
+            model.addAttribute("paging", paging);
         }
-
-        Page<SellBuyList> paging = sellBuyListService.findBuyList(page, loginId);
-        sellBuyListService.pageStartEndNumber(page, paging, model);
-        model.addAttribute("page", page);
-        model.addAttribute("paging", paging);
-
 
         return "musicList/buyMusicListForm";
     }
