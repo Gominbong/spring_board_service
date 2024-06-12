@@ -64,6 +64,8 @@ public class LoginService {
                 .compact();
         log.info("jwt 생성 = {}", jwt);
         Cookie cookie = new Cookie("jwtToken", jwt);
+        cookie.setPath("/");
+        cookie.setMaxAge((int)expiredTime);
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
         response.addCookie(cookie);
@@ -71,6 +73,7 @@ public class LoginService {
         Object payload = claimsJws.getPayload();
         log.info("jwt 검증 = {}", claimsJws);
         log.info("jwt 검증 = {}", payload);
+        log.info("jwt 유효시간 = {}",claimsJws.getPayload().getExpiration());
         LoginService.loginId = loginId;
 
     }
@@ -79,7 +82,7 @@ public class LoginService {
 
         Cookie jwtCookie = WebUtils.getCookie(request, "jwtToken");
         if (jwtCookie != null) {
-
+                log.info("jwt 쿠키값확인 = {},", jwtCookie.getValue() );
             try{
                 Jws<Claims> claimsJws = Jwts.parser().verifyWith(key).build().parseSignedClaims(jwtCookie.getValue());
                 log.info("jwt 만료 확인 = {}", claimsJws);
@@ -103,16 +106,20 @@ public class LoginService {
                     .signWith(key, Jwts.SIG.HS512)
                     .expiration(ext)
                     .compact();
-            log.info("jwt 생성 = {}", jwt);
+            log.info("jwt 생성1 = {}", jwt);
+
             Cookie cookie = new Cookie("jwtToken", jwt);
+            cookie.setPath("/");
+            cookie.setMaxAge((int)expiredTime);
             cookie.setHttpOnly(true);
             cookie.setSecure(true);
             response.addCookie(cookie);
 
             Jws<Claims> claimsJws = Jwts.parser().verifyWith(key).build().parseSignedClaims(jwt);
             Object payload = claimsJws.getPayload();
-            log.info("jwt 검증 = {}", claimsJws);
-            log.info("jwt 검증 = {}", payload);
+            log.info("jwt 검증1 = {}", claimsJws);
+            log.info("jwt 검증1 = {}", payload);
+            log.info("jwt 유효시간1 = {}",claimsJws.getPayload().getExpiration());
             loginId = claimsJws.getPayload().getSubject();
         }
         return loginId;

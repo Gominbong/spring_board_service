@@ -45,6 +45,7 @@ server:
     session:
       timeout: 3600
       tracking-modes: cookie
+    context-path: /
   error:
     whitelabel:
       enabled: false
