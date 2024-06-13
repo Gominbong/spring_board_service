@@ -13,6 +13,9 @@ import java.util.List;
 public interface CommentRepository extends JpaRepository <Comment, Long> {
 
 
+    @Query("select c from Comment c inner join fetch c.musicList musicList inner join fetch" +
+            " c.member member where musicList.id = :musicListId ")
+    List<Comment> findCommentList1(Long musicListId);
 
     @Query("select c from Comment c inner join fetch c.musicList musicList inner join fetch" +
             " c.member member where musicList.id = :musicListId order by" +

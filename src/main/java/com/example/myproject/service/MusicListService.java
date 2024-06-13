@@ -7,7 +7,6 @@ import com.example.myproject.dto.*;
 import com.example.myproject.repository.MusicListRepository;
 import com.example.myproject.repository.FileListRepository;
 import com.example.myproject.repository.MemberRepository;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;

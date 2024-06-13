@@ -1,8 +1,13 @@
 package com.example.myproject;
 
+import com.example.myproject.domain.Comment;
 import com.example.myproject.domain.Member;
 import com.example.myproject.domain.MusicList;
+import com.example.myproject.repository.CommentRepository;
+import com.example.myproject.repository.MemberRepository;
+import com.example.myproject.repository.MusicListRepository;
 import com.example.myproject.service.MemberService;
+import com.example.myproject.service.MusicListService;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -22,12 +27,21 @@ public class InitDb {
 
     @PostConstruct
     public void init() {
+
+
+/*        for (int i=0; i<1000; i++){
+            initService.dbInit3();
+        }*/
+
+
 /*        initService.createMember("3", "3", "Rhalsqhd123");
         initService.createMember("2", "2", "Rhalsqhd456");
         for(int i=0; i<170; i++){
             initService.dbInit1();
             initService.dbInit2();
         }*/
+
+
 
     }
 
@@ -40,6 +54,38 @@ public class InitDb {
         private final EntityManager em;
         private final MemberService memberService;
         private final PasswordEncoder passwordEncoder;
+        private final MusicListService musicListService;
+        private final MusicListRepository musicListRepository;
+        private final MemberRepository memberRepository;
+        private final CommentRepository commentRepository;
+
+        int parent = 0;
+
+        public void dbInit4(){
+            Member member = memberRepository.findByLoginId("3");
+        }
+        public void dbInit3(){
+            MusicList musicList = musicListRepository.findById(102L).orElseThrow();
+            Member member = memberRepository.findByLoginId("3");
+
+            Comment comment = new Comment();
+            LocalDateTime localDateTime = LocalDateTime.now().withNano(0);
+            String temp = String.valueOf(localDateTime);
+            String createTime = temp.replace("T", " ");
+            comment.setCreateTime(createTime);
+            comment.setMusicList(musicList);
+            comment.setMember(member);
+            comment.setDivWidthSize(0);
+            comment.setParent(parent);
+            parent += 1;
+            comment.setContent("테스트내용");
+            comment.setChild1(0);
+            comment.setChild2(0);
+            comment.setChild3(0);
+            comment.setChild4(0);
+            commentRepository.save(comment);
+
+        }
 
         public void dbInit1(){
             Member member = memberService.findByLoginId("3");

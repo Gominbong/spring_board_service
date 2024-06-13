@@ -6,7 +6,6 @@ import com.example.myproject.dto.BuyMusicListDto;
 import com.example.myproject.service.LoginService;
 import com.example.myproject.service.MemberService;
 import com.example.myproject.service.SellBuyListService;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -63,8 +62,6 @@ public class SellBuyController {
             model.addAttribute("page", page);
             model.addAttribute("paging", paging);
         }
-
-
 
         return "musicList/sellMusicListForm";
     }

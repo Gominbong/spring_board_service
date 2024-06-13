@@ -247,7 +247,6 @@ public class MusicListController {
         String loginId = loginService.loginIdCheck(request, response);
 
         log.info("로그인 아이디 확인 = {}", loginId);
-        loginId= null;
         if (loginId == null){
             log.info("뮤직리스트 삭제실패 jwt 로그인 유지시간 초과");
             return "redirect:" + referer;

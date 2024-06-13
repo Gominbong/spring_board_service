@@ -18,7 +18,6 @@ public class SignupController {
 
     private final SignupService signupService;
 
-
     @GetMapping("/signup")
     public String sign(Model model) {
 
