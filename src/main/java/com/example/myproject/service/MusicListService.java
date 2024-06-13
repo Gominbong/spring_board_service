@@ -176,16 +176,20 @@ public class MusicListService {
                 String encode = originalFilename.replaceAll("[^ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9]", "_");
                 String storedFileName = System.currentTimeMillis() + "_" + encode;
 
-                try {
-                    multipartFile.transferTo(new File(storedFileName));
-                } catch (IOException e) {
-
+                String os = System.getProperty("os.name").toLowerCase();
+                if (os.contains("win")) {
+                    try {
+                        multipartFile.transferTo(new File("C:/Users/asd/Desktop/study/pdf/" + storedFileName));
+                    } catch (IOException e) {
+                        e.getStackTrace();
+                    }
+                } else {
+                    try {
+                        multipartFile.transferTo(new File(storedFileName));
+                    } catch (IOException e) {
+                        e.getStackTrace();
+                    }
                 }
-                FileList fileList = new FileList();
-                fileList.setMusicList(musicList); //외래키 설정
-                fileList.setOriginalFilename(originalFilename);
-                fileList.setStoredFilename(storedFileName);
-                fileRepository.save(fileList);
             }
         }
         return null;
