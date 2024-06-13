@@ -58,7 +58,7 @@ public class LoginService {
         cookie.setPath("/");
         cookie.setMaxAge((int)expiredTime);
         cookie.setHttpOnly(true);
-        cookie.setSecure(false);
+        cookie.setSecure(true);
         response.addCookie(cookie);
         Jws<Claims> claimsJws = Jwts.parser().verifyWith(key).build().parseSignedClaims(jwt);
         Object payload = claimsJws.getPayload();
@@ -100,7 +100,7 @@ public class LoginService {
             cookie.setPath("/");
             cookie.setMaxAge((int)expiredTime);
             cookie.setHttpOnly(true);
-            cookie.setSecure(false);
+            cookie.setSecure(true);
             response.addCookie(cookie);
             Jws<Claims> claimsJws = Jwts.parser().verifyWith(key).build().parseSignedClaims(jwt);
             Object payload = claimsJws.getPayload();
