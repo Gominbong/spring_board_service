@@ -24,15 +24,27 @@ import java.time.LocalDateTime;
 public class InitDb {
 
     private final InitService initService;
+    private static int parent = 0;
 
     @PostConstruct
     public void init() {
 
-
-/*        for (int i=0; i<1000; i++){
-            initService.dbInit3();
-        }*/
-
+        parent =0;
+        for (int i=0; i<2000; i++){
+            initService.dbInit3(2L);
+        }
+        parent =0;
+        for (int i=0; i<3000; i++){
+            initService.dbInit3(3L);
+        }
+        parent =0;
+        for (int i=0; i<4000; i++){
+            initService.dbInit3(4L);
+        }
+        parent =0;
+        for (int i=0; i<5000; i++){
+            initService.dbInit3(5L);
+        }
 
 /*        initService.createMember("3", "3", "Rhalsqhd123");
         initService.createMember("2", "2", "Rhalsqhd456");
@@ -41,10 +53,7 @@ public class InitDb {
             initService.dbInit2();
         }*/
 
-
-
     }
-
 
     @Component
     @Transactional
@@ -59,13 +68,11 @@ public class InitDb {
         private final MemberRepository memberRepository;
         private final CommentRepository commentRepository;
 
-        int parent = 0;
-
         public void dbInit4(){
             Member member = memberRepository.findByLoginId("3");
         }
-        public void dbInit3(){
-            MusicList musicList = musicListRepository.findById(102L).orElseThrow();
+        public void dbInit3(Long id){
+            MusicList musicList = musicListRepository.findById(id).orElseThrow();
             Member member = memberRepository.findByLoginId("3");
 
             Comment comment = new Comment();
