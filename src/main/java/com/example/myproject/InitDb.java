@@ -29,7 +29,7 @@ public class InitDb {
     @PostConstruct
     public void init() {
 
-        parent = 0;
+    /*    parent = 0;
         for (int i=0; i<2000; i++){
             initService.dbInit3(402L);
         }
@@ -44,7 +44,7 @@ public class InitDb {
         parent = 0;
         for (int i=0; i<5000; i++){
             initService.dbInit3(405L);
-        }
+        }*/
 
 /*        initService.createMember("3", "3", "Rhalsqhd123");
         initService.createMember("2", "2", "Rhalsqhd456");
