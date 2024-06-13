@@ -29,21 +29,21 @@ public class InitDb {
     @PostConstruct
     public void init() {
 
-        parent =0;
+        parent = 0;
         for (int i=0; i<2000; i++){
-            initService.dbInit3(2L);
+            initService.dbInit3(402L);
         }
-        parent =0;
+        parent = 0;
         for (int i=0; i<3000; i++){
-            initService.dbInit3(3L);
+            initService.dbInit3(403L);
         }
-        parent =0;
+        parent = 0;
         for (int i=0; i<4000; i++){
-            initService.dbInit3(4L);
+            initService.dbInit3(404L);
         }
-        parent =0;
+        parent = 0;
         for (int i=0; i<5000; i++){
-            initService.dbInit3(5L);
+            initService.dbInit3(405L);
         }
 
 /*        initService.createMember("3", "3", "Rhalsqhd123");
