@@ -63,10 +63,9 @@ public class MusicListController {
                              @RequestParam(value = "page", defaultValue = "0") int page){
 
         String loginId = loginService.loginIdCheck(request, response);
+        model.addAttribute("loginId", loginId);
         log.info("로그인 아이디 확인 = {}", loginId);
-        if (loginId != null){
-            model.addAttribute("loginId", loginId);
-        }
+
 
         model.addAttribute("searchDto", searchSortDto);
         Page<MusicList> paging = musicListService.musicListSearchSort(page, searchSortDto);
@@ -83,10 +82,8 @@ public class MusicListController {
                        @RequestParam(value = "page", defaultValue = "0") int page){
 
         String loginId = loginService.loginIdCheck(request, response);
+        model.addAttribute("loginId", loginId);
         log.info("로그인 아이디 확인 = {}", loginId);
-        if (loginId != null){
-            model.addAttribute("loginId", loginId);
-        }
 
         model.addAttribute("homeSortDto", homeSortDto);
         Page<MusicList> paging = musicListService.homeSort(page, homeSortDto);
@@ -103,10 +100,8 @@ public class MusicListController {
                          HttpServletRequest request, Model model){
 
         String loginId = loginService.loginIdCheck(request, response);
+        model.addAttribute("loginId", loginId);
         log.info("로그인 아이디 확인 = {}", loginId);
-        if (loginId != null){
-            model.addAttribute("loginId", loginId);
-        }
 
         model.addAttribute("searchDto", searchDto);
         model.addAttribute("searchDto", searchDto);
@@ -129,7 +124,6 @@ public class MusicListController {
         }else{
             commentService.commentEdit(commentUpdateDto);
         }
-
 
         return "redirect:" + referer;
     }
@@ -198,10 +192,8 @@ public class MusicListController {
             throws MalformedURLException {
 
         String loginId = loginService.loginIdCheck(request, response);
+        model.addAttribute("loginId", loginId);
         log.info("로그인 아이디 확인 = {}", loginId);
-        if (loginId != null){
-            model.addAttribute("loginId", loginId);
-        }
 
         LikeCount likeCount = likeCountService.findMyLike(id, loginId);
         MusicList musicList = musicListService.findById(id);
@@ -309,10 +301,8 @@ public class MusicListController {
     public String addMusicList(HttpServletRequest request, Model model, HttpServletResponse response) {
 
         String loginId = loginService.loginIdCheck(request, response);
+        model.addAttribute("loginId", loginId);
         log.info("로그인 아이디 확인 = {}", loginId);
-        if (loginId != null){
-            model.addAttribute("loginId", loginId);
-        }
 
         model.addAttribute("musicListFormDto", new MusicListFormDto());
         return "musicList/addMusicListForm";

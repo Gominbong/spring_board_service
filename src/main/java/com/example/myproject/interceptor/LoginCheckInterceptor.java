@@ -12,6 +12,8 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.WebUtils;
 
+import java.util.Date;
+
 import static com.example.myproject.service.jwtKey.key;
 
 @Slf4j
@@ -25,23 +27,57 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
         String requestURI = request.getRequestURI();
 
         Cookie jwtCookie = WebUtils.getCookie(request, "jwtToken");
+        if (jwtCookie == null){
+            log.info("jwt 쿠키값 null 로그인 하세요");
+            log.info("이전주소 url = {}", requestURI);
+            Cookie cookie = new Cookie("url", requestURI);
+            response.addCookie(cookie);
+            response.sendRedirect("/loginInterceptor");
+            return false;
+        }
         try {
             Jws<Claims> claimsJws = Jwts.parser().verifyWith(key).build().parseSignedClaims(jwtCookie.getValue());
         } catch (Exception e) {
             log.info("jwt Exception 확인 = {}", e.toString());
-            log.info("쿠키값 = null 혹은 jwt 유효시간 초과");
+            log.info("jwt 유효시간 초과 로그인 하세요");
+            log.info("이전주소 url = {}", requestURI);
             Cookie cookie = new Cookie("url", requestURI);
             response.addCookie(cookie);
             response.sendRedirect("/loginInterceptor");
+            return false;
         }
 
-        log.info("로그인 유지 상태 입니다");
+        String loginId = Jwts.parser().verifyWith(key).build().parseSignedClaims(jwtCookie.getValue()).getPayload().getSubject();
+        long expiredTime = 1000 * 60L * 1000L; // 토큰 유효 시간 (30분)
+        Date ext = new Date();
+        ext.setTime(ext.getTime() + expiredTime);
+
+        String jwt = Jwts.builder()
+                .header()
+                .keyId("jwt")
+                .and()
+                .subject(loginId)
+                .signWith(key, Jwts.SIG.HS512)
+                .expiration(ext)
+                .compact();
+        log.info("jwt 생성 = {}", jwt);
+        Cookie cookie = new Cookie("jwtToken", jwt);
+        cookie.setPath("/");
+        cookie.setMaxAge((int)expiredTime);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        response.addCookie(cookie);
+        Jws<Claims> claimsJws = Jwts.parser().verifyWith(key).build().parseSignedClaims(jwt);
+        Object payload = claimsJws.getPayload();
+        log.info("jwt 검증 = {}", claimsJws);
+        log.info("jwt 유효시간 = {}",claimsJws.getPayload().getExpiration());
+
         return true;
     }
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-
+        log.info("aaa = {}", handler.getClass().getName());
     }
 
 }
