@@ -41,6 +41,8 @@ logging:
     org.apache.coyote.http11: debug
 
 server:
+  ssl:
+    enabled: false
   servlet:
     session:
       timeout: 3600
