@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -79,26 +80,17 @@ public class MusicListService {
 
                 String os = System.getProperty("os.name").toLowerCase();
                 if (os.contains("win")) {
-
-                    File file = new File("C:/Users/asd/Desktop/study/pdf/" + storedFileName);
-                    if (file.exists()){
-                        try {
-                            multipartFile.transferTo(file);
-                        } catch (IOException e) {
-                            return null;
-                        }
+                    try {
+                        multipartFile.transferTo(new File("C:/Users/asd/Desktop/study/pdf/" + storedFileName));
+                    } catch (IOException e) {
+                        e.getStackTrace();
                     }
-                    file.delete();
                 } else {
-                    File file = new File(storedFileName);
-                    if (file.exists()){
-                        try {
-                            multipartFile.transferTo(file);
-                        } catch (IOException e) {
-                            return null;
-                        }
+                    try {
+                        multipartFile.transferTo(new File(storedFileName));
+                    } catch (IOException e) {
+                        e.getStackTrace();
                     }
-                    file.delete();
                 }
 
                 FileList fileList = new FileList();
@@ -187,26 +179,17 @@ public class MusicListService {
 
                 String os = System.getProperty("os.name").toLowerCase();
                 if (os.contains("win")) {
-
-                    File file = new File("C:/Users/asd/Desktop/study/pdf/" + storedFileName);
-                    if (file.exists()){
-                        try {
-                            multipartFile.transferTo(file);
-                        } catch (IOException e) {
-                            return null;
-                        }
+                    try {
+                        multipartFile.transferTo(new File("C:/Users/asd/Desktop/study/pdf/" + storedFileName));
+                    } catch (IOException e) {
+                        e.getStackTrace();
                     }
-                    file.delete();
                 } else {
-                    File file = new File(storedFileName);
-                    if (file.exists()){
-                        try {
-                            multipartFile.transferTo(file);
-                        } catch (IOException e) {
-                            return null;
-                        }
+                    try {
+                        multipartFile.transferTo(new File(storedFileName));
+                    } catch (IOException e) {
+                        e.getStackTrace();
                     }
-                    file.delete();
                 }
             }
         }
@@ -316,18 +299,18 @@ public class MusicListService {
     public void pageStartEndNumber(int page, Page<MusicList> paging, Model model) {
         int temp = page / 7;
         int start = temp * 7;
-        if (paging.getTotalPages() ==0 || paging.getTotalPages()==1){
+        if (paging.getTotalPages() == 0 || paging.getTotalPages() == 1) {
             model.addAttribute("start", 0);
             model.addAttribute("end", 0);
-        }else if (start ==0 && paging.getTotalPages() <=7){
+        } else if (start == 0 && paging.getTotalPages() <= 7) {
             model.addAttribute("start", 0);
-            model.addAttribute("end", paging.getTotalPages() -1);
-        }else if (start != 0 && paging.getTotalPages() - start <=7){
+            model.addAttribute("end", paging.getTotalPages() - 1);
+        } else if (start != 0 && paging.getTotalPages() - start <= 7) {
             model.addAttribute("start", start);
-            model.addAttribute("end", paging.getTotalPages()-1);
+            model.addAttribute("end", paging.getTotalPages() - 1);
         } else {
             model.addAttribute("start", start);
-            model.addAttribute("end", start +6);
+            model.addAttribute("end", start + 6);
         }
 
     }
