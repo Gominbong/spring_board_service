@@ -62,7 +62,6 @@ public class MusicListService {
         musicList.setLevel(musicListFormDto.getLevel());
         musicList.setPrice(musicListFormDto.getPrice());
         musicList.setContent(musicListFormDto.getContent());
-        musicList.setViews(0);
         musicList.setLikeCount(0);
         musicList.setSalesQuantity(0);
         LocalDateTime localDateTime = LocalDateTime.now().withNano(0);
@@ -83,13 +82,13 @@ public class MusicListService {
                     try {
                         multipartFile.transferTo(new File("C:/Users/asd/Desktop/study/pdf/" + storedFileName));
                     } catch (IOException e) {
-                        e.getStackTrace();
+                        return null;
                     }
                 } else {
                     try {
                         multipartFile.transferTo(new File(storedFileName));
                     } catch (IOException e) {
-                        e.getStackTrace();
+                        return null;
                     }
                 }
                 FileList fileList = new FileList();
@@ -181,13 +180,13 @@ public class MusicListService {
                     try {
                         multipartFile.transferTo(new File("C:/Users/asd/Desktop/study/pdf/" + storedFileName));
                     } catch (IOException e) {
-                        e.getStackTrace();
+                        return null;
                     }
                 } else {
                     try {
                         multipartFile.transferTo(new File(storedFileName));
                     } catch (IOException e) {
-                        e.getStackTrace();
+                        return null;
                     }
                 }
             }

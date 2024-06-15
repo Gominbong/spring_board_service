@@ -48,8 +48,9 @@ public class CommentService {
         String temp = String.valueOf(localDateTime);
         String createTime = temp.replace("T", " ");
         comment.setCreateTime(createTime);
-        comment.setMusicList(musicList);
         comment.setMember(member);
+        comment.setParentMember(member);
+        comment.setMusicList(musicList);
         comment.setDivWidthSize(0);
         comment.setParent(parent);
         comment.setContent(commentFormDto.getCommentContent());
@@ -69,11 +70,6 @@ public class CommentService {
         return commentRepository.findByMusicListIdAndDivWidthSize(musicListId, 0);
     }
 
-    public Page<Comment> findFirstCommentList(Long id) {
-        Pageable pageable = PageRequest.of(0, 1);
-        return commentRepository.findFirstCommentList(pageable, id);
-    }
-
     public void replyAdd(CommentReplyFormDto commentReplyFormDto, String loginId) {
         Member member = memberRepository.findByLoginId(loginId);
 
@@ -84,7 +80,8 @@ public class CommentService {
         // divWidthSize 2이면 parent child1 child2 넣는식으로 셋팅한다.
         // 대댓글 깊이 5단계인데 원하는 깊이만큼 추가로 만들 수 있다.
         Comment comment = commentRepository.findCommentId(commentReplyFormDto.getCommentId());
-        Member parentCommentMember = memberRepository.findByLoginId(comment.getMember().getLoginId());
+        Member parentMember = comment.getMember();
+
         Long musicListId = comment.getMusicList().getId();
         int parentId = comment.getParent();
         int child1 = comment.getChild1();
@@ -92,22 +89,21 @@ public class CommentService {
         int child3 = comment.getChild3();
 
         Comment reply = new Comment();
-        reply.setParentMemberNickname(parentCommentMember.getNickname());
-        reply.setParentMemberLoginId(parentCommentMember.getLoginId());
         LocalDateTime localDateTime = LocalDateTime.now().withNano(0);
         String temp = String.valueOf(localDateTime);
         String createTime = temp.replace("T", " ");
+        reply.setMember(member);
         reply.setCreateTime(createTime);
         reply.setContent(commentReplyFormDto.getReplyContent());
         reply.setMusicList(comment.getMusicList());
-        reply.setMember(member);
         reply.setMusicList(comment.getMusicList());
-
 
         switch (comment.getDivWidthSize()) {
             case 0 -> {
                 List<Comment> parent = commentRepository.findParent(musicListId, parentId);
+                reply.setParentMember(parentMember);
                 reply.setDivWidthSize(1);
+                reply.setMember(member);
                 reply.setParent(comment.getParent());
                 reply.setChild1(parent.get(0).getChild1() +1);
                 reply.setChild2(0);
@@ -117,6 +113,7 @@ public class CommentService {
             case 1 -> {
                 List<Comment> parent = commentRepository.findParentChild1(musicListId, parentId, child1);
                 reply.setDivWidthSize(2);
+                reply.setParentMember(parentMember);
                 reply.setParent(comment.getParent());
                 reply.setChild1(comment.getChild1());
                 reply.setChild2(parent.get(0).getChild2() +1);
@@ -127,6 +124,7 @@ public class CommentService {
                 List<Comment> parent = commentRepository.
                         findParentChild1Child2(musicListId, parentId, child1, child2);
                 reply.setDivWidthSize(3);
+                reply.setParentMember(parentMember);
                 reply.setParent(comment.getParent());
                 reply.setChild1(comment.getChild1());
                 reply.setChild2(comment.getChild2());
@@ -137,6 +135,7 @@ public class CommentService {
                 List<Comment> parent = commentRepository.
                         findParentChild1Child2Child3(musicListId, parentId, child1, child2, child3);
                 reply.setDivWidthSize(4);
+                reply.setParentMember(parentMember);
                 reply.setParent(comment.getParent());
                 reply.setChild1(comment.getChild1());
                 reply.setChild2(comment.getChild2());

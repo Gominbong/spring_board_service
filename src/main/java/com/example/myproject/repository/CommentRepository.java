@@ -12,20 +12,10 @@ import java.util.List;
 @Repository
 public interface CommentRepository extends JpaRepository <Comment, Long> {
 
-
     @Query("select c from Comment c inner join fetch c.musicList musicList inner join fetch" +
-            " c.member member where musicList.id = :musicListId ")
-    List<Comment> findCommentList1(Long musicListId);
-
-    @Query("select c from Comment c inner join fetch c.musicList musicList inner join fetch" +
-            " c.member member where musicList.id = :musicListId order by" +
+            " c.member member inner join fetch c.parentMember parentMember where musicList.id = :musicListId order by" +
             " c.parent, c.child1, c.child2, c. child3, c.child4")
     List<Comment> findCommentList(Long musicListId);
-
-    @Query("select c from Comment c inner join fetch c.musicList musicList inner join fetch" +
-            " c.member member where musicList.id = :musicListId order by" +
-            " c.parent, c.child1, c.child2, c. child3, c.child4")
-    Page<Comment> findFirstCommentList(Pageable pageable, Long musicListId);
 
     List<Comment> findByMusicListIdAndDivWidthSize(Long musicListId, int divWidthSize);
 

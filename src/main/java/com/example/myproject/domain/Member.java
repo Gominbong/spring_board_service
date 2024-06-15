@@ -24,7 +24,5 @@ public class Member {
     private Integer cash;
     private Integer revenue;
     private String createTime;
-    private String refreshToken;
-
 
 }

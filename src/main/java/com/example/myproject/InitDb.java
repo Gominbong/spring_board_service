@@ -81,7 +81,6 @@ public class InitDb {
             String createTime = temp.replace("T", " ");
             comment.setCreateTime(createTime);
             comment.setMusicList(musicList);
-            comment.setMember(member);
             comment.setDivWidthSize(0);
             comment.setParent(parent);
             parent += 1;

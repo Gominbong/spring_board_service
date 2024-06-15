@@ -14,7 +14,6 @@ public class Cart {
     @Column(name = "cart_id")
     private Long id;
     private String createTime;
-    private String musicListTitle;
     private String loginId;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "musicList_id")

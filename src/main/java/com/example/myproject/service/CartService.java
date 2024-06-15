@@ -29,7 +29,6 @@ public class CartService {
             String createTime = temp.replace("T", " ");
             cart.setCreateTime(createTime);
             cart.setLoginId(loginId);
-            cart.setMusicListTitle(musicList.getTitle());
             cart.setMusicList(musicList);
             cartRepository.save(cart);
             log.info("장바구니 추가 완료");

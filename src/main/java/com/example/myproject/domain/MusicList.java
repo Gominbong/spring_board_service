@@ -30,6 +30,5 @@ public class MusicList {
     private String softDelete;
     private Integer salesQuantity;
     private Integer likeCount;
-    private Integer views;
 
 }
