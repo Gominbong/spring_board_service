@@ -25,9 +25,37 @@ public class InitDb {
 
     private final InitService initService;
     private static int parent = 0;
+    private final MemberRepository memberRepository;
 
     @PostConstruct
     public void init() {
+
+        /*
+        Member member = memberRepository.findByLoginId("3");
+        for (int a=0; a<3095; a++){
+            initService.for0(102L ,a, member);
+        }*/
+
+
+/*
+
+        for (int a=0; a<5; a++){
+            initService.for0(102L ,a, member);
+            for (int b=1; b<6; b++){
+                initService.for1(102L, a, b, member);
+                for (int c=2; c<7; c++){
+                    initService.for2(102L, a, b, c, member);
+                    for (int d=3; d<8; d++){
+                        initService.for3(102L ,a, b, c, d, member);
+                        for (int e=4; e<9; e++){
+                            initService.for4(102L ,a, b, c, d, e, member);
+                        }
+                    }
+                }
+            }
+        }
+*/
+
 
     /*    parent = 0;
         for (int i=0; i<2000; i++){
@@ -68,9 +96,117 @@ public class InitDb {
         private final MemberRepository memberRepository;
         private final CommentRepository commentRepository;
 
-        public void dbInit4(){
-            Member member = memberRepository.findByLoginId("3");
+        public void for0(Long id, int a, Member member){
+            MusicList musicList = musicListRepository.findById(id).orElseThrow();
+
+            Comment comment = new Comment();
+            comment.setMember(member);
+            comment.setParentMember(member);
+            LocalDateTime localDateTime = LocalDateTime.now().withNano(0);
+            String temp = String.valueOf(localDateTime);
+            String createTime = temp.replace("T", " ");
+            comment.setCreateTime(createTime);
+            comment.setMusicList(musicList);
+            comment.setDivWidthSize(0);
+            comment.setContent("테스트내용");
+            comment.setParent(a);
+            comment.setChild1(0);
+            comment.setChild2(0);
+            comment.setChild3(0);
+            comment.setChild4(0);
+            commentRepository.save(comment);
+
         }
+
+        public void for1(Long id, int a, int b, Member member){
+            MusicList musicList = musicListRepository.findById(id).orElseThrow();
+
+            Comment comment = new Comment();
+            comment.setMember(member);
+            comment.setParentMember(member);
+            LocalDateTime localDateTime = LocalDateTime.now().withNano(0);
+            String temp = String.valueOf(localDateTime);
+            String createTime = temp.replace("T", " ");
+            comment.setCreateTime(createTime);
+            comment.setMusicList(musicList);
+            comment.setDivWidthSize(1);
+            comment.setContent("테스트내용");
+            comment.setParent(a);
+            comment.setChild1(b);
+            comment.setChild2(0);
+            comment.setChild3(0);
+            comment.setChild4(0);
+            commentRepository.save(comment);
+
+        }
+
+        public void for2(Long id, int a, int b, int c, Member member){
+            MusicList musicList = musicListRepository.findById(id).orElseThrow();
+
+            Comment comment = new Comment();
+            comment.setMember(member);
+            comment.setParentMember(member);
+            LocalDateTime localDateTime = LocalDateTime.now().withNano(0);
+            String temp = String.valueOf(localDateTime);
+            String createTime = temp.replace("T", " ");
+            comment.setCreateTime(createTime);
+            comment.setMusicList(musicList);
+            comment.setDivWidthSize(2);
+            comment.setContent("테스트내용");
+            comment.setParent(a);
+            comment.setChild1(b);
+            comment.setChild2(c);
+            comment.setChild3(0);
+            comment.setChild4(0);
+            commentRepository.save(comment);
+
+        }
+
+        public void for3(Long id, int a, int b, int c, int d, Member member){
+            MusicList musicList = musicListRepository.findById(id).orElseThrow();
+
+            Comment comment = new Comment();
+            comment.setMember(member);
+            comment.setParentMember(member);
+            LocalDateTime localDateTime = LocalDateTime.now().withNano(0);
+            String temp = String.valueOf(localDateTime);
+            String createTime = temp.replace("T", " ");
+            comment.setCreateTime(createTime);
+            comment.setMusicList(musicList);
+            comment.setDivWidthSize(3);
+            comment.setContent("테스트내용");
+            comment.setParent(a);
+            comment.setChild1(b);
+            comment.setChild2(c);
+            comment.setChild3(d);
+            comment.setChild4(0);
+            commentRepository.save(comment);
+
+        }
+
+        public void for4(Long id, int a, int b, int c, int d, int e, Member member){
+            MusicList musicList = musicListRepository.findById(id).orElseThrow();
+
+            Comment comment = new Comment();
+            comment.setMember(member);
+            comment.setParentMember(member);
+            LocalDateTime localDateTime = LocalDateTime.now().withNano(0);
+            String temp = String.valueOf(localDateTime);
+            String createTime = temp.replace("T", " ");
+            comment.setCreateTime(createTime);
+            comment.setMusicList(musicList);
+            comment.setDivWidthSize(4);
+            comment.setContent("테스트내용");
+            comment.setParent(a);
+            comment.setChild1(b);
+            comment.setChild2(c);
+            comment.setChild3(d);
+            comment.setChild4(e);
+            commentRepository.save(comment);
+
+        }
+
+
         public void dbInit3(Long id){
             MusicList musicList = musicListRepository.findById(id).orElseThrow();
             Member member = memberRepository.findByLoginId("3");

@@ -1,6 +1,7 @@
 package com.example.myproject.repository;
 
 import com.example.myproject.domain.Cart;
+import com.example.myproject.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import java.util.List;

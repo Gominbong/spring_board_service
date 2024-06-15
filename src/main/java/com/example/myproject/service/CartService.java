@@ -1,6 +1,7 @@
 package com.example.myproject.service;
 
 import com.example.myproject.domain.Cart;
+import com.example.myproject.domain.Member;
 import com.example.myproject.domain.MusicList;
 import com.example.myproject.repository.CartRepository;
 import com.example.myproject.repository.MusicListRepository;
@@ -18,10 +19,9 @@ public class CartService {
     private final CartRepository cartRepository;
     private final MusicListRepository musicListRepository;
 
-    public Cart createCart(Long id, String loginId) {
+    public Cart createAddCart(Long id, String loginId) {
         MusicList musicList = musicListRepository.findById(id).orElseThrow();
         Cart result = cartRepository.findByLoginIdAndMusicListId(loginId, id);
-
         if (result == null){
             Cart cart = new Cart();
             LocalDateTime localDateTime = LocalDateTime.now().withNano(0);
@@ -45,7 +45,7 @@ public class CartService {
 
     }
 
-    public void deleteCartList(Long cartListId) {
+    public void deleteCartList(Long cartListId, String loginId) {
         log.info("장바구니 삭제완료");
         cartRepository.deleteById(cartListId);
     }

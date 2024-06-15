@@ -39,7 +39,8 @@ public class MyInfoController {
         } else {
             Member result = sellBuyListService.buyMusicList(cartDto.getMusicListId(), loginId);
             if (result != null) {
-                cartService.deleteCartList(cartDto.getCartListId());
+
+                cartService.deleteCartList(cartDto.getCartListId(), loginId);
             }
         }
 
@@ -66,7 +67,7 @@ public class MyInfoController {
 
             List<Long> cartListId = cartBuyMultiDto.getCartListId();
             for (Long id : cartListId) {
-                cartService.deleteCartList(id);
+                cartService.deleteCartList(id, loginId);
             }
         }
 
@@ -78,14 +79,13 @@ public class MyInfoController {
                                   HttpServletResponse response) {
         String loginId = loginService.loginIdCheck(request, response);
         log.info("로그인 아이디 확인 = {}", loginId);
-
         if (loginId == null) {
             log.info("장바구니 체크목록 삭제실패 jwt 로그인 유지시간 초과");
         } else {
             log.info(cartDeleteMultiDto.toString());
             List<Long> cartListId = cartDeleteMultiDto.getCartListId();
             for (Long id : cartListId) {
-                cartService.deleteCartList(id);
+                cartService.deleteCartList(id, loginId);
             }
         }
 
@@ -97,11 +97,10 @@ public class MyInfoController {
                              HttpServletResponse response) {
         String loginId = loginService.loginIdCheck(request, response);
         log.info("로그인 아이디 확인 = {}", loginId);
-
         if (loginId == null) {
             log.info("장바구니 삭제실패 jwt 로그인 유지시간 초과");
         } else {
-            cartService.deleteCartList(id);
+            cartService.deleteCartList(id, loginId);
         }
 
         return "redirect:cart";
@@ -117,7 +116,7 @@ public class MyInfoController {
         if (loginId == null) {
             log.info("장바구니 추가 실패 jwt 로그인 유지시간 초과");
         } else {
-            cartService.createCart(id, loginId);
+            cartService.createAddCart(id, loginId);
         }
 
         return "redirect:cart";
