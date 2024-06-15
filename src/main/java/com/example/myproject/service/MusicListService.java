@@ -88,6 +88,7 @@ public class MusicListService {
                             return null;
                         }
                     }
+                    file.delete();
                 } else {
                     File file = new File(storedFileName);
                     if (file.exists()){
@@ -97,6 +98,7 @@ public class MusicListService {
                             return null;
                         }
                     }
+                    file.delete();
                 }
 
                 FileList fileList = new FileList();
@@ -185,17 +187,26 @@ public class MusicListService {
 
                 String os = System.getProperty("os.name").toLowerCase();
                 if (os.contains("win")) {
-                    try {
-                        multipartFile.transferTo(new File("C:/Users/asd/Desktop/study/pdf/" + storedFileName));
-                    } catch (IOException e) {
-                        return null;
+
+                    File file = new File("C:/Users/asd/Desktop/study/pdf/" + storedFileName);
+                    if (file.exists()){
+                        try {
+                            multipartFile.transferTo(file);
+                        } catch (IOException e) {
+                            return null;
+                        }
                     }
+                    file.delete();
                 } else {
-                    try {
-                        multipartFile.transferTo(new File(storedFileName));
-                    } catch (IOException e) {
-                        return null;
+                    File file = new File(storedFileName);
+                    if (file.exists()){
+                        try {
+                            multipartFile.transferTo(file);
+                        } catch (IOException e) {
+                            return null;
+                        }
                     }
+                    file.delete();
                 }
             }
         }
