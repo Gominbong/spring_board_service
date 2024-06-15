@@ -74,13 +74,15 @@ public class InitDb {
             initService.dbInit3(405L);
         }*/
 
-/*        initService.createMember("3", "3", "Rhalsqhd123");
+        /*
+        initService.createMember("3", "3", "Rhalsqhd123");
         initService.createMember("2", "2", "Rhalsqhd456");
-        for(int i=0; i<170; i++){
+        */
+
+/*        for(int i=0; i<170; i++){
             initService.dbInit1();
             initService.dbInit2();
         }*/
-
     }
 
     @Component

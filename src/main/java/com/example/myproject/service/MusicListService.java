@@ -79,18 +79,26 @@ public class MusicListService {
 
                 String os = System.getProperty("os.name").toLowerCase();
                 if (os.contains("win")) {
-                    try {
-                        multipartFile.transferTo(new File("C:/Users/asd/Desktop/study/pdf/" + storedFileName));
-                    } catch (IOException e) {
-                        return null;
+
+                    File file = new File("C:/Users/asd/Desktop/study/pdf/" + storedFileName);
+                    if (file.exists()){
+                        try {
+                            multipartFile.transferTo(file);
+                        } catch (IOException e) {
+                            return null;
+                        }
                     }
                 } else {
-                    try {
-                        multipartFile.transferTo(new File(storedFileName));
-                    } catch (IOException e) {
-                        return null;
+                    File file = new File(storedFileName);
+                    if (file.exists()){
+                        try {
+                            multipartFile.transferTo(file);
+                        } catch (IOException e) {
+                            return null;
+                        }
                     }
                 }
+
                 FileList fileList = new FileList();
                 fileList.setMusicList(musicList); //외래키 설정
                 fileList.setOriginalFilename(originalFilename);
