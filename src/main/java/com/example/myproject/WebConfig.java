@@ -19,6 +19,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class WebConfig implements WebMvcConfigurer {
 
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

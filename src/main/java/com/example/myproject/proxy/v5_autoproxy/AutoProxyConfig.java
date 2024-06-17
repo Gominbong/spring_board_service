@@ -16,6 +16,7 @@ public class AutoProxyConfig {
     public LogTrace logTrace() {
         return new ThreadLocalLogTrace();
     }
+
     @Bean
     public Advisor advisor2(LogTrace logTrace) {
         //pointcut

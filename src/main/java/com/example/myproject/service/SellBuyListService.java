@@ -38,9 +38,6 @@ public class SellBuyListService {
         Member sellMember = memberRepository.findById(musicList.getMember().getId()).orElseThrow();
 
         Cart cart = cartRepository.findByLoginIdAndMusicListId(loginId, id);
-        if (cart != null){
-            cartRepository.delete(cart);
-        }
         if (buyMember.getCash() >= musicList.getPrice()){
             SellBuyList sellBuyList = new SellBuyList();
             sellBuyList.setMusicList(musicList);
@@ -55,8 +52,12 @@ public class SellBuyListService {
             buyMember.setCash(buyMember.getCash() - musicList.getPrice());
             sellMember.setRevenue(sellMember.getRevenue() + musicList.getPrice());
         }else{
-            log.info("보유금액 초과 구매실패");
+            log.info("잔액부족 구매실패");
             return null;
+        }
+
+        if (cart != null){
+            cartRepository.delete(cart);
         }
         log.info("구매성공");
         return  buyMember;
