@@ -19,6 +19,11 @@ public class MemberService {
         return memberRepository.findByLoginId(loginId);
     }
 
+    public Member findByLoginId1(String loginId){
+
+        return memberRepository.find(loginId);
+    }
+
     @Transactional
     public Map<String, String> addCash(String loginId, AddCashDto addCashDto) {
 

@@ -7,8 +7,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface MusicListRepository extends JpaRepository<MusicList, Long> {
+
 
     @Query("select musicList from MusicList musicList inner join fetch" +
             " musicList.member member where musicList.softDelete is null")

@@ -199,7 +199,8 @@ public class MusicListController {
         MusicList musicList = musicListService.findById(id);
         List<FileList> fileList = fileListService.findByFiles(id);
         SellBuyList sellBuyList = sellBuyListService.myBuyInfo(id, loginId);
-        Member member = memberService.findByLoginId(loginId);
+        Member member = memberService.findByLoginId1(loginId);
+        log.info("쿼리 dsl 확인 = {}", member.getLoginId());
         List<Comment> commentList = commentService.findCommentList(id);
         model.addAttribute("commentList", commentList);
 
