@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -16,12 +17,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     public Member findByLoginId(String loginId){
-        return memberRepository.findByLoginId(loginId);
-    }
-
-    public Member findByLoginId1(String loginId){
-
-        return memberRepository.find(loginId);
+        return memberRepository.findByLoginIdQueryDsl(loginId);
     }
 
     @Transactional
@@ -41,7 +37,7 @@ public class MemberService {
         }
 
 
-        Member member = memberRepository.findByLoginId(loginId);
+        Member member = memberRepository.findByLoginIdQueryDsl(loginId);
         member.setCash(member.getCash() + addCashDto.getCash());
 
         return null;

@@ -27,9 +27,9 @@ public class MyInfoService {
             return errors;
         }
 
-        Member result = memberRepository.findByNickname(myInfoEditDto.getNickname());
+        Member result = memberRepository.findByNicknameQueryDsl(myInfoEditDto.getNickname());
         if (result == null){
-            Member member = memberRepository.findByLoginId(loginId);
+            Member member = memberRepository.findByLoginIdQueryDsl(loginId);
             member.setNickname(myInfoEditDto.getNickname());
         }else{
             log.info("닉네임중복입니다.");

@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface SellBuyListRepository extends JpaRepository<SellBuyList, Long> {
+public interface SellBuyListRepository extends JpaRepository<SellBuyList, Long>, SellBuyListRepositoryCustom {
 
 
     SellBuyList findByMusicListIdAndBuyMemberLoginId(Long musicListId, String loginId);

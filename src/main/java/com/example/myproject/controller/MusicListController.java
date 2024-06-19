@@ -194,17 +194,20 @@ public class MusicListController {
         String loginId = loginService.loginIdCheck(request, response);
         model.addAttribute("loginId", loginId);
         log.info("로그인 아이디 확인 = {}", loginId);
+        if (loginId != null){
+            SellBuyList sellBuyList = sellBuyListService.myBuyInfo(id, loginId);
+            model.addAttribute("sellBuyList", sellBuyList);
+        }
 
-        LikeCount likeCount = likeCountService.findMyLike(id, loginId);
+        LikeCount myLike = likeCountService.findMyLike(id, loginId);
         MusicList musicList = musicListService.findById(id);
         List<FileList> fileList = fileListService.findByFiles(id);
-        SellBuyList sellBuyList = sellBuyListService.myBuyInfo(id, loginId);
-        Member member = memberService.findByLoginId1(loginId);
-        log.info("쿼리 dsl 확인 = {}", member.getLoginId());
+
+        Member member = memberService.findByLoginId(loginId);
         List<Comment> commentList = commentService.findCommentList(id);
         model.addAttribute("commentList", commentList);
 
-        if (likeCount != null){
+        if (myLike != null){
             model.addAttribute("likeCount", 1);
         }else{
             model.addAttribute("likeCount", 0);
@@ -229,7 +232,7 @@ public class MusicListController {
 
         model.addAttribute("fileList", fileList);
         model.addAttribute("musicList", musicList);
-        model.addAttribute("sellBuyList", sellBuyList);
+
         return "musicList/contentMusicListForm";
     }
 

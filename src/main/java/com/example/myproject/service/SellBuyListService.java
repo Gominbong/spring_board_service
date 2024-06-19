@@ -34,10 +34,9 @@ public class SellBuyListService {
 
 
         MusicList musicList = musicListRepository.findById(id).orElseThrow();
-        Member buyMember = memberRepository.findByLoginId(loginId);
+        Member buyMember = memberRepository.findByLoginIdQueryDsl(loginId);
         Member sellMember = memberRepository.findById(musicList.getMember().getId()).orElseThrow();
 
-        Cart cart = cartRepository.findByLoginIdAndMusicListId(loginId, id);
         if (buyMember.getCash() >= musicList.getPrice()){
             SellBuyList sellBuyList = new SellBuyList();
             sellBuyList.setMusicList(musicList);
@@ -56,6 +55,7 @@ public class SellBuyListService {
             return null;
         }
 
+        Cart cart = cartRepository.findByLoginIdAndMusicListIdQueryDsl(loginId, id);
         if (cart != null){
             cartRepository.delete(cart);
         }
@@ -65,17 +65,17 @@ public class SellBuyListService {
 
 
     public SellBuyList myBuyInfo(Long id, String loginId) {
-        return sellBuyListRepository.findByMusicListIdAndBuyMemberLoginId(id, loginId);
+        return sellBuyListRepository.findByMusicListIdAndBuyMemberLoginIdQueryDsl(id, loginId);
     }
 
     public Page<SellBuyList> findBuyList(int page, String loginId) {
         Pageable pageable = PageRequest.of(page, 15, Sort.by(Sort.Direction.DESC, "id"));
-        return sellBuyListRepository.findMyBuyList(pageable, loginId);
+        return sellBuyListRepository.findMyBuyListQueryDsl(pageable, loginId);
     }
 
     public Page<SellBuyList> findSellList(int page, String loginId) {
         Pageable pageable = PageRequest.of(page, 15, Sort.by(Sort.Direction.DESC, "id"));
-        return sellBuyListRepository.findMySellList(pageable, loginId);
+        return sellBuyListRepository.findMySellListQueryDsl(pageable, loginId);
     }
 
     public void pageStartEndNumber(int page, Page<SellBuyList> paging, Model model) {

@@ -55,7 +55,7 @@ public class MusicListService {
             return errors;
         }
 
-        Member member = memberRepository.findByLoginId(loginId);
+        Member member = memberRepository.findByLoginIdQueryDsl(loginId);
         MusicList musicList = new MusicList();
         musicList.setMember(member); // 외래키 설정
         musicList.setTitle(musicListFormDto.getTitle());
@@ -105,12 +105,13 @@ public class MusicListService {
     }
 
     public Page<MusicList> findMusicList(int page) {
-        Pageable pageable = PageRequest.of(page, 15, Sort.by(Sort.Direction.DESC, "id"));
-        return musicListRepository.findBySoftDeleteIsNull(pageable);
+        Pageable pageable = PageRequest.of(page, 15);
+        return musicListRepository.findBySoftDeleteIsNullQueryDsl(pageable);
     }
 
+
     public MusicList findById(Long id) {
-        return musicListRepository.findByMusicList(id);
+        return musicListRepository.findByMusicListQueryDsl(id);
     }
 
 
@@ -154,7 +155,7 @@ public class MusicListService {
         if (filename != null) {
             for (String file : filename) {
                 log.info("수정페이지에서 삭제버튼누른 파일이름 = '{}'", file);
-                FileList fileList = fileRepository.findByStoredFilename(file);
+                FileList fileList = fileRepository.findByStoredFilenameQueryDsl(file);
                 fileRepository.delete(fileList);
 
                 String os = System.getProperty("os.name").toLowerCase();
@@ -215,48 +216,48 @@ public class MusicListService {
                 && searchSortDto.getSortType().equals("sortSelect")) {
             log.info("여기1111");
             Pageable pageable = PageRequest.of(page, 15, Sort.by(Sort.Direction.DESC, "id"));
-            return musicListRepository.findMusicListByTitleContains(pageable, searchSortDto.getSearch());
+            return musicListRepository.findMusicListByTitleContainsQueryDsl(pageable, searchSortDto.getSearch());
         } else if (searchSortDto.getSearchType().equals("searchTitle")
                 && searchSortDto.getSortType().equals("sortPrice")) {
             log.info("여기2222");
             log.info("dto확인 = {}", searchSortDto.getSearch());
             Pageable pageable = PageRequest.of(page, 15, Sort.by(Sort.Direction.DESC, "price"));
-            return musicListRepository.findMusicListByTitleContains(pageable,
+            return musicListRepository.findMusicListByTitleContainsQueryDsl(pageable,
                     searchSortDto.getSearch());
         } else if (searchSortDto.getSearchType().equals("searchTitle")
                 && searchSortDto.getSortType().equals("sortLike")) {
             log.info("여기3333");
             Pageable pageable = PageRequest.of(page, 15, Sort.by(Sort.Direction.DESC, "likeCount"));
-            return musicListRepository.findMusicListByTitleContains(pageable, searchSortDto.getSearch());
+            return musicListRepository.findMusicListByTitleContainsQueryDsl(pageable, searchSortDto.getSearch());
         } else if (searchSortDto.getSearchType().equals("searchTitle")
                 && searchSortDto.getSortType().equals("sortQuantity")) {
             log.info("여기4444");
             Pageable pageable = PageRequest.of(page, 15, Sort.by(Sort.Direction.DESC, "salesQuantity"));
-            return musicListRepository.findMusicListByTitleContains(pageable, searchSortDto.getSearch());
+            return musicListRepository.findMusicListByTitleContainsQueryDsl(pageable, searchSortDto.getSearch());
         }
 
         if (searchSortDto.getSearchType().equals("searchNickname")
                 && searchSortDto.getSortType().equals("sortSelect")) {
             log.info("여기1111");
             Pageable pageable = PageRequest.of(page, 15, Sort.by(Sort.Direction.DESC, "id"));
-            return musicListRepository.findMusicListByNicknameContains(pageable, searchSortDto.getSearch());
+            return musicListRepository.findMusicListByNicknameContainsQueryDsl(pageable, searchSortDto.getSearch());
         } else if (searchSortDto.getSearchType().equals("searchNickname")
                 && searchSortDto.getSortType().equals("sortPrice")) {
             log.info("여기2222");
             log.info("dto확인 = {}", searchSortDto.getSearch());
             Pageable pageable = PageRequest.of(page, 15, Sort.by(Sort.Direction.DESC, "price"));
-            return musicListRepository.findMusicListByNicknameContains(pageable,
+            return musicListRepository.findMusicListByNicknameContainsQueryDsl(pageable,
                     searchSortDto.getSearch());
         } else if (searchSortDto.getSearchType().equals("searchNickname")
                 && searchSortDto.getSortType().equals("sortLike")) {
             log.info("여기3333");
             Pageable pageable = PageRequest.of(page, 15, Sort.by(Sort.Direction.DESC, "likeCount"));
-            return musicListRepository.findMusicListByNicknameContains(pageable, searchSortDto.getSearch());
+            return musicListRepository.findMusicListByNicknameContainsQueryDsl(pageable, searchSortDto.getSearch());
         } else if (searchSortDto.getSearchType().equals("searchNickname")
                 && searchSortDto.getSortType().equals("sortQuantity")) {
             log.info("여기4444");
             Pageable pageable = PageRequest.of(page, 15, Sort.by(Sort.Direction.DESC, "salesQuantity"));
-            return musicListRepository.findMusicListByNicknameContains(pageable, searchSortDto.getSearch());
+            return musicListRepository.findMusicListByNicknameContainsQueryDsl(pageable, searchSortDto.getSearch());
         }
 
         return null;
@@ -265,10 +266,10 @@ public class MusicListService {
     public Page<MusicList> musicListSearch(int page, SearchDto searchDto) {
         Pageable pageable = PageRequest.of(page, 15, Sort.by(Sort.Direction.DESC, "id"));
         if (searchDto.getSearchType().equals("searchTitle")) {
-            return musicListRepository.findMusicListByTitleContains(pageable, searchDto.getSearch());
+            return musicListRepository.findMusicListByTitleContainsQueryDsl(pageable, searchDto.getSearch());
         }
         if (searchDto.getSearchType().equals("searchNickname")) {
-            return musicListRepository.findMusicListByNicknameContains(pageable, searchDto.getSearch());
+            return musicListRepository.findMusicListByNicknameContainsQueryDsl(pageable, searchDto.getSearch());
         }
         log.info("ㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹ");
         return null;
@@ -278,19 +279,19 @@ public class MusicListService {
 
         if (homeSortDto.getSortType().equals("sortSelect")) {
             Pageable pageable = PageRequest.of(page, 15, Sort.by(Sort.Direction.DESC, "id"));
-            return musicListRepository.findBySoftDeleteIsNull(pageable);
+            return musicListRepository.findBySoftDeleteIsNullQueryDsl(pageable);
         }
         if (homeSortDto.getSortType().equals("sortPrice")) {
             Pageable pageable = PageRequest.of(page, 15, Sort.by(Sort.Direction.DESC, "price"));
-            return musicListRepository.findBySoftDeleteIsNull(pageable);
+            return musicListRepository.findBySoftDeleteIsNullQueryDsl(pageable);
         }
         if (homeSortDto.getSortType().equals("sortLike")) {
             Pageable pageable = PageRequest.of(page, 15, Sort.by(Sort.Direction.DESC, "likeCount"));
-            return musicListRepository.findBySoftDeleteIsNull(pageable);
+            return musicListRepository.findBySoftDeleteIsNullQueryDsl(pageable);
         }
         if (homeSortDto.getSortType().equals("sortQuantity")) {
             Pageable pageable = PageRequest.of(page, 15, Sort.by(Sort.Direction.DESC, "salesQuantity"));
-            return musicListRepository.findBySoftDeleteIsNull(pageable);
+            return musicListRepository.findBySoftDeleteIsNullQueryDsl(pageable);
         }
 
         return null;
@@ -299,6 +300,8 @@ public class MusicListService {
     public void pageStartEndNumber(int page, Page<MusicList> paging, Model model) {
         int temp = page / 7;
         int start = temp * 7;
+
+
         if (paging.getTotalPages() == 0 || paging.getTotalPages() == 1) {
             model.addAttribute("start", 0);
             model.addAttribute("end", 0);

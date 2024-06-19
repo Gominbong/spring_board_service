@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface MusicListRepository extends JpaRepository<MusicList, Long> {
+public interface MusicListRepository extends JpaRepository<MusicList, Long>, MusicListRepositoryCustom {
 
 
     @Query("select musicList from MusicList musicList inner join fetch" +

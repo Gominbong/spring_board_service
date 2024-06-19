@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface CommentRepository extends JpaRepository <Comment, Long> {
+public interface CommentRepository extends JpaRepository <Comment, Long>, CommentRepositoryCustom {
 
     @Query("select c from Comment c inner join fetch c.musicList musicList inner join fetch" +
             " c.member member inner join fetch c.parentMember parentMember where musicList.id = :musicListId order by" +
@@ -24,26 +24,20 @@ public interface CommentRepository extends JpaRepository <Comment, Long> {
     Comment findCommentId(Long commentId);
 
     @Query("select c from Comment c inner join fetch c.musicList musicList" +
-            " where c.musicList.id = :musicListId and c.parent = :parentId" +
-            " order by c.parent desc, c.child1 desc, c.child2 desc, c.child3 desc, c.child4 desc")
+            " where c.musicList.id = :musicListId and c.parent = :parentId")
     List<Comment> findParent(Long musicListId, int parentId);
 
     @Query("select c from Comment c inner join fetch c.musicList musicList" +
-            " where c.musicList.id = :musicListId and c.parent = :parentId and c.child1 = :child1" +
-            " order by c.parent desc, c.child1 desc, c.child2 desc, c.child3 desc, c.child4 desc")
-    List<Comment> findParentChild1(Long musicListId, int parentId, int child1);
+            " where c.musicList.id = :musicListId and c.child1 = :child1")
+    List<Comment> findChild1(Long musicListId, int child1);
 
     @Query("select c from Comment c inner join fetch c.musicList musicList" +
-            " where c.musicList.id = :musicListId and c.parent = :parentId and c.child1 = :child1" +
-            " and c.child2 = :child2" +
-            " order by c.parent desc, c.child1 desc, c.child2 desc, c.child3 desc, c.child4 desc")
-    List<Comment> findParentChild1Child2(Long musicListId, int parentId, int child1, int child2);
+            " where c.musicList.id = :musicListId and c.child2 = :child2")
+    List<Comment> findChild2(Long musicListId, int child2);
 
 
     @Query("select c from Comment c inner join fetch c.musicList musicList" +
-            " where c.musicList.id = :musicListId and c.parent = :parentId and c.child1 = :child1" +
-            " and c.child2 = :child2 and c.child3 = :child3" +
-            " order by c.parent desc, c.child1 desc, c.child2 desc, c.child3 desc, c.child4 desc")
-    List<Comment> findParentChild1Child2Child3(Long musicListId, int parentId, int child1, int child2, int child3);
+            " where c.musicList.id = :musicListId and c.child3 = :child3")
+    List<Comment> findChild3(Long musicListId, int child3);
 
 }

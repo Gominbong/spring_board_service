@@ -27,7 +27,7 @@ public class LoginService {
     long expiredTime = 1000 * 60L * 1000L; // 토큰 유효 시간 (30분)
     public Member login(LoginFormDto loginFormDto) {
 
-        Member result = memberRepository.findEncodePassword(loginFormDto.getId());
+        Member result = memberRepository.findEncodePasswordQueryDsl(loginFormDto.getId());
         log.info("암호화 비밀번호 가져오기 확인  = '{}'", result);
 
         if (result == null) {

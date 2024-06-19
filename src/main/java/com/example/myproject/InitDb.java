@@ -211,7 +211,7 @@ public class InitDb {
 
         public void dbInit3(Long id){
             MusicList musicList = musicListRepository.findById(id).orElseThrow();
-            Member member = memberRepository.findByLoginId("3");
+            Member member = memberRepository.findByLoginIdQueryDsl("3");
 
             Comment comment = new Comment();
             LocalDateTime localDateTime = LocalDateTime.now().withNano(0);

@@ -22,8 +22,8 @@ public class SignupService {
 
     public Map<String, String> createMember(SignupFormDto signupFormDto) {
 
-        Member loginId = memberRepository.findByLoginId(signupFormDto.getId());
-        Member nickname = memberRepository.findByNickname(signupFormDto.getNick());
+        Member loginId = memberRepository.findByLoginIdQueryDsl(signupFormDto.getId());
+        Member nickname = memberRepository.findByNicknameQueryDsl(signupFormDto.getNick());
         Map<String, String> errors = new HashMap<>();
         Member member = new Member();
         if (signupFormDto.getPw().equals(signupFormDto.getPwCheck())){

@@ -2,10 +2,12 @@ package com.example.myproject.repository;
 
 import com.example.myproject.domain.Member;
 
-import java.util.List;
-
 public interface MemberRepositoryCustom {
-    Member find(String loginId);
+    Member findByLoginIdQueryDsl(String loginId);
+
+    Member findByNicknameQueryDsl(String nickname);
+
+    Member findEncodePasswordQueryDsl(String id);
 
 
 }

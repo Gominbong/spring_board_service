@@ -21,7 +21,7 @@ public class CartService {
 
     public Cart createAddCart(Long id, String loginId) {
         MusicList musicList = musicListRepository.findById(id).orElseThrow();
-        Cart result = cartRepository.findByLoginIdAndMusicListId(loginId, id);
+        Cart result = cartRepository.findByLoginIdAndMusicListIdQueryDsl(loginId, id);
         if (result == null){
             Cart cart = new Cart();
             LocalDateTime localDateTime = LocalDateTime.now().withNano(0);
@@ -41,7 +41,7 @@ public class CartService {
 
 
     public List<Cart> findCartList(String loginId) {
-        return cartRepository.findCartList(loginId);
+        return cartRepository.findCartListQueryDsl(loginId);
 
     }
 

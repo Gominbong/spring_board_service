@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository
-public interface LikeCountRepository extends JpaRepository<LikeCount, Long> {
+public interface LikeCountRepository extends JpaRepository<LikeCount, Long>, LikeCountRepositoryCustom {
 
 
     LikeCount findByMusicListIdAndLoginId(Long musicListId, String loginId);

@@ -20,7 +20,7 @@ public class LikeCountService {
     public LikeCount like(Long id, String loginId){
 
         MusicList musicList = musicListRepository.findById(id).orElseThrow();
-        LikeCount result = likeCountRepository.findByMusicListIdAndLoginId(id, loginId);
+        LikeCount result = likeCountRepository.findByMusicListIdAndLoginIdQueryDsl(id, loginId);
 
         if (result == null) {
             LikeCount likeCount = new LikeCount();
@@ -36,7 +36,12 @@ public class LikeCountService {
     }
 
     public LikeCount findMyLike(Long id, String loginId) {
-        return likeCountRepository.findByMusicListIdAndLoginId(id, loginId);
-
+        if (loginId == null){
+            return null;
+        }else{
+            return likeCountRepository.findByMusicListIdAndLoginIdQueryDsl(id, loginId);
+        }
     }
+
+
 }

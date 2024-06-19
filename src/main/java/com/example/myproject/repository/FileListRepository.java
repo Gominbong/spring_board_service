@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface FileListRepository extends JpaRepository<FileList, Long> {
+public interface FileListRepository extends JpaRepository<FileList, Long>, FileListRepositoryCustom {
 
     List<FileList> findByMusicListId(Long musicListId);
 

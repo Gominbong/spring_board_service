@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
-public interface CartRepository extends JpaRepository<Cart, Long> {
+public interface CartRepository extends JpaRepository<Cart, Long>, CartRepositoryCustom {
 
     @Query("select cart from Cart cart inner join fetch cart.musicList musicList inner join fetch" +
             " musicList.member member where cart.loginId = :loginId")
