@@ -4,7 +4,6 @@ import com.example.myproject.domain.MusicList;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-
 public interface MusicListRepositoryCustom {
 
 

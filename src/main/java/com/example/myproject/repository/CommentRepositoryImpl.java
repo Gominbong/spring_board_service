@@ -6,9 +6,7 @@ import com.example.myproject.domain.QMember;
 import com.example.myproject.domain.QMusicList;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
-
 import java.util.List;
-
 import static com.example.myproject.domain.QComment.comment;
 import static com.example.myproject.domain.QMember.member;
 import static com.example.myproject.domain.QMusicList.musicList;

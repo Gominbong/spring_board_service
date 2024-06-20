@@ -3,8 +3,6 @@ package com.example.myproject.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
-
 import static jakarta.persistence.FetchType.LAZY;
 
 @Entity

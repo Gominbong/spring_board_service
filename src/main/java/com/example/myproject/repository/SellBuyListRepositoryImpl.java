@@ -8,9 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-
 import java.util.List;
-
 import static com.example.myproject.domain.QMember.member;
 import static com.example.myproject.domain.QMusicList.musicList;
 import static com.example.myproject.domain.QSellBuyList.sellBuyList;

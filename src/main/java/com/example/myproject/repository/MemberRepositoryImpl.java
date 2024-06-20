@@ -4,8 +4,6 @@ import com.example.myproject.domain.Member;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-
 import static com.example.myproject.domain.QMember.member;
 
 @RequiredArgsConstructor

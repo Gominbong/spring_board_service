@@ -1,6 +1,5 @@
 package com.example.myproject.repository;
 
-
 import com.example.myproject.domain.SellBuyList;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
