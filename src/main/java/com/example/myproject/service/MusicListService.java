@@ -105,7 +105,7 @@ public class MusicListService {
     }
 
     public Page<MusicList> findMusicList(int page) {
-        Pageable pageable = PageRequest.of(page, 15);
+        Pageable pageable = PageRequest.of(page, 15, Sort.by(Sort.Direction.DESC, "id"));
         return musicListRepository.findBySoftDeleteIsNullQueryDsl(pageable);
     }
 

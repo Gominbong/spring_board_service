@@ -67,11 +67,9 @@
 
 <div th:if="${loginId != null}" class="container">
     <ul class="pagination justify-content-center" style="margin-top: 20px">
-        <li class="page-item">
-            <a class="page-link" th:if="${start==0}" th:href="@{|?page=${start}|}"> << </a>
-        </li>
-        <li class="page-item">
-            <a class="page-link" th:if="${start>0}" th:href="@{|?page=${start -1}|}"> << </a>
+
+        <li class="page-item" th:classappend="${start==0} ? 'disabled'">
+            <a class="page-link" th:href="@{|?page=${start -1}|}"> << </a>
         </li>
 
         <li class="page-item" th:classappend="${!paging.hasPrevious} ? 'disabled'">
@@ -87,20 +85,10 @@
             <a class="page-link" th:href="@{|?page=${paging.number+1}|}"> > </a>
         </li>
 
-        <li class="page-item">
-            <a class="page-link" th:if="${paging.getTotalPages() == 0}"
-               th:href="@{|?page=${paging.getTotalPages()}|}"> >> </a>
+        <li class="page-item" th:classappend="${paging.getTotalPages()-start<=7} ? 'disabled'">
+            <a class="page-link" th:href="@{|?page=${start+7}|}"> >> </a>
         </li>
 
-        <li class="page-item">
-            <a class="page-link" th:if="${paging.getTotalPages() != 0}"
-               th:href="@{|?page=${paging.getTotalPages()-1}|}"> >> </a>
-        </li>
-
-        <li class="page-item">
-            <a class="page-link" th:if="${paging.getTotalPages() - start > 6}"
-               th:href="@{|?page=${start+7}|}"> >> </a>
-        </li>
     </ul>
 </div>
 

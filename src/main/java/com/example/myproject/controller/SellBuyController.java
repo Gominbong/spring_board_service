@@ -5,6 +5,7 @@ import com.example.myproject.domain.SellBuyList;
 import com.example.myproject.dto.BuyMusicListDto;
 import com.example.myproject.service.LoginService;
 import com.example.myproject.service.MemberService;
+import com.example.myproject.service.MusicListService;
 import com.example.myproject.service.SellBuyListService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -26,6 +27,7 @@ public class SellBuyController {
     private final SellBuyListService sellBuyListService;
     private final MemberService memberService;
     private final LoginService loginService;
+    private final MusicListService musicListService;
 
     @PostMapping("/buyMusicList")
     public String buyComplete(BuyMusicListDto buyMusicListDto, HttpServletRequest request,
@@ -54,10 +56,10 @@ public class SellBuyController {
         Member member = memberService.findByLoginId(loginId);
         model.addAttribute("member", member);
         Page<SellBuyList> paging = sellBuyListService.findSellList(page, loginId);
-        sellBuyListService.pageStartEndNumber(page, paging, model);
+
         model.addAttribute("page", page);
         model.addAttribute("paging", paging);
-
+        sellBuyListService.pageStartEndNumber(page, paging, model);
         return "musicList/sellMusicListForm";
     }
 
@@ -70,10 +72,10 @@ public class SellBuyController {
         model.addAttribute("loginId", loginId);
 
         Page<SellBuyList> paging = sellBuyListService.findBuyList(page, loginId);
-        sellBuyListService.pageStartEndNumber(page, paging, model);
+
         model.addAttribute("page", page);
         model.addAttribute("paging", paging);
-
+        sellBuyListService.pageStartEndNumber(page, paging, model);
         return "musicList/buyMusicListForm";
     }
 
