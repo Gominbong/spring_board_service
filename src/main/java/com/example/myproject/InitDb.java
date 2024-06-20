@@ -77,10 +77,10 @@ public class InitDb {
 
         //initService.createMember("3", "3", "Rhalsqhd123");
 
-        for(int i=0; i<150; i++){
+/*        for(int i=0; i<150; i++){
             initService.dbInit1();
            // initService.dbInit2();
-        }
+        }*/
     }
 
     @Component
