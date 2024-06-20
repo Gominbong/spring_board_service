@@ -24,7 +24,7 @@ public class exControllerAdvice {
     public ResponseEntity<ErrorResult> userExHandler(ExecutionControl.UserException e) {
         log.error("[exceptionHandler] ex", e);
         ErrorResult errorResult = new ErrorResult("USER-EX", e.getMessage());
-        return new ResponseEntity(errorResult, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorResult, HttpStatus.BAD_REQUEST);
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

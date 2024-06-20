@@ -3,6 +3,8 @@ package com.example.myproject.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
+
 import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
@@ -26,12 +28,18 @@ public class Comment {
     private MusicList musicList;
 
     private int parent;
+    private int child;
     private int child1;
     private int child2;
     private int child3;
-    private int child4;
     private String createTime;
     private int divWidthSize;
     private String softDelete;
+
+    private String parentMemberNickname;
+    private String parentMemberLoginId;
+
+
+
 
 }

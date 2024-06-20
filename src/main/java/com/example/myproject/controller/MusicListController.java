@@ -122,6 +122,7 @@ public class MusicListController {
             log.info("댓글수정 실패 jwt 로그인 유지시간 초과");
             return "redirect:" + referer;
         }else{
+            log.info("댓글수정 = {}", commentUpdateDto.getCommentId());
             commentService.commentEdit(commentUpdateDto);
         }
 
@@ -176,9 +177,9 @@ public class MusicListController {
                 int parent = 0;
                 Comment comment = commentService.commentAdd(commentFormDto, loginId, parent);
             }else{
-                List<Comment> byMusicListIdAndDivWidthSize =
+                List<Comment> byMusicListIdAndParent =
                         commentService.findByMusicListIdAndDivWidthSize(commentFormDto.getMusicListId());
-                int parent = byMusicListIdAndDivWidthSize.size();
+                int parent = byMusicListIdAndParent.size();
                 Comment comment = commentService.commentAdd(commentFormDto, loginId, parent);
             }
         }

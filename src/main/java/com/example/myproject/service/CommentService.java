@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -53,11 +54,8 @@ public class CommentService {
         comment.setMusicList(musicList);
         comment.setDivWidthSize(0);
         comment.setParent(parent);
+        comment.setChild(0);
         comment.setContent(commentFormDto.getCommentContent());
-        comment.setChild1(0);
-        comment.setChild2(0);
-        comment.setChild3(0);
-        comment.setChild4(0);
         commentRepository.save(comment);
         return comment;
     }
@@ -67,77 +65,84 @@ public class CommentService {
     }
 
     public List<Comment> findByMusicListIdAndDivWidthSize(Long musicListId) {
-        //부모만 찾아야 하므로 div 깊이가 0인것은 전부 부모다.
         return commentRepository.findByMusicListIdAndDivWidthSizeQueryDsl(musicListId, 0);
     }
 
+
+
+    @Transactional
     public void replyAdd(CommentReplyFormDto commentReplyFormDto, String loginId) {
         Member member = memberRepository.findByLoginIdQueryDsl(loginId);
+        log.info("디티오확인 = {}", commentReplyFormDto.getCommentId());
 
-        //대댓글 구조 변경중;; 원하는 결과값이 안나옴
         Comment comment = commentRepository.findCommentIdQueryDsl(commentReplyFormDto.getCommentId());
         Member parentMember = comment.getMember();
+        log.info("댓글부모 정보 = {} ", comment.getChild());
 
-        Long musicListId = comment.getMusicList().getId();
-
-        int parent = comment.getParent();
-        int child1 = comment.getChild1();
-        int child2 = comment.getChild2();
-        int child3 = comment.getChild3();
-        int child4 = comment.getChild4();
         Comment reply = new Comment();
         LocalDateTime localDateTime = LocalDateTime.now().withNano(0);
         String temp = String.valueOf(localDateTime);
         String createTime = temp.replace("T", " ");
         reply.setMember(member);
+        reply.setParentMember(parentMember);
+        reply.setMusicList(comment.getMusicList());
         reply.setCreateTime(createTime);
         reply.setContent(commentReplyFormDto.getReplyContent());
-        reply.setMusicList(comment.getMusicList());
-        reply.setMusicList(comment.getMusicList());
+        reply.setParent(comment.getParent());
 
-        switch (comment.getDivWidthSize()) {
+
+        //대댓글 중간 삽입 할 경우 index 순서를 정함
+        switch (comment.getDivWidthSize()){
             case 0 -> {
-                List<Comment> parentId = commentRepository.findParentQueryDsl(musicListId, parent);
-                reply.setParentMember(parentMember);
+                List<Comment> parent = commentRepository.findByParentQueryDsl(comment.getMusicList(), comment.getParent());
+                reply.setParent(comment.getParent());
                 reply.setDivWidthSize(1);
-                reply.setParent(parent);
-                reply.setChild1(parentId.get(0).getChild1() +1);
-                reply.setChild2(parentId.get(0).getChild1() +1);
-                reply.setChild3(parentId.get(0).getChild1() +1);
-                reply.setChild4(parentId.get(0).getChild1() +1);
+                reply.setChild(parent.size());
+
             }
             case 1 -> {
-                List<Comment> child1Id = commentRepository.findChild1QueryDsl(musicListId, child1);
+                List<Comment> parent = commentRepository.
+                        findByParentAndChildQueryDsl(comment.getMusicList(), comment.getParent(), comment.getChild());
                 reply.setDivWidthSize(2);
-                reply.setParentMember(parentMember);
-                reply.setParent(parent);
-                reply.setChild1(child1Id.get(0).getChild1() +1);
-                reply.setChild2(child1Id.get(0).getChild1() +1);
-                reply.setChild3(child1Id.get(0).getChild1() +1);
-                reply.setChild4(child1Id.get(0).getChild1() +1);
+                reply.setParent(comment.getParent());
+                reply.setChild(comment.getChild());
+                reply.setChild1(parent.size());
+
             }
             case 2 -> {
-                List<Comment> child2Id  = commentRepository.findChild2QueryDsl(musicListId, child2);
+                List<Comment> parent = commentRepository.
+                        findByParentAndChildAndChild1QueryDsl(comment.getMusicList(),
+                                comment.getParent(), comment.getChild(), comment.getChild1());
                 reply.setDivWidthSize(3);
-                reply.setParentMember(parentMember);
-                reply.setParent(parent);
-                reply.setChild1(child2Id.get(0).getChild1() +1);
-                reply.setChild2(child2Id.get(0).getChild1() +1);
-                reply.setChild3(child2Id.get(0).getChild1() +1);
-                reply.setChild4(0);
+                reply.setParent(comment.getParent());
+                reply.setChild(comment.getChild());
+                reply.setChild1(comment.getChild1());
+                reply.setChild2(parent.size());
             }
-            case 3,4 -> {
-                List<Comment> child3Id = commentRepository.findChild3QueryDsl(musicListId, child3);
+            case 3 -> {
+                List<Comment> parent = commentRepository.
+                        findByParentAndChildAndChild1AndChild2QueryDsl(comment.getMusicList(),
+                                comment.getParent(), comment.getChild(), comment.getChild1(), comment.getChild2());
                 reply.setDivWidthSize(4);
-                reply.setParentMember(parentMember);
-                reply.setParent(parent);
-                reply.setChild1(child3Id.get(0).getChild1() +1);
-                reply.setChild2(child3Id.get(0).getChild1() +1);
-                reply.setChild3(child3Id.get(0).getChild1() +1);
-                reply.setChild4(child3Id.get(0).getChild1() +1);
+                reply.setParent(comment.getParent());
+                reply.setChild(comment.getChild());
+                reply.setChild1(comment.getChild1());
+                reply.setChild2(comment.getChild2());
+                reply.setChild3(parent.size());
+            }
+            case 4 ->{
+                reply.setDivWidthSize(4);
+                reply.setParent(comment.getParent());
+                reply.setChild(comment.getChild());
+                reply.setChild1(comment.getChild1());
+                reply.setChild2(comment.getChild2());
+                reply.setChild3(comment.getChild3());
             }
 
         }
+
+
+
         commentRepository.save(reply);
 
     }

@@ -112,10 +112,7 @@ public class InitDb {
             comment.setDivWidthSize(0);
             comment.setContent("테스트내용");
             comment.setParent(a);
-            comment.setChild1(0);
-            comment.setChild2(0);
-            comment.setChild3(0);
-            comment.setChild4(0);
+
             commentRepository.save(comment);
 
         }
@@ -134,10 +131,7 @@ public class InitDb {
             comment.setDivWidthSize(1);
             comment.setContent("테스트내용");
             comment.setParent(a);
-            comment.setChild1(b);
-            comment.setChild2(0);
-            comment.setChild3(0);
-            comment.setChild4(0);
+
             commentRepository.save(comment);
 
         }
@@ -156,10 +150,7 @@ public class InitDb {
             comment.setDivWidthSize(2);
             comment.setContent("테스트내용");
             comment.setParent(a);
-            comment.setChild1(b);
-            comment.setChild2(c);
-            comment.setChild3(0);
-            comment.setChild4(0);
+
             commentRepository.save(comment);
 
         }
@@ -178,10 +169,7 @@ public class InitDb {
             comment.setDivWidthSize(3);
             comment.setContent("테스트내용");
             comment.setParent(a);
-            comment.setChild1(b);
-            comment.setChild2(c);
-            comment.setChild3(d);
-            comment.setChild4(0);
+
             commentRepository.save(comment);
 
         }
@@ -200,10 +188,7 @@ public class InitDb {
             comment.setDivWidthSize(4);
             comment.setContent("테스트내용");
             comment.setParent(a);
-            comment.setChild1(b);
-            comment.setChild2(c);
-            comment.setChild3(d);
-            comment.setChild4(e);
+
             commentRepository.save(comment);
 
         }
@@ -211,7 +196,7 @@ public class InitDb {
 
         public void dbInit3(Long id){
             MusicList musicList = musicListRepository.findById(id).orElseThrow();
-            Member member = memberRepository.findByLoginIdQueryDsl("3");
+            Member member = memberRepository.findByLoginId("3");
 
             Comment comment = new Comment();
             LocalDateTime localDateTime = LocalDateTime.now().withNano(0);
@@ -223,10 +208,7 @@ public class InitDb {
             comment.setParent(parent);
             parent += 1;
             comment.setContent("테스트내용");
-            comment.setChild1(0);
-            comment.setChild2(0);
-            comment.setChild3(0);
-            comment.setChild4(0);
+
             commentRepository.save(comment);
 
         }

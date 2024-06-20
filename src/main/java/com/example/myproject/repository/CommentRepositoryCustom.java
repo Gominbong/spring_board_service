@@ -1,6 +1,7 @@
 package com.example.myproject.repository;
 
 import com.example.myproject.domain.Comment;
+import com.example.myproject.domain.MusicList;
 
 import java.util.List;
 
@@ -12,13 +13,11 @@ public interface CommentRepositoryCustom {
 
     Comment findCommentIdQueryDsl(Long commentId);
 
-    List<Comment> findParentQueryDsl(Long musicListId, int parentId);
+    List<Comment> findByParentQueryDsl(MusicList musicList, int parent);
 
-    List<Comment> findChild1QueryDsl(Long musicListId, int child1);
+    List<Comment> findByParentAndChildQueryDsl(MusicList musicList, int parent, int child);
 
-    List<Comment> findChild2QueryDsl(Long musicListId, int child2);
+    List<Comment> findByParentAndChildAndChild1QueryDsl(MusicList musicList, int parent, int child, int child1);
 
-    List<Comment> findChild3QueryDsl(Long musicListId, int child3);
-
-    List<Comment> findChild4QueryDsl(Long musicListId, int child4);
+    List<Comment> findByParentAndChildAndChild1AndChild2QueryDsl(MusicList musicList, int parent, int child, int child1, int child2);
 }

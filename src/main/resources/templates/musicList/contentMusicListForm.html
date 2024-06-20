@@ -496,8 +496,8 @@
             const commentEditDiv = document.getElementById('commentEdit');
             // Edit Div 창 바로아래로 이동시킴
             $(obj).parent().parent().parent().append(commentEditDiv);
-            const commentId = $(obj).next().text();
-            console.log("commentId1="+commentId)
+            const commentId = $(obj).next().next().text();
+            console.log("commentId="+commentId)
 
             if (commentEditDiv.style.display === 'none'){  // 답글 Div 숨김상태에서 화면에 보여줌
                 commentEditDiv.style.display = 'block';

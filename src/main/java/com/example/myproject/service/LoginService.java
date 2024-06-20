@@ -24,7 +24,7 @@ public class LoginService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
-    long expiredTime = 1000 * 60L * 1000L; // 토큰 유효 시간 (30분)
+    long expiredTime = 1000 * 60L * 30L; // 토큰 유효 시간 (30분)
     public Member login(LoginFormDto loginFormDto) {
 
         Member result = memberRepository.findEncodePasswordQueryDsl(loginFormDto.getId());
