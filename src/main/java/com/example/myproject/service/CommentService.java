@@ -112,7 +112,7 @@ public class CommentService {
                 reply.setChild1(comment.getChild1());
                 reply.setChild2(parent.size());
             }
-            case 3 -> {
+            case 3,4 -> {
                 List<Comment> parent = commentRepository.
                         findByParentAndChildAndChild1AndChild2QueryDsl(comment.getMusicList(),
                                 comment.getParent(), comment.getChild(), comment.getChild1(), comment.getChild2());
@@ -122,14 +122,6 @@ public class CommentService {
                 reply.setChild1(comment.getChild1());
                 reply.setChild2(comment.getChild2());
                 reply.setChild3(parent.size());
-            }
-            case 4 ->{
-                reply.setDivWidthSize(4);
-                reply.setParent(comment.getParent());
-                reply.setChild(comment.getChild());
-                reply.setChild1(comment.getChild1());
-                reply.setChild2(comment.getChild2());
-                reply.setChild3(comment.getChild3());
             }
 
         }
