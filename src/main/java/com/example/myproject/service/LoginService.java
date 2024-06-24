@@ -48,7 +48,7 @@ public class LoginService {
             member.setCreateTime(createTime);
             member.setLoginId(naverProfile.getResponse().id);
             member.setPassword(pw);
-            member.setNickname(naverProfile.getResponse().name + uuid);
+            member.setNickname(naverProfile.getResponse().name +"_"+ uuid);
             member.setCash(20000);
             member.setRevenue(0);
             memberRepository.save(member);
