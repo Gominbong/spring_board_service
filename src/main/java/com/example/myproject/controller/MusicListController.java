@@ -63,7 +63,8 @@ public class MusicListController {
                              @RequestParam(value = "page", defaultValue = "0") int page){
 
         String loginId = loginService.loginIdCheck(request, response);
-        model.addAttribute("loginId", loginId);
+        Member loginMember = memberService.findByLoginId(loginId);
+        model.addAttribute("member", loginMember);
         log.info("로그인 아이디 확인 = {}", loginId);
 
 
@@ -82,7 +83,8 @@ public class MusicListController {
                        @RequestParam(value = "page", defaultValue = "0") int page){
 
         String loginId = loginService.loginIdCheck(request, response);
-        model.addAttribute("loginId", loginId);
+        Member loginMember = memberService.findByLoginId(loginId);
+        model.addAttribute("member", loginMember);
         log.info("로그인 아이디 확인 = {}", loginId);
 
         model.addAttribute("homeSortDto", homeSortDto);
@@ -100,7 +102,8 @@ public class MusicListController {
                          HttpServletRequest request, Model model){
 
         String loginId = loginService.loginIdCheck(request, response);
-        model.addAttribute("loginId", loginId);
+        Member loginMember = memberService.findByLoginId(loginId);
+        model.addAttribute("member", loginMember);
         log.info("로그인 아이디 확인 = {}", loginId);
 
         model.addAttribute("searchDto", searchDto);
@@ -193,7 +196,8 @@ public class MusicListController {
             throws MalformedURLException {
 
         String loginId = loginService.loginIdCheck(request, response);
-        model.addAttribute("loginId", loginId);
+        Member loginMember = memberService.findByLoginId(loginId);
+        model.addAttribute("member", loginMember);
         log.info("로그인 아이디 확인 = {}", loginId);
         if (loginId != null){
             SellBuyList sellBuyList = sellBuyListService.myBuyInfo(id, loginId);
@@ -260,10 +264,12 @@ public class MusicListController {
 
         String loginId = loginService.loginIdCheck(request, response);
         log.info("로그인 아이디 확인 = {}", loginId);
-        model.addAttribute("loginId", loginId);
+
         if (loginId == null){
             log.info("뮤직리스트 수정실패 jwt 로그인 유지시간 초과");
         } else{
+            Member loginMember = memberService.findByLoginId(loginId);
+            model.addAttribute("member", loginMember);
             model.addAttribute("musicListId", id);
             List<FileList> fileList = fileListService.findByFiles(id);
             Map<String, String> errors = musicListService.updateMusicList(id, musicListUpdateDto);
@@ -286,11 +292,14 @@ public class MusicListController {
 
         String loginId = loginService.loginIdCheck(request, response);
         log.info("로그인 아이디 확인 = {}", loginId);
-        model.addAttribute("loginId", loginId);
+
         if (loginId == null){
             log.info("뮤직리스트 수정실패 jwt 로그인 유지시간 초과");
             return "redirect:/";
         } else {
+            Member loginMember = memberService.findByLoginId(loginId);
+            model.addAttribute("member", loginMember);
+
             MusicListUpdateDto musicListUpdateDto = musicListService.setMusicListUpdateDto(id);
             List<FileList> fileList = fileListService.findByFiles(id);
 
@@ -306,7 +315,8 @@ public class MusicListController {
     public String addMusicList(HttpServletRequest request, Model model, HttpServletResponse response) {
 
         String loginId = loginService.loginIdCheck(request, response);
-        model.addAttribute("loginId", loginId);
+        Member loginMember = memberService.findByLoginId(loginId);
+        model.addAttribute("member", loginMember);
         log.info("로그인 아이디 확인 = {}", loginId);
 
         model.addAttribute("musicListFormDto", new MusicListFormDto());
@@ -318,11 +328,13 @@ public class MusicListController {
                                HttpServletResponse response) {
 
         String loginId = loginService.loginIdCheck(request, response);
+
         log.info("로그인 아이디 확인 = {}", loginId);
         if (loginId == null){
             log.info("뮤직리스트 등록실패 jwt 로그인 유지시간 초과");
         }else {
-            model.addAttribute("loginId", loginId);
+            Member loginMember = memberService.findByLoginId(loginId);
+            model.addAttribute("member", loginMember);
             Map<String, String> errors = musicListService.createAddItem(musicListFormDto, loginId);
             if (errors != null) {
                 model.addAttribute("errors", errors);

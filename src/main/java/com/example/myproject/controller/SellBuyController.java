@@ -51,10 +51,9 @@ public class SellBuyController {
                            HttpServletRequest request, Model model) {
         String loginId = loginService.loginIdCheck(request, response);
         log.info("로그인 아이디 확인 = {}", loginId);
-        model.addAttribute("loginId", loginId);
+        Member loginMember = memberService.findByLoginId(loginId);
+        model.addAttribute("member", loginMember);
 
-        Member member = memberService.findByLoginId(loginId);
-        model.addAttribute("member", member);
         Page<SellBuyList> paging = sellBuyListService.findSellList(page, loginId);
 
         model.addAttribute("page", page);
@@ -69,7 +68,8 @@ public class SellBuyController {
 
         String loginId = loginService.loginIdCheck(request, response);
         log.info("로그인 아이디 확인 = {}", loginId);
-        model.addAttribute("loginId", loginId);
+        Member loginMember = memberService.findByLoginId(loginId);
+        model.addAttribute("member", loginMember);
 
         Page<SellBuyList> paging = sellBuyListService.findBuyList(page, loginId);
 

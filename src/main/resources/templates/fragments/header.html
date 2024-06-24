@@ -35,12 +35,12 @@
             </form>
 
             <div class="text-end">
-                <a class="btn btn-outline-light me-2" href="/login" th:if="!${loginId}">로그인</a>
-                <a class="btn btn-outline-info" href="/signup"th:if="!${loginId}" >회원가입</a>
+                <a class="btn btn-outline-light me-2" href="/login" th:if="!${member}">로그인</a>
+                <a class="btn btn-outline-info" href="/signup"th:if="!${member}" >회원가입</a>
 
                 <form method="post" th:action="@{/logout}">
-                    <a class="btn btn-warning me-2 fw-bold" th:if="${loginId}"th:text="${loginId} + ' 님'">이름</a>
-                    <button class="btn btn-outline-info fw-bold" th:if="${loginId}">로그아웃</button>
+                    <a class="btn btn-warning me-2 fw-bold" th:if="${member}"th:text="${member.nickname} + ' 님'">이름</a>
+                    <button class="btn btn-outline-info fw-bold" th:if="${member}">로그아웃</button>
                 </form>
 
             </div>

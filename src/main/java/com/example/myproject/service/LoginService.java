@@ -1,5 +1,6 @@
 package com.example.myproject.service;
 
+import com.example.myproject.controller.NaverProfile;
 import com.example.myproject.domain.Member;
 import com.example.myproject.dto.LoginFormDto;
 import com.example.myproject.repository.MemberRepository;
@@ -14,7 +15,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.WebUtils;
+
+import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.UUID;
+
 import static com.example.myproject.service.jwtKey.key;
 
 @Slf4j
@@ -25,6 +30,33 @@ public class LoginService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     long expiredTime = 1000 * 60L * 30L; // 토큰 유효 시간 (30분)
+
+
+
+
+    public Member naverSignupCheck(NaverProfile naverProfile) {
+        Member result = memberRepository.findByLoginId(naverProfile.getResponse().id);
+
+        if (result == null){
+            String uuid = UUID.randomUUID().toString().substring(0, 4);
+            String pw = UUID.randomUUID().toString().substring(0, 8);
+            LocalDateTime localDateTime = LocalDateTime.now().withNano(0);
+            String temp = String.valueOf(localDateTime);
+            String createTime = temp.replace("T", " ");
+
+            Member member = new Member();
+            member.setCreateTime(createTime);
+            member.setLoginId(naverProfile.getResponse().id);
+            member.setPassword(pw);
+            member.setNickname(naverProfile.getResponse().name + uuid);
+            member.setCash(20000);
+            member.setRevenue(0);
+            memberRepository.save(member);
+            log.info("네이버 회원가입 완료");
+        }
+        return result;
+    }
+
     public Member login(LoginFormDto loginFormDto) {
 
         Member result = memberRepository.findEncodePasswordQueryDsl(loginFormDto.getId());
@@ -41,7 +73,7 @@ public class LoginService {
         return null;
     }
 
-    public void createJwt(String loginId, HttpServletRequest request, HttpServletResponse response) {
+    public void createJwt(String loginId, HttpServletResponse response) {
 
         Date ext = new Date();
         ext.setTime(ext.getTime() + expiredTime);
@@ -62,7 +94,6 @@ public class LoginService {
         cookie.setSecure(true);
         response.addCookie(cookie);
         Jws<Claims> claimsJws = Jwts.parser().verifyWith(key).build().parseSignedClaims(jwt);
-        Object payload = claimsJws.getPayload();
         log.info("jwt 검증 = {}", claimsJws);
         log.info("jwt 유효시간 = {}",claimsJws.getPayload().getExpiration());
 
@@ -103,14 +134,12 @@ public class LoginService {
         cookie.setSecure(true);
         response.addCookie(cookie);
         Jws<Claims> claimsJws = Jwts.parser().verifyWith(key).build().parseSignedClaims(jwt);
-        Object payload = claimsJws.getPayload();
         log.info("jwt 검증 = {}", claimsJws);
         log.info("jwt 유효시간 = {}",claimsJws.getPayload().getExpiration());
-
+        Member member = memberRepository.findByLoginIdQueryDsl(loginId);
         return loginId;
 
     }
-
 }
 
 

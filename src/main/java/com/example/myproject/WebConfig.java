@@ -23,6 +23,8 @@ import java.util.concurrent.TimeUnit;
 public class WebConfig implements WebMvcConfigurer {
 
 
+
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
