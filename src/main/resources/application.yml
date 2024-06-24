@@ -2,7 +2,7 @@
 naver:
   client_id: S1MikRkeASAoEW5nscCR
   client_secret: IR9OV_HszV
-  redirect_uri : http://localhost:8081/login/naver/callback
+  redirect_uri : https://minbong.shop/login/naver/callback
 
 spring:
   servlet:

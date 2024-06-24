@@ -123,11 +123,12 @@ public class LoginService {
 
     public Member naverLogin(NaverApi naverApi, String code) throws JsonProcessingException, ParseException {
 
+        String state = UUID.randomUUID().toString().substring(0, 8);
         String url = "https://nid.naver.com/oauth2.0/token?grant_type=authorization_code" +
                 "&client_id=" + naverApi.getNaverClientId() +
                 "&client_secret=" + naverApi.getNaverClientSecret() +
                 "&code=" + code +
-                "&state=fqefqqfeqf";
+                "&state=" + state;
         WebClient wc = WebClient.create(url);
 
         String naverToken = wc.post()
