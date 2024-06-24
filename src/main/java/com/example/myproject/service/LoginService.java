@@ -1,5 +1,7 @@
 package com.example.myproject.service;
 
+import com.example.myproject.controller.KakaoApi;
+import com.example.myproject.controller.KakaoProfile;
 import com.example.myproject.controller.NaverApi;
 import com.example.myproject.controller.NaverProfile;
 import com.example.myproject.domain.Member;
@@ -121,6 +123,61 @@ public class LoginService {
 
     }
 
+    public Member kakaoLogin(KakaoApi kakaoApi, String code) throws JsonProcessingException, ParseException {
+        String state = UUID.randomUUID().toString().substring(0, 8);
+        String url = "https://kauth.kakao.com/oauth/token?grant_type=authorization_code" +
+                "&client_id=" + kakaoApi.getNaverClientId() +
+                "&client_secret=" + kakaoApi.getNaverClientSecret() +
+                "&code=" + code +
+                "&state=" + state;
+        WebClient wc = WebClient.create(url);
+
+        String kakaoToken = wc.post()
+                .uri(url)
+                .header("Content-type", "application/x-www-form-urlencoded;charset=utf-8")
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+        log.info("카카오 로그인 Json = {}", kakaoToken);
+        JSONParser parserAccessToken = new JSONParser();
+        JSONObject jsonObj = (JSONObject) parserAccessToken.parse(kakaoToken);
+        String access_token = (String) jsonObj.get("access_token");
+        log.info("카카오 엑세스 토큰 = {}", access_token);
+
+        String user = "https://kapi.kakao.com/v2/user/me";
+        String userInfo = wc.post()
+                .uri(user)
+                .header("Authorization", "Bearer " + access_token)
+                .header("Content-type", "application/x-www-form-urlencoded;charset=utf-8")
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+        log.info("카카오 유저 정보 Json = {}", userInfo);
+        ObjectMapper objectMapper = new ObjectMapper();
+        KakaoProfile kakaoProfile = objectMapper.readValue(userInfo, KakaoProfile.class);
+        log.info("카카오 유저 프로필 = {}", kakaoProfile.kakao_account);
+        Member result = memberRepository.findByLoginId(kakaoProfile.id);
+        if (result == null) {
+            String uuid = UUID.randomUUID().toString().substring(0, 4);
+            String pw = UUID.randomUUID().toString().substring(0, 8);
+            LocalDateTime localDateTime = LocalDateTime.now().withNano(0);
+            String temp = String.valueOf(localDateTime);
+            String createTime = temp.replace("T", " ");
+
+            Member member = new Member();
+            member.setCreateTime(createTime);
+            member.setLoginId(kakaoProfile.id);
+            member.setPassword(passwordEncoder.encode(pw));
+            member.setNickname(kakaoProfile.properties.nickname + "_" + uuid);
+            member.setCash(20000);
+            member.setRevenue(0);
+            memberRepository.save(member);
+            log.info("네이버 회원가입 완료");
+            return member;
+        }
+        return result;
+    }
+
     public Member naverLogin(NaverApi naverApi, String code) throws JsonProcessingException, ParseException {
         String state = UUID.randomUUID().toString().substring(0, 8);
         String url = "https://nid.naver.com/oauth2.0/token?grant_type=authorization_code" +
@@ -154,8 +211,8 @@ public class LoginService {
         ObjectMapper objectMapper = new ObjectMapper();
         NaverProfile naverProfile = objectMapper.readValue(userInfo, NaverProfile.class);
         log.info("네이버 유저 프로필 = {}", naverProfile.getResponse());
-        Member result = memberRepository.findByLoginId(naverProfile.getResponse().id);
 
+        Member result = memberRepository.findByLoginId(naverProfile.getResponse().id);
         if (result == null) {
             String uuid = UUID.randomUUID().toString().substring(0, 4);
             String pw = UUID.randomUUID().toString().substring(0, 8);

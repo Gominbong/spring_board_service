@@ -1,7 +1,6 @@
 package com.example.myproject.controller;
 
 import lombok.Data;
-import org.apache.catalina.connector.Response;
 
 @Data
 public class NaverProfile {

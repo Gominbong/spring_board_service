@@ -4,6 +4,11 @@ naver:
   client_secret: IR9OV_HszV
   redirect_uri : https://minbong.shop/login/naver/callback
 
+kakao:
+  client_id: 0c3786e0d5029e212b8975762dc5b45f
+  client_secret: 0sp7hcJBqVsH28t7iKTzrfC6x0y6Q0fc
+  redirect_uri : https://minbong.shop/login/kakao/callback
+
 spring:
   servlet:
     multipart:
