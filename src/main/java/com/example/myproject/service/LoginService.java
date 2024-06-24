@@ -129,6 +129,7 @@ public class LoginService {
                 "&code=" + code +
                 "&state=" + state;
         WebClient wc = WebClient.create(url);
+
         String naverToken = wc.post()
                 .uri(url)
                 .header("Content-type", "application/x-www-form-urlencoded;charset=utf-8")
@@ -140,6 +141,7 @@ public class LoginService {
         JSONObject jsonObj = (JSONObject) parserAccessToken.parse(naverToken);
         String access_token = (String) jsonObj.get("access_token");
         log.info("네이버 엑세스 토큰 = {}", access_token);
+
         String user = "https://openapi.naver.com/v1/nid/me";
         String userInfo = wc.post()
                 .uri(user)
@@ -153,6 +155,7 @@ public class LoginService {
         NaverProfile naverProfile = objectMapper.readValue(userInfo, NaverProfile.class);
         log.info("네이버 유저 프로필 = {}", String.valueOf(naverProfile.getResponse()));
         Member result = memberRepository.findByLoginId(naverProfile.getResponse().id);
+
         if (result == null) {
             String uuid = UUID.randomUUID().toString().substring(0, 4);
             String pw = UUID.randomUUID().toString().substring(0, 8);
