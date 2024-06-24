@@ -153,7 +153,7 @@ public class LoginService {
         log.info("네이버 유저 정보 Json = {}", userInfo);
         ObjectMapper objectMapper = new ObjectMapper();
         NaverProfile naverProfile = objectMapper.readValue(userInfo, NaverProfile.class);
-        log.info("네이버 유저 프로필 = {}", String.valueOf(naverProfile.getResponse()));
+        log.info("네이버 유저 프로필 = {}", naverProfile.getResponse());
         Member result = memberRepository.findByLoginId(naverProfile.getResponse().id);
 
         if (result == null) {
