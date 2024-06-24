@@ -174,7 +174,7 @@ public class LoginService {
             member.setRevenue(0);
             memberRepository.save(member);
             log.info("네이버 회원가입 완료");
-
+            return member;
         }
 
         return result;
