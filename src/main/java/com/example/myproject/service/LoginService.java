@@ -232,7 +232,6 @@ public class LoginService {
     }
 
     public Member googleLogin(GoogleApi googleApi, String code) throws JsonProcessingException, ParseException {
-
         WebClient wc = WebClient.create();
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("code", code);
