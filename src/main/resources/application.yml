@@ -10,7 +10,6 @@ google:
   client_id: 688848632769-rhf1l0ib6bapf8pi0keo9gj1ho6pebhd.apps.googleusercontent.com
   client_secret: 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
   redirect_uri : https://minbong.shop/login/google/callback
-
 spring:
   servlet:
     multipart:
