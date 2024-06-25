@@ -12,7 +12,6 @@ public class NaverProfile {
     @Data
     public static class Response{
         public String id;
-        public String email;
         public String name;
     }
 }

@@ -1,9 +1,6 @@
 package com.example.myproject.service;
 
-import com.example.myproject.controller.KakaoApi;
-import com.example.myproject.controller.KakaoProfile;
-import com.example.myproject.controller.NaverApi;
-import com.example.myproject.controller.NaverProfile;
+import com.example.myproject.controller.*;
 import com.example.myproject.domain.Member;
 import com.example.myproject.dto.LoginFormDto;
 import com.example.myproject.repository.MemberRepository;
@@ -22,6 +19,9 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.WebUtils;
 import java.time.LocalDateTime;
@@ -118,7 +118,6 @@ public class LoginService {
         Jws<Claims> claimsJws = Jwts.parser().verifyWith(key).build().parseSignedClaims(jwt);
         log.info("jwt 검증 = {}", claimsJws);
         log.info("jwt 유효시간 = {}", claimsJws.getPayload().getExpiration());
-        Member member = memberRepository.findByLoginIdQueryDsl(loginId);
         return loginId;
 
     }
@@ -130,7 +129,7 @@ public class LoginService {
                 "&client_secret=" + kakaoApi.getNaverClientSecret() +
                 "&code=" + code +
                 "&state=" + state;
-        WebClient wc = WebClient.create(url);
+        WebClient wc = WebClient.create();
 
         String kakaoToken = wc.post()
                 .uri(url)
@@ -144,9 +143,8 @@ public class LoginService {
         String access_token = (String) jsonObj.get("access_token");
         log.info("카카오 엑세스 토큰 = {}", access_token);
 
-        String user = "https://kapi.kakao.com/v2/user/me";
         String userInfo = wc.post()
-                .uri(user)
+                .uri("https://kapi.kakao.com/v2/user/me")
                 .header("Authorization", "Bearer " + access_token)
                 .header("Content-type", "application/x-www-form-urlencoded;charset=utf-8")
                 .retrieve()
@@ -185,7 +183,7 @@ public class LoginService {
                 "&client_secret=" + naverApi.getNaverClientSecret() +
                 "&code=" + code +
                 "&state=" + state;
-        WebClient wc = WebClient.create(url);
+        WebClient wc = WebClient.create();
 
         String naverToken = wc.post()
                 .uri(url)
@@ -199,9 +197,8 @@ public class LoginService {
         String access_token = (String) jsonObj.get("access_token");
         log.info("네이버 엑세스 토큰 = {}", access_token);
 
-        String user = "https://openapi.naver.com/v1/nid/me";
         String userInfo = wc.post()
-                .uri(user)
+                .uri("https://openapi.naver.com/v1/nid/me")
                 .header("Authorization", "Bearer " + access_token)
                 .header("Content-type", "application/x-www-form-urlencoded;charset=utf-8")
                 .retrieve()
@@ -229,6 +226,63 @@ public class LoginService {
             member.setRevenue(0);
             memberRepository.save(member);
             log.info("네이버 회원가입 완료");
+            return member;
+        }
+        return result;
+    }
+
+    public Member googleLogin(GoogleApi googleApi, String code) throws JsonProcessingException, ParseException {
+
+        WebClient wc = WebClient.create();
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("code", code);
+        params.add("client_id", googleApi.getGoogleClientId());
+        params.add("client_secret", googleApi.getGoogleClientSecret());
+        params.add("redirect_uri", googleApi.getGoogleRedirectUri());
+        params.add("grant_type", "authorization_code");
+
+        String googleToken = wc.post()
+                .uri("https://oauth2.googleapis.com/token")
+                .body(BodyInserters.fromFormData(params))
+                .header("Content-type", "application/x-www-form-urlencoded;charset=utf-8")
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+        log.info("구글 로그인 Json = {}", googleToken);
+        JSONParser parserAccessToken = new JSONParser();
+        JSONObject jsonObj = (JSONObject) parserAccessToken.parse(googleToken);
+        String access_token = (String) jsonObj.get("access_token");
+        log.info("구글 엑세스 토큰 = {}", access_token);
+
+        String userInfo = wc.get()
+                .uri("https://www.googleapis.com/userinfo/v2/me")
+                .header("Authorization", "Bearer" + access_token)
+                .header("Content-type", "application/xml;charset=utf-8")
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+        log.info("구글 유저 정보 Json = {}", userInfo);
+        ObjectMapper objectMapper = new ObjectMapper();
+        GoogleProfile googleProfile = objectMapper.readValue(userInfo, GoogleProfile.class);
+        log.info("구글 유저 프로필 = {}", googleProfile.getName());
+
+        Member result = memberRepository.findByLoginId(googleProfile.getId());
+        if (result == null) {
+            String uuid = UUID.randomUUID().toString().substring(0, 4);
+            String pw = UUID.randomUUID().toString().substring(0, 8);
+            LocalDateTime localDateTime = LocalDateTime.now().withNano(0);
+            String temp = String.valueOf(localDateTime);
+            String createTime = temp.replace("T", " ");
+
+            Member member = new Member();
+            member.setCreateTime(createTime);
+            member.setLoginId(googleProfile.getId());
+            member.setPassword(passwordEncoder.encode(pw));
+            member.setNickname(googleProfile.getName() + "_" + uuid);
+            member.setCash(20000);
+            member.setRevenue(0);
+            memberRepository.save(member);
+            log.info("구글 회원가입 완료");
             return member;
         }
         return result;

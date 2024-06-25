@@ -1,13 +1,17 @@
-
 naver:
-  client_id: S1MikRkeASAoEW5nscCR
-  client_secret: IR9OV_HszV
+  client_id: zt2sXdh8jcnjMMZp89XD
+  client_secret: QG4sqfjHeL
   redirect_uri : https://minbong.shop/login/naver/callback
 
 kakao:
   client_id: 0c3786e0d5029e212b8975762dc5b45f
   client_secret: 0sp7hcJBqVsH28t7iKTzrfC6x0y6Q0fc
   redirect_uri : https://minbong.shop/login/kakao/callback
+
+google:
+  client_id: 24188790972-1vhh7d9gu7e2ddqrijikri3s43q8hcmu.apps.googleusercontent.com
+  client_secret: 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
+  redirect_uri : https://minbong.shop/login/google/callback
 
 spring:
   servlet:
