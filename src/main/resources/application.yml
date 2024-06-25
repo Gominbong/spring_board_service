@@ -1,6 +1,6 @@
 naver:
-  client_id: zt2sXdh8jcnjMMZp89XD
-  client_secret: QG4sqfjHeL
+  client_id: t1jPMSOyVjXjL2oqFw4l
+  client_secret: m171qS4vOk
   redirect_uri : https://minbong.shop/login/naver/callback
 
 kakao:
