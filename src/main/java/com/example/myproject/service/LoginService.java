@@ -164,7 +164,7 @@ public class LoginService {
 
             Member member = new Member();
             member.setCreateTime(createTime);
-            member.setLoginId(kakaoProfile.id);
+            member.setLoginId("kakao_" + kakaoProfile.id);
             member.setPassword(passwordEncoder.encode(pw));
             member.setNickname(kakaoProfile.properties.nickname + "_" + uuid);
             member.setCash(20000);
@@ -219,7 +219,7 @@ public class LoginService {
 
             Member member = new Member();
             member.setCreateTime(createTime);
-            member.setLoginId(naverProfile.getResponse().id);
+            member.setLoginId("naver_" + naverProfile.getResponse().id);
             member.setPassword(passwordEncoder.encode(pw));
             member.setNickname(naverProfile.getResponse().name + "_" + uuid);
             member.setCash(20000);
@@ -275,7 +275,7 @@ public class LoginService {
 
             Member member = new Member();
             member.setCreateTime(createTime);
-            member.setLoginId(googleProfile.getId());
+            member.setLoginId("google_" + googleProfile.getId());
             member.setPassword(passwordEncoder.encode(pw));
             member.setNickname(googleProfile.getName() + "_" + uuid);
             member.setCash(20000);
