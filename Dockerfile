@@ -8,4 +8,5 @@ RUN mkdir /upload && \
     git clone https://github.com/Gominbong/spring_board_service.git && \
     cd /spring_board_service/ && \
     chmod +x * && \
-    ./gradlew build
+    ./gradlew build \
+ENV LANG=C.UTF-8

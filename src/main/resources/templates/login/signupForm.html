@@ -92,6 +92,9 @@
 </div>
 <script>
 
+    // 매우 빠르게 입력된다면 input 값에 입력값이 안들어가 if문 에 조건이 input 에 값이 없다고 인식한다.
+    // 로그를 확인해보면 데이터가 늦게 들어올 뿐 폼 전송해보면 데이터는 정상적으로 들어있다.
+    // 프론트에서 자바스크립트로 체크하는것은 백퍼센트 안전하지 않은듯?
     $(function(){
         $('#pw').keyup(function(){
             const pw = document.getElementById('pw');
@@ -114,6 +117,14 @@
         $('#pwCheck').keyup(function(){
             const pw = document.getElementById('pw');
             const pwCheck = document.getElementById('pwCheck');
+            const pw1 = document.getElementById('pw').value;
+            const pwCheck1 = document.getElementById('pwCheck').value;
+            const a = pw1.innerText = pw1;
+            const b = pw1.innerText = pwCheck1;
+            console.log("a값="+a);
+            console.log("b값="+b);
+            console.log("pw값="+ $('#pw').val())
+            console.log("pw체크값="+$('#pwCheck').val())
             if($('#pw').val()){
                 console.log("여기다6");
                 if($('#pw').val() === ($('#pwCheck').val())){
