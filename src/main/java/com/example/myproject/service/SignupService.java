@@ -56,7 +56,7 @@ public class SignupService {
 
         member.setLoginId(signupFormDto.getId());
         member.setNickname(signupFormDto.getNick());
-        member.setCash(10000);
+        member.setCash(20000);
         member.setRevenue(0);
         LocalDateTime localDateTime = LocalDateTime.now().withNano(0);
         String temp = String.valueOf(localDateTime);
