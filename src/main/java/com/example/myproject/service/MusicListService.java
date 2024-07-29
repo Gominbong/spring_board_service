@@ -106,6 +106,7 @@ public class MusicListService {
 
     public Page<MusicList> findMusicList(int page) {
         Pageable pageable = PageRequest.of(page, 15, Sort.by(Sort.Direction.DESC, "id"));
+
         return musicListRepository.findBySoftDeleteIsNullQueryDsl(pageable);
     }
 
@@ -276,25 +277,9 @@ public class MusicListService {
     }
 
     public Page<MusicList> homeSort(int page, HomeSortDto homeSortDto) {
+        Pageable pageable = PageRequest.of(page, 15);
+        return musicListRepository.HomeSortFindBySoftDeleteIsNullQueryDsl(pageable, homeSortDto);
 
-        if (homeSortDto.getSortType().equals("sortSelect")) {
-            Pageable pageable = PageRequest.of(page, 15, Sort.by(Sort.Direction.DESC, "id"));
-            return musicListRepository.findBySoftDeleteIsNullQueryDsl(pageable);
-        }
-        if (homeSortDto.getSortType().equals("sortPrice")) {
-            Pageable pageable = PageRequest.of(page, 15, Sort.by(Sort.Direction.DESC, "price"));
-            return musicListRepository.findBySoftDeleteIsNullQueryDsl(pageable);
-        }
-        if (homeSortDto.getSortType().equals("sortLike")) {
-            Pageable pageable = PageRequest.of(page, 15, Sort.by(Sort.Direction.DESC, "likeCount"));
-            return musicListRepository.findBySoftDeleteIsNullQueryDsl(pageable);
-        }
-        if (homeSortDto.getSortType().equals("sortQuantity")) {
-            Pageable pageable = PageRequest.of(page, 15, Sort.by(Sort.Direction.DESC, "salesQuantity"));
-            return musicListRepository.findBySoftDeleteIsNullQueryDsl(pageable);
-        }
-
-        return null;
     }
 
     public void pageStartEndNumber(int page, Page<MusicList> paging, Model model) {
