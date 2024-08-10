@@ -196,6 +196,7 @@ public class MusicListController {
             throws MalformedURLException {
 
         String loginId = loginService.loginIdCheck(request, response);
+        model.addAttribute("loginId", loginId);
         Member loginMember = memberService.findByLoginId(loginId);
         model.addAttribute("member", loginMember);
         log.info("로그인 아이디 확인 = {}", loginId);
