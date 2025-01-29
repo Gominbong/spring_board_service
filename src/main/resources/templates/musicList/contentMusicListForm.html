@@ -34,10 +34,8 @@
                     </table>
                 </div>
             </li>
-
         </ul>
     </div>
-
 
     <div th:if="${sellBuyList==null} and ${!#strings.equals(loginId,musicList.member.loginId)}">
         <button onclick="buyBtnClick()"
@@ -228,13 +226,10 @@
                 <p style="margin-top: 10px" class="form-label">답글 쓰기</p>
                 <textarea style="width: 88%" class="form-control" id="replyContent" name="replyContent"
                           rows="3"></textarea>
-
                 <button style="height: 80px; width: 50px; border-width: thin; margin-left: 8px;"
                         type="button" onclick="addCommentReply(this)">등록
                 </button>
                 <input type="hidden" th:name="musicListId" th:value="${musicList.id}">
-
-
             </form>
         </div>
 
@@ -252,7 +247,6 @@
             </form>
         </div>
     </div>
-
 
     <div style="margin-top: 227px"></div>
     <div th:replace="~{fragments/footer :: footer}"/>
@@ -284,7 +278,6 @@
 
             }
         }
-
 
         function reply(obj, divSize) {
             let tempCommentId;
