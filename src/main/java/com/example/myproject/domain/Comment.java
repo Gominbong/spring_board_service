@@ -18,24 +18,20 @@ public class Comment {
     @ManyToOne (fetch = LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
     @ManyToOne (fetch = LAZY)
     @JoinColumn(name = "parentMember_id")
     private Member parentMember;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "musicList_id")
     private MusicList musicList;
-
-    private int parent;
-    private int child;
-    private int child1;
-    private int child2;
-    private int child3;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name= "parent_id")
+    private Comment parent;
     private String createTime;
-    private int divWidthSize;
+    private int depth;
     private String softDelete;
 
-    private String parentMemberNickname;
-    private String parentMemberLoginId;
 
 
 

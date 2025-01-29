@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import java.net.MalformedURLException;
@@ -43,7 +44,7 @@ public class MusicListController {
         String os = System.getProperty("os.name").toLowerCase();
         String Path;
         if (os.contains("win")){
-            Path = "C:/Users/asd/Desktop/study/pdf/" + storedFilename;
+            Path = "C:/upload/" + storedFilename;
         }else{
             Path = "/upload/" + storedFilename;
         }
@@ -148,7 +149,7 @@ public class MusicListController {
         return "redirect:" + referer;
     }
 
-    @PostMapping("replyAdd")
+    @PostMapping("/replyAdd")
     public String replyAdd(CommentReplyFormDto commentReplyFormDto, HttpServletRequest request,
                            HttpServletResponse response){
         String referer = request.getHeader("Referer");
@@ -175,16 +176,7 @@ public class MusicListController {
             log.info("댓글등록 실패 jwt 로그인 유지시간 초과");
             return "redirect:" + referer;
         }else{
-            List<Comment> commentList = commentService.findCommentList(commentFormDto.getMusicListId());
-            if (commentList.isEmpty()){
-                int parent = 0;
-                Comment comment = commentService.commentAdd(commentFormDto, loginId, parent);
-            }else{
-                List<Comment> byMusicListIdAndParent =
-                        commentService.findByMusicListIdAndDivWidthSize(commentFormDto.getMusicListId());
-                int parent = byMusicListIdAndParent.size();
-                Comment comment = commentService.commentAdd(commentFormDto, loginId, parent);
-            }
+            commentService.commentAdd(commentFormDto, loginId);
         }
         return "redirect:" + referer;
 
@@ -210,7 +202,10 @@ public class MusicListController {
         List<FileList> fileList = fileListService.findByFiles(id);
 
         Member member = memberService.findByLoginId(loginId);
-        List<Comment> commentList = commentService.findCommentList(id);
+
+
+        List<CommentDTO> commentList = commentService.findCommentList(id);
+
         model.addAttribute("commentList", commentList);
 
         if (myLike != null){

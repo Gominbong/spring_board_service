@@ -27,20 +27,17 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom{
                 .fetchJoin()
                 .innerJoin(comment.member, member)
                 .fetchJoin()
-                .innerJoin(comment.parentMember, parentMember)
-                .fetchJoin()
                 .where(musicList.id.eq(musicListId))
-                .orderBy(comment.parent.asc(), comment.child.asc(), comment.child1.asc(),
-                        comment.child2.asc(),comment.child3.asc())
+
                 .fetch();
     }
 
     @Override
-    public List<Comment> findByMusicListIdAndDivWidthSizeQueryDsl(Long musicListId, int divWidthSize) {
+    public List<Comment> findByMusicListIdAndDepthQueryDsl(Long musicListId,int depth) {
         return queryFactory
                 .selectFrom(comment)
                 .innerJoin(comment.musicList, musicList)
-                .where(musicList.id.eq(musicListId), comment.parent.eq(divWidthSize))
+                .where(musicList.id.eq(musicListId))
                 .fetch();
     }
 
@@ -56,53 +53,4 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom{
                 .fetchOne();
     }
 
-    @Override
-    public List<Comment> findByParentQueryDsl(MusicList musicList, int parent) {
-        return queryFactory
-                .selectFrom(comment)
-                .innerJoin(comment.musicList, QMusicList.musicList)
-                .fetchJoin()
-                .innerJoin(comment.member, member)
-                .fetchJoin()
-                .where(comment.musicList.eq(musicList), comment.parent.eq(parent))
-                .fetch();
-    }
-
-    @Override
-    public List<Comment> findByParentAndChildQueryDsl(MusicList musicList, int parent, int child) {
-        return queryFactory
-                .selectFrom(comment)
-                .innerJoin(comment.musicList, QMusicList.musicList)
-                .fetchJoin()
-                .innerJoin(comment.member, member)
-                .fetchJoin()
-                .where(QMusicList.musicList.eq(musicList), comment.parent.eq(parent), comment.child.eq(child))
-                .fetch();
-    }
-
-    @Override
-    public List<Comment> findByParentAndChildAndChild1QueryDsl(MusicList musicList, int parent, int child, int child1) {
-        return queryFactory
-                .selectFrom(comment)
-                .innerJoin(comment.musicList, QMusicList.musicList)
-                .fetchJoin()
-                .innerJoin(comment.member, member)
-                .fetchJoin()
-                .where(QMusicList.musicList.eq(musicList), comment.parent.eq(parent),
-                        comment.child.eq(child), comment.child1.eq(child1))
-                .fetch();
-    }
-
-    @Override
-    public List<Comment> findByParentAndChildAndChild1AndChild2QueryDsl(MusicList musicList, int parent, int child, int child1, int child2) {
-        return queryFactory
-                .selectFrom(comment)
-                .innerJoin(comment.musicList, QMusicList.musicList)
-                .fetchJoin()
-                .innerJoin(comment.member, member)
-                .fetchJoin()
-                .where(QMusicList.musicList.eq(musicList), comment.parent.eq(parent),
-                        comment.child.eq(child), comment.child1.eq(child1), comment.child2.eq(child2))
-                .fetch();
-    }
 }

@@ -28,7 +28,7 @@
                             <td>
                                 <p style="color: blue; text-decoration: underline;  cursor: pointer;"
                                    th:text="${list.originalFilename}"
-                                   th:onclick="download([[${list.id}]])"></p>
+                                   th:onclick="'download(' + ${list.id} + ')'"></p>
                             </td>
                         </tr>
                     </table>
@@ -106,10 +106,7 @@
                         onclick="btnNo('cart_div')">No
                 </button>
             </div>
-
         </div>
-
-
     </div>
 
     <div id='update_div' style="display: none">
@@ -157,11 +154,10 @@
 
 
     <div style="max-width: 800px">
-        <div th:each="list : ${commentList}">
-            <div th:if="${list.divWidthSize == 0}"
-                 style="border-width: 1px 1px 1px 1px; border-style: solid; border-color: brown">
+        <div th:each="list : ${commentList}" th:style="'margin-left:' + ${list.depth} * 20 + 'px'">
+            <div style="border-width: 1px 1px 1px 1px; border-style: solid; border-color: brown; margin-left: 10px;">
                 <div style="display: inline-block;height: 20px; margin-top: 10px; margin-left: 10px;">
-                    <p class="fw-bold" th:text="${list.member.nickname} + ' 님'"></p>
+                    <p class="fw-bold" th:text="${list.memberName}"></p>
                 </div>
 
                 <div th:if="${list.softDelete==null}" style="display: inline-block; height: 30px;  margin-left: 10px;">
@@ -178,7 +174,7 @@
                 </div>
 
                 <div th:if="${list.softDelete==null}" style="float: right; margin-top: 9px; margin-right: 20px;">
-                    <form th:if="${list.member.loginId.equals(loginId)}">
+                    <form th:if="${musicList.member.loginId.equals(loginId)}">
                         <button type="button" style="border: none" onclick="commentEdit(this, 0)">수정</button>
                         <button type="button" style="border: none" onclick="commentDelete(this)">삭제</button>
                         <button type="button" style="display: none" th:text="${list.id}"></button>
@@ -186,166 +182,18 @@
                 </div>
 
                 <div style="max-width: 780px; margin-left: 15px;">
-                    <p class="fw-bold" th:if="${list.softDelete!=null}">삭제된 댓글 입니다</p>
-                    <p th:if="${list.softDelete==null}" style="white-space: pre-line;
-                     word-break:break-word;" th:text="${list.content}"></p>
-                </div>
-            </div>
-
-            <div th:if="${list.divWidthSize == 1}" style="margin-left: 3%;
-          border-width: 1px 1px 1px 1px; border-style: solid; border-color: brown">
-                <div style="display: inline-block; height: 30px; margin-top: 10px; margin-left: 10px;">
-                    <p class="fw-bold" th:text="${list.member.nickname} + ' 님'"></p>
-                </div>
-
-                <div th:if="${list.softDelete==null}" style="display: inline-block; height: 20px; margin-left: 10px;">
-                    <p th:text="'['+${list.createTime}+']'"></p>
-                </div>
-
-                <div style="float: right; width: 15px;"><br></div>
-
-                <div th:if="${list.softDelete==null}" style="float: right; margin-top: 9px;">
-                    <form>
-                        <button type="button" style="border: none" onclick="reply(this, 4)">답글</button>
-                        <button type="button" style="border: none; display: none;" th:text="${list.id}"></button>
-                    </form>
-                </div>
-
-                <div th:if="${list.softDelete==null}" style="float: right; margin-top: 9px; margin-right: 20px;">
-                    <form th:if="${list.member.loginId.equals(loginId)}">
-                        <button type="button" style="border: none" onclick="commentEdit(this, 4)">수정</button>
-                        <button type="button" style="border: none" onclick="commentDelete(this)">삭제</button>
-                        <button type="button" style="display: none" th:text="${list.id}"></button>
-                    </form>
-                </div>
-
-                <div style="max-width: 780px; margin-left: 15px; height: 18px;">
-                    <p class="fw-bold" th:if="${list.softDelete!=null}">삭제된 댓글 입니다</p>
-                    <p style="color: blueviolet; max-height: 10px" th:if="${list.softDelete==null}"
-                       class="fw-bold" th:text="'@'+${list.parentMember.nickname}"></p>
-                </div>
-                <div style="margin-left: 15px;">
-                    <p th:if="${list.softDelete==null}" style="white-space: pre-line;
-                     word-break:break-word;" th:text="${list.content}"></p>
-                </div>
-            </div>
-
-            <div th:if="${list.divWidthSize == 2}" style="margin-left: 6%;
-         border-width: 1px 1px 1px 1px; border-style: solid; border-color: brown">
-                <div style="display: inline-block; margin-top: 10px; margin-left: 10px;">
-                    <p class="fw-bold" th:text="${list.member.nickname} + ' 님'"></p>
-                </div>
-
-                <div th:if="${list.softDelete==null}" style="display: inline-block; margin-left: 10px;">
-                    <p th:text="'['+${list.createTime}+']'"></p>
-                </div>
-
-                <div style="float: right; width: 15px;"><br></div>
-
-                <div th:if="${list.softDelete==null}" style="float: right; margin-top: 9px;">
-                    <form>
-                        <button type="button" style="border: none" onclick="reply(this, 8)">답글</button>
-                        <button type="button" style="border: none; display: none;" th:text="${list.id}"></button>
-                    </form>
-                </div>
-
-
-                <div th:if="${list.softDelete==null}" style="float: right; margin-top: 9px; margin-right: 20px;">
-                    <form th:if="${list.member.loginId.equals(loginId)}">
-                        <button type="button" style="border: none" onclick="commentEdit(this, 8)">수정</button>
-                        <button type="button" style="border: none" onclick="commentDelete(this)">삭제</button>
-                        <button type="button" style="display: none" th:text="${list.id}"></button>
-                    </form>
-                </div>
-
-                <div style="max-width: 780px; margin-left: 15px; height: 18px;">
-                    <p class="fw-bold" th:if="${list.softDelete!=null}">삭제된 댓글 입니다</p>
-                    <p style="color: blueviolet; max-height: 10px" th:if="${list.softDelete==null}"
-                       class="fw-bold" th:text="'@'+${list.parentMember.nickname}"></p>
-                </div>
-                <div style="margin-left: 15px;">
-                    <p th:if="${list.softDelete==null}" style="white-space: pre-line;
-                     word-break:break-word;" th:text="${list.content}"></p>
-                </div>
-            </div>
-
-            <div th:if="${list.divWidthSize == 3}" style="margin-left: 9%;
-        border-width: 1px 1px 1px 1px; border-style: solid; border-color: brown">
-                <div style="display: inline-block; margin-top: 10px; margin-left: 10px;">
-                    <p class="fw-bold" th:text="${list.member.nickname} + ' 님'"></p>
-                </div>
-
-                <div th:if="${list.softDelete==null}" style="display: inline-block; margin-left: 10px;">
-                    <p th:text="'['+${list.createTime}+']'"></p>
-                </div>
-
-                <div style="float: right; width: 15px;"><br></div>
-
-                <div th:if="${list.softDelete==null}" style="float: right; margin-top: 9px;">
-                    <form>
-                        <button type="button" style="border: none" onclick="reply(this, 12)">답글</button>
-                        <button type="button" style="border: none; display: none;" th:text="${list.id}"></button>
-                    </form>
-                </div>
-
-                <div th:if="${list.softDelete==null}" style="float: right; margin-top: 9px; margin-right: 20px;">
-                    <form th:if="${list.member.loginId.equals(loginId)}">
-                        <button type="button" style="border: none" onclick="commentEdit(this, 12)">수정</button>
-                        <button type="button" style="border: none" onclick="commentDelete(this)">삭제</button>
-                        <button type="button" style="display: none" th:text="${list.id}"></button>
-                    </form>
-                </div>
-                <div style="max-width: 780px; margin-left: 15px; height: 18px;">
-                    <p class="fw-bold" th:if="${list.softDelete!=null}">삭제된 댓글 입니다</p>
-                    <p style="color: blueviolet; max-height: 10px" th:if="${list.softDelete==null}"
-                       class="fw-bold" th:text="'@'+${list.parentMember.nickname}"></p>
-                </div>
-                <div style="margin-left: 15px;">
-                    <p th:if="${list.softDelete==null}" style="white-space: pre-line;
-                     word-break:break-word;" th:text="${list.content}"></p>
-                </div>
-            </div>
-
-            <div th:if="${list.divWidthSize == 4}" style="margin-left: 12%;
-         border-width: 1px 1px 1px 1px; border-style: solid; border-color: brown">
-                <div style="display: inline-block; margin-top: 10px; margin-left: 10px;">
-                    <p class="fw-bold" th:text="${list.member.nickname} + ' 님'"></p>
-                </div>
-
-                <div th:if="${list.softDelete==null}" style="display: inline-block; margin-left: 10px;">
-                    <p th:text="'['+${list.createTime}+']'"></p>
-                </div>
-
-                <div style="float: right; width: 15px;"><br></div>
-
-                <div th:if="${list.softDelete==null}" style="float: right; margin-top: 9px;">
-                    <form>
-                        <button type="button" style="border: none" onclick="reply(this, 16)">답글</button>
-                        <button type="button" style="border: none; display: none;" th:text="${list.id}"></button>
-                    </form>
-                </div>
-
-
-                <div th:if="${list.softDelete==null}" style="float: right; margin-top: 9px; margin-right: 20px;">
-                    <form th:if="${list.member.loginId.equals(loginId)}">
-                        <button type="button" style="border: none" onclick="commentEdit(this, 16)">수정</button>
-                        <button type="button" style="border: none" onclick="commentDelete(this)">삭제</button>
-                        <button type="button" style="display: none" th:text="${list.id}"></button>
-                    </form>
-                </div>
-
-                <div style="max-width: 780px; margin-left: 15px; height: 18px;">
-                    <p class="fw-bold" th:if="${list.softDelete!=null}">삭제된 댓글 입니다</p>
-                    <p style="color: blueviolet; max-height: 10px" th:if="${list.softDelete==null}"
-                       class="fw-bold" th:text="'@'+${list.parentMember.nickname}"></p>
-                </div>
-                <div style="margin-left: 15px;">
-                    <p th:if="${list.softDelete==null}" style="white-space: pre-line;
-                     word-break:break-word;" th:text="${list.content}"></p>
+                    <p class="fw-bold" th:if="${list.softDelete != null}">삭제된 댓글 입니다</p>
+                    <p th:if="${list.parentMemberName==null && list.softDelete==null}" style="white-space: pre-line; word-break: break-word;
+                     padding-right: 6px;
+                     line-height: 24px;" th:utext="${list.content}"></p>
+                    <span th:if="${list.parentMemberName!=null && list.softDelete==null}" style="white-space: pre-line; word-break: break-word;
+                       padding-right: 6px; color: blue" th:text="'@ '+ ${list.parentMemberName}"></span>
+                    <p th:if="${list.parentMemberName!=null && list.softDelete==null}" style="white-space: pre-line; word-break: break-word;
+                     padding-right: 6px;
+                     line-height: 24px;" th:utext="${list.content}"></p>
                 </div>
             </div>
         </div>
-
 
         <div style="margin-top: 20px; min-height: 120px;
      border-width: 1px 1px 1px 1px; border-style: solid; border-color: darkred">
@@ -380,9 +228,12 @@
                 <p style="margin-top: 10px" class="form-label">답글 쓰기</p>
                 <textarea style="width: 88%" class="form-control" id="replyContent" name="replyContent"
                           rows="3"></textarea>
+
                 <button style="height: 80px; width: 50px; border-width: thin; margin-left: 8px;"
-                        type="submit" name="commentAddBtn" onclick="addCommentReply(this)">등록
+                        type="button" onclick="addCommentReply(this)">등록
                 </button>
+                <input type="hidden" th:name="musicListId" th:value="${musicList.id}">
+
 
             </form>
         </div>
@@ -390,7 +241,6 @@
 
         <div id="commentEdit" style="min-height: 120px; display: none;
         border-width: 3px 1px 1px 1px; border-style: solid; border-color: darkred">
-
             <form id="commentEditForm" method="post" action="/commentEdit"
                   class="row g-1" style="margin-bottom: 10px; margin-left: 10px; max-width: 800px;">
                 <p style="margin-top: 10px" class="form-label">댓글 수정</p>
@@ -399,20 +249,14 @@
                 <button style="height: 80px; width: 50px; border-width: thin; margin-left: 8px;"
                         type="submit" name="commentEditBtn" onclick="commentEdit(this)">수정
                 </button>
-
             </form>
         </div>
-
-
     </div>
 
 
     <div style="margin-top: 227px"></div>
-
     <div th:replace="~{fragments/footer :: footer}"/>
-
     <div style="margin-bottom: 130px"></div>
-
     <script type="text/javascript">
         function commentDelete(obj) {
             const commentId = $(obj).next().text();
@@ -442,8 +286,8 @@
         }
 
 
-        let tempCommentId;
         function reply(obj, divSize) {
+            let tempCommentId;
             const commentEditDiv = document.getElementById('commentEdit');
             commentEditDiv.style.display = 'none';
             const memberCash = [[${memberCash}]];
@@ -459,19 +303,19 @@
             const replyDiv = document.getElementById('reply');
             // 답글 Div 바로아래 이동시킴
             $(obj).parent().parent().parent().append(replyDiv);
-            const commentId = $(obj).next().text();
-            console.log("commentId="+commentId)
+            const parentId = $(obj).next().text();
+            console.log("commentId=" + parentId)
 
-            if (replyDiv.style.display === 'none'){  // 답글 Div 숨김상태에서 화면에 보여줌
+            if (replyDiv.style.display === 'none') {  // 답글 Div 숨김상태에서 화면에 보여줌
                 replyDiv.style.display = 'block';  // div block 상태에서 다른 댓글 답글버튼누루면 block 상태 유지하기 위한 임시 저장
-                tempCommentId = commentId;
-                console.log("tempID="+tempCommentId)
-            } else if (tempCommentId == commentId){  // 답글버튼 껏다 켯다 하는기능
+                tempCommentId = parentId;
+                console.log("tempID=" + tempCommentId)
+            } else if (tempCommentId == parentId) {  // 답글버튼 껏다 켯다 하는기능
                 console.log("조건T")
                 replyDiv.style.display = 'none';
-            } else if (replyDiv.style.display === 'block'){
-                tempCommentId = commentId; //껏다켯다 하기위해 현제위치로 설정.
-                console.log("여여여기기"+tempCommentId)
+            } else if (replyDiv.style.display === 'block') {
+                tempCommentId = parentId; //껏다켯다 하기위해 현제위치로 설정.
+                console.log("여여여기기" + tempCommentId)
             }
 
             console.log("pppp" + $(obj).parent().parent().next().next().next().text());
@@ -479,37 +323,38 @@
             console.log("iiiii" + length);
             console.log(divSize);
             console.log("pppp" + $(obj).parent().parent().next().next().next().text());
-
             const form = document.getElementById('replyForm');
             const input = document.createElement('input');
             input.type = 'hidden';
-            input.name = 'commentId';
-            input.value = commentId;
+            input.name = 'parentId';
+            input.value = tempCommentId;
             form.append(input);
+
+
         }
 
 
-        let tempCommentId1;
         function commentEdit(obj, divSize) {
+            let tempCommentId1;
             const replyDiv = document.getElementById('reply');
             replyDiv.style.display = 'none';
             const commentEditDiv = document.getElementById('commentEdit');
             // Edit Div 창 바로아래로 이동시킴
             $(obj).parent().parent().parent().append(commentEditDiv);
             const commentId = $(obj).next().next().text();
-            console.log("commentId="+commentId)
+            console.log("commentId=" + commentId)
 
-            if (commentEditDiv.style.display === 'none'){  // 답글 Div 숨김상태에서 화면에 보여줌
+            if (commentEditDiv.style.display === 'none') {  // 답글 Div 숨김상태에서 화면에 보여줌
                 commentEditDiv.style.display = 'block';
 
                 tempCommentId1 = commentId;  // div block 상태에서 다른 댓글 답글버튼누루면 block 상태 유지하기 위한 임시 저장
-                console.log("tempID="+tempCommentId1)
-            } else if (tempCommentId1 == commentId){  // 답글버튼 껏다 켯다 하는기능
+                console.log("tempID=" + tempCommentId1)
+            } else if (tempCommentId1 == commentId) {  // 답글버튼 껏다 켯다 하는기능
                 console.log("조건T")
                 commentEditDiv.style.display = 'none';
-            } else if (commentEditDiv.style.display === 'block'){
+            } else if (commentEditDiv.style.display === 'block') {
                 tempCommentId1 = commentId; //껏다켯다 하기위해 현제위치로 설정.
-                console.log("여여여기기"+tempCommentId1)
+                console.log("여여여기기" + tempCommentId1)
             }
 
             const length = $(obj).parent().parent().next().next().text().length;
