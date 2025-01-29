@@ -3,10 +3,7 @@ package com.example.myproject.service;
 import com.example.myproject.domain.Comment;
 import com.example.myproject.domain.Member;
 import com.example.myproject.domain.MusicList;
-import com.example.myproject.dto.CommentDeleteDto;
-import com.example.myproject.dto.CommentFormDto;
-import com.example.myproject.dto.CommentReplyFormDto;
-import com.example.myproject.dto.CommentUpdateDto;
+import com.example.myproject.dto.*;
 import com.example.myproject.repository.CommentRepository;
 import com.example.myproject.repository.MemberRepository;
 import com.example.myproject.repository.MusicListRepository;
@@ -16,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -33,7 +31,7 @@ public class CommentService {
     }
 
     @Transactional
-    public Comment commentAdd(CommentFormDto commentFormDto, String loginId, int parent) {
+    public Comment commentAdd(CommentFormDto commentFormDto, String loginId) {
 
         MusicList musicList = musicListRepository.findById(commentFormDto.getMusicListId()).orElseThrow();
         Member member = memberRepository.findByLoginIdQueryDsl(loginId);
@@ -43,90 +41,43 @@ public class CommentService {
         String createTime = temp.replace("T", " ");
         comment.setCreateTime(createTime);
         comment.setMember(member);
-        comment.setParentMember(member);
         comment.setMusicList(musicList);
-        comment.setDivWidthSize(0);
-        comment.setParent(parent);
-        comment.setChild(0);
+        comment.setDepth(0);
         comment.setContent(commentFormDto.getCommentContent());
         commentRepository.save(comment);
         return comment;
     }
 
-    public List<Comment> findCommentList(Long id) {
-        return commentRepository.findCommentListQueryDsl(id);
-    }
-
-    public List<Comment> findByMusicListIdAndDivWidthSize(Long musicListId) {
-        return commentRepository.findByMusicListIdAndDivWidthSizeQueryDsl(musicListId, 0);
-    }
-
 
 
     @Transactional
-    public void replyAdd(CommentReplyFormDto commentReplyFormDto, String loginId) {
-        Member member = memberRepository.findByLoginIdQueryDsl(loginId);
-        log.info("디티오확인 = {}", commentReplyFormDto.getCommentId());
+    public List<CommentDTO> findCommentList(Long id) {
+        List<Comment> comments = commentRepository.findCommentsByMusicListId(id);
+        return comments.stream()
+                .map(CommentDTO::new)
+                .collect(Collectors.toList());
+    }
 
-        Comment comment = commentRepository.findCommentIdQueryDsl(commentReplyFormDto.getCommentId());
-        Member parentMember = comment.getMember();
-        log.info("댓글부모 정보 = {} ", comment.getChild());
+    @Transactional
+    public void replyAdd(CommentReplyFormDto commentReplyFormDto, String loginId) {
+        MusicList musicList = musicListRepository.findById(commentReplyFormDto.getMusicListId()).orElseThrow();
+        Comment comment = commentRepository.findCommentIdQueryDsl(commentReplyFormDto.getParentId());
+        Member member = memberRepository.findByLoginIdQueryDsl(loginId);
+
+        log.info("댓글 로그보기"+comment.getMember().getId());
+        log.info("멤버 로그보기"+member.getId());
 
         Comment reply = new Comment();
         LocalDateTime localDateTime = LocalDateTime.now().withNano(0);
         String temp = String.valueOf(localDateTime);
         String createTime = temp.replace("T", " ");
         reply.setMember(member);
-        reply.setParentMember(parentMember);
-        reply.setMusicList(comment.getMusicList());
+        reply.setMusicList(musicList);
+        reply.setParentMember(comment.getMember());
         reply.setCreateTime(createTime);
+        reply.setDepth(comment.getDepth() + 1);
         reply.setContent(commentReplyFormDto.getReplyContent());
-        reply.setParent(comment.getParent());
-
-
-        //대댓글 중간 삽입 할 경우 index 순서를 정함
-        switch (comment.getDivWidthSize()){
-            case 0 -> {
-                List<Comment> parent = commentRepository.findByParentQueryDsl(comment.getMusicList(), comment.getParent());
-                reply.setParent(comment.getParent());
-                reply.setDivWidthSize(1);
-                reply.setChild(parent.size());
-
-            }
-            case 1 -> {
-                List<Comment> parent = commentRepository.
-                        findByParentAndChildQueryDsl(comment.getMusicList(), comment.getParent(), comment.getChild());
-                reply.setDivWidthSize(2);
-                reply.setParent(comment.getParent());
-                reply.setChild(comment.getChild());
-                reply.setChild1(parent.size());
-
-            }
-            case 2 -> {
-                List<Comment> parent = commentRepository.
-                        findByParentAndChildAndChild1QueryDsl(comment.getMusicList(),
-                                comment.getParent(), comment.getChild(), comment.getChild1());
-                reply.setDivWidthSize(3);
-                reply.setParent(comment.getParent());
-                reply.setChild(comment.getChild());
-                reply.setChild1(comment.getChild1());
-                reply.setChild2(parent.size());
-            }
-            case 3,4 -> {
-                List<Comment> parent = commentRepository.
-                        findByParentAndChildAndChild1AndChild2QueryDsl(comment.getMusicList(),
-                                comment.getParent(), comment.getChild(), comment.getChild1(), comment.getChild2());
-                reply.setDivWidthSize(4);
-                reply.setParent(comment.getParent());
-                reply.setChild(comment.getChild());
-                reply.setChild1(comment.getChild1());
-                reply.setChild2(comment.getChild2());
-                reply.setChild3(parent.size());
-            }
-
-        }
-
-
+        reply.setParent(comment);
 
         commentRepository.save(reply);
 

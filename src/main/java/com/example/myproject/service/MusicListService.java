@@ -75,21 +75,24 @@ public class MusicListService {
         if (!pdfFiles.get(0).isEmpty()) {
             for (MultipartFile multipartFile : pdfFiles) {
                 String originalFilename = multipartFile.getOriginalFilename();
-                String encode = originalFilename.replaceAll("[^ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9]", "_");
+                String encode = originalFilename.replaceAll("[^ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9.]", "_");
+
                 String storedFileName = System.currentTimeMillis() + "_" + encode;
 
                 String os = System.getProperty("os.name").toLowerCase();
                 if (os.contains("win")) {
+
+
                     try {
-                        multipartFile.transferTo(new File("C:/Users/asd/Desktop/study/pdf/" + storedFileName));
+                        multipartFile.transferTo(new File("C:/upload/" + storedFileName));
                     } catch (IOException e) {
-                        e.getStackTrace();
+                        e.printStackTrace();
                     }
                 } else {
                     try {
                         multipartFile.transferTo(new File(storedFileName));
                     } catch (IOException e) {
-                        e.getStackTrace();
+                        e.printStackTrace();
                     }
                 }
 
@@ -176,21 +179,22 @@ public class MusicListService {
             for (MultipartFile multipartFile : pdfFiles) {
 
                 String originalFilename = multipartFile.getOriginalFilename();
-                String encode = originalFilename.replaceAll("[^ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9]", "_");
+                String encode = originalFilename.replaceAll("[^ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9.]", "_");
+
                 String storedFileName = System.currentTimeMillis() + "_" + encode;
 
                 String os = System.getProperty("os.name").toLowerCase();
                 if (os.contains("win")) {
                     try {
-                        multipartFile.transferTo(new File("C:/Users/asd/Desktop/study/pdf/" + storedFileName));
+                        multipartFile.transferTo(new File("C:/upload/" + storedFileName));
                     } catch (IOException e) {
-                        e.getStackTrace();
+                        e.printStackTrace();
                     }
                 } else {
                     try {
                         multipartFile.transferTo(new File(storedFileName));
                     } catch (IOException e) {
-                        e.getStackTrace();
+                        e.printStackTrace();
                     }
                 }
             }

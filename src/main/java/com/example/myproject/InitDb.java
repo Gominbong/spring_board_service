@@ -24,7 +24,6 @@ import java.time.LocalDateTime;
 public class InitDb {
 
     private final InitService initService;
-    private static int parent = 0;
     private final MemberRepository memberRepository;
 
     @PostConstruct
@@ -101,15 +100,15 @@ public class InitDb {
 
             Comment comment = new Comment();
             comment.setMember(member);
-            comment.setParentMember(member);
+
             LocalDateTime localDateTime = LocalDateTime.now().withNano(0);
             String temp = String.valueOf(localDateTime);
             String createTime = temp.replace("T", " ");
             comment.setCreateTime(createTime);
             comment.setMusicList(musicList);
-            comment.setDivWidthSize(0);
+            comment.setDepth(0);
             comment.setContent("테스트내용");
-            comment.setParent(a);
+
 
             commentRepository.save(comment);
 
@@ -120,15 +119,15 @@ public class InitDb {
 
             Comment comment = new Comment();
             comment.setMember(member);
-            comment.setParentMember(member);
+
             LocalDateTime localDateTime = LocalDateTime.now().withNano(0);
             String temp = String.valueOf(localDateTime);
             String createTime = temp.replace("T", " ");
             comment.setCreateTime(createTime);
             comment.setMusicList(musicList);
-            comment.setDivWidthSize(1);
+            comment.setDepth(1);
             comment.setContent("테스트내용");
-            comment.setParent(a);
+
 
             commentRepository.save(comment);
 
@@ -139,77 +138,22 @@ public class InitDb {
 
             Comment comment = new Comment();
             comment.setMember(member);
-            comment.setParentMember(member);
+
             LocalDateTime localDateTime = LocalDateTime.now().withNano(0);
             String temp = String.valueOf(localDateTime);
             String createTime = temp.replace("T", " ");
             comment.setCreateTime(createTime);
             comment.setMusicList(musicList);
-            comment.setDivWidthSize(2);
-            comment.setContent("테스트내용");
-            comment.setParent(a);
-
-            commentRepository.save(comment);
-
-        }
-
-        public void for3(Long id, int a, int b, int c, int d, Member member){
-            MusicList musicList = musicListRepository.findById(id).orElseThrow();
-
-            Comment comment = new Comment();
-            comment.setMember(member);
-            comment.setParentMember(member);
-            LocalDateTime localDateTime = LocalDateTime.now().withNano(0);
-            String temp = String.valueOf(localDateTime);
-            String createTime = temp.replace("T", " ");
-            comment.setCreateTime(createTime);
-            comment.setMusicList(musicList);
-            comment.setDivWidthSize(3);
-            comment.setContent("테스트내용");
-            comment.setParent(a);
-
-            commentRepository.save(comment);
-
-        }
-
-        public void for4(Long id, int a, int b, int c, int d, int e, Member member){
-            MusicList musicList = musicListRepository.findById(id).orElseThrow();
-
-            Comment comment = new Comment();
-            comment.setMember(member);
-            comment.setParentMember(member);
-            LocalDateTime localDateTime = LocalDateTime.now().withNano(0);
-            String temp = String.valueOf(localDateTime);
-            String createTime = temp.replace("T", " ");
-            comment.setCreateTime(createTime);
-            comment.setMusicList(musicList);
-            comment.setDivWidthSize(4);
-            comment.setContent("테스트내용");
-            comment.setParent(a);
-
-            commentRepository.save(comment);
-
-        }
-
-
-        public void dbInit3(Long id){
-            MusicList musicList = musicListRepository.findById(id).orElseThrow();
-            Member member = memberRepository.findByLoginId("3");
-
-            Comment comment = new Comment();
-            LocalDateTime localDateTime = LocalDateTime.now().withNano(0);
-            String temp = String.valueOf(localDateTime);
-            String createTime = temp.replace("T", " ");
-            comment.setCreateTime(createTime);
-            comment.setMusicList(musicList);
-            comment.setDivWidthSize(0);
-            comment.setParent(parent);
-            parent += 1;
+            comment.setDepth(2);
             comment.setContent("테스트내용");
 
             commentRepository.save(comment);
 
         }
+
+
+
+
 
         public void dbInit1(){
             Member member = memberService.findByLoginId("3");
