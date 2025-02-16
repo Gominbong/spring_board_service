@@ -4,9 +4,9 @@ import com.example.myproject.domain.FileList;
 import com.example.myproject.domain.Member;
 import com.example.myproject.domain.MusicList;
 import com.example.myproject.dto.*;
-import com.example.myproject.repository.MusicListRepository;
 import com.example.myproject.repository.FileListRepository;
 import com.example.myproject.repository.MemberRepository;
+import com.example.myproject.repository.MusicListRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -81,8 +81,7 @@ public class MusicListService {
 
                 String os = System.getProperty("os.name").toLowerCase();
                 if (os.contains("win")) {
-
-
+                    log.info("윈도우");
                     try {
                         multipartFile.transferTo(new File("C:/upload/" + storedFileName));
                     } catch (IOException e) {
@@ -164,20 +163,18 @@ public class MusicListService {
 
                 String os = System.getProperty("os.name").toLowerCase();
                 if (os.contains("win")) {
-                    File file1 = new File("C:/Users/asd/Desktop/study/pdf/" + file);
+                    File file1 = new File("C:/upload/" + file);
                     file1.delete();
                 } else {
                     File file1 = new File("/upload/" + file);
                     file1.delete();
                 }
-
             }
         }
 
         List<MultipartFile> pdfFiles = musicListUpdateDto.getPdfFiles();
         if (!pdfFiles.get(0).isEmpty()) {
             for (MultipartFile multipartFile : pdfFiles) {
-
                 String originalFilename = multipartFile.getOriginalFilename();
                 String encode = originalFilename.replaceAll("[^ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9.]", "_");
 
@@ -185,6 +182,7 @@ public class MusicListService {
 
                 String os = System.getProperty("os.name").toLowerCase();
                 if (os.contains("win")) {
+                    log.info("윈도우");
                     try {
                         multipartFile.transferTo(new File("C:/upload/" + storedFileName));
                     } catch (IOException e) {
@@ -197,8 +195,16 @@ public class MusicListService {
                         e.printStackTrace();
                     }
                 }
+
+                FileList fileList = new FileList();
+                fileList.setMusicList(musicList); //외래키 설정
+                fileList.setOriginalFilename(originalFilename);
+                fileList.setStoredFilename(storedFileName);
+                fileRepository.save(fileList);
             }
         }
+
+
         return null;
     }
 
